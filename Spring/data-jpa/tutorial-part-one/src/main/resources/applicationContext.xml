@@ -26,5 +26,5 @@
     <!--
         Configures Spring Data JPA and sets the base package of my DAOs.
     -->
-    <jpa:repositories base-package="net.petrikainulainen.spring.datajpa.dao"/>
+    <jpa:repositories base-package="net.petrikainulainen.spring.datajpa.repository"/>
 </beans>
