@@ -2,7 +2,9 @@ package net.petrikainulainen.spring.datajpa.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.hibernate.ejb.HibernatePersistence;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -43,6 +45,9 @@ public class ApplicationContext {
     private static final String PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY = "hibernate.ejb.naming_strategy";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
+
+    private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
+    private static final String PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE = "message.source.use.code.as.default.message";
 
     @Resource
     private Environment environment;
@@ -85,6 +90,16 @@ public class ApplicationContext {
         entityManagerFactoryBean.setJpaProperties(jpaProterties);
 
         return entityManagerFactoryBean;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasename(environment.getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_BASENAME));
+        messageSource.setUseCodeAsDefaultMessage(Boolean.parseBoolean(environment.getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE)));
+
+        return messageSource;
     }
 
     @Bean
