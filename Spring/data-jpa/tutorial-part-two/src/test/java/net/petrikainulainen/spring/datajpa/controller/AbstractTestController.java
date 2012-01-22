@@ -30,6 +30,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 /**
+ * An abstract base class for all controller unit tests.
  * @author Petri Kainulainen
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,10 +58,20 @@ public abstract class AbstractTestController {
 
     protected abstract void setUpTest();
 
+    /**
+     * Asserts that an error message is present.
+     * @param model The model which is used to store the error message.
+     * @param messageCode   The message code of the expected error message.
+     */
     protected void assertErrorMessage(RedirectAttributes model, String messageCode) {
         assertFlashMessages(model, messageCode, FLASH_ERROR_MESSAGE);
     }
 
+    /**
+     * Asserts that a feedback message is present.
+     * @param model The model which is used to store the feedback message.
+     * @param messageCode
+     */
     protected void assertFeedbackMessage(RedirectAttributes model, String messageCode) {
         assertFlashMessages(model, messageCode, FLASH_FEEDBACK_MESSAGE);
     }
@@ -76,6 +87,11 @@ public abstract class AbstractTestController {
         verifyNoMoreInteractions(messageSourceMock);
     }
 
+    /**
+     * Asserts that the binding result contains specified field errors.
+     * @param result    The binding result
+     * @param fieldNames    The names which should have validation errors.
+     */
     protected void assertFieldErrors(BindingResult result, String... fieldNames) {
         assertEquals(fieldNames.length, result.getFieldErrorCount());
         for (String fieldName : fieldNames) {
@@ -83,17 +99,12 @@ public abstract class AbstractTestController {
         }
     }
 
-    protected void assertObjectErrors(BindingResult result, String... objectNames) {
-        assertEquals(objectNames.length, result.getErrorCount());
-        List<ObjectError> errors = result.getAllErrors();
-        List<String> objectNameList = Arrays.asList(objectNames);
-        for (ObjectError error : errors) {
-            String objectName = error.getObjectName();
-            boolean objectFound = objectNameList.contains(objectName);
-            assertTrue(objectFound);
-        }
-    }
-
+    /**
+     * Binds and validates the given form object.
+     * @param request   The http servlet request object.
+     * @param formObject    A form object.
+     * @return  A binding result containing the outcome of binding and validation.
+     */
     protected BindingResult bindAndValidate(HttpServletRequest request, Object formObject) {
         WebDataBinder binder = new WebDataBinder(formObject);
         binder.setValidator(validator);
@@ -102,6 +113,11 @@ public abstract class AbstractTestController {
         return binder.getBindingResult();
     }
 
+    /**
+     * Creates an expected redirect view path.
+     * @param path  The path to the requested view.
+     * @return  The expected redirect view path.
+     */
     protected String createExpectedRedirectViewPath(String path) {
         StringBuilder builder = new StringBuilder();
         builder.append(VIEW_REDIRECT_PREFIX);
@@ -109,14 +125,30 @@ public abstract class AbstractTestController {
         return builder.toString();
     }
 
+    /**
+     * Initializes the message source mock to return an error message when
+     * the error message code given as a a parameter is used to get message
+     * from message source.
+     * @param errorMessageCode  The wanted error message code.
+     */
     protected void initMessageSourceForErrorMessage(String errorMessageCode) {
         when(messageSourceMock.getMessage(eq(errorMessageCode), any(Object[].class), any(Locale.class))).thenReturn(ERROR_MESSAGE);
     }
 
+    /**
+     * Initializes the message source mock to return a feedback message when
+     * the feedback message code given as a parameter is used to get message
+     * from message source.
+     * @param feedbackMessageCode   The wanted feedback message code.
+     */
     protected void initMessageSourceForFeedbackMessage(String feedbackMessageCode) {
         when(messageSourceMock.getMessage(eq(feedbackMessageCode), any(Object[].class), any(Locale.class))).thenReturn(FEEDBACK_MESSAGE);
     }
 
+    /**
+     * Returns the message source mock.
+     * @return
+     */
     protected MessageSource getMessageSourceMock() {
         return messageSourceMock;
     }

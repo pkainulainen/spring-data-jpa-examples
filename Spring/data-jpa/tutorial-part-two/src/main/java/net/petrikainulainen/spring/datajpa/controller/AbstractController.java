@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import java.util.Locale;
 
 /**
+ * An abstract controller class which provides utility methods useful
+ * to actual controller classes.
  * @author Petri Kainulainen
  */
 public abstract class AbstractController {

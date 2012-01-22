@@ -7,6 +7,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
+ * A test context which is used for unit testing controllers.
  * @author Petri Kainulainen
  */
 @Configuration
