@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * This implementation of the PersonService interface communicates with
+ * the database by using a Spring Data JPA repository.
  * @author Petri Kainulainen
  */
 @Service

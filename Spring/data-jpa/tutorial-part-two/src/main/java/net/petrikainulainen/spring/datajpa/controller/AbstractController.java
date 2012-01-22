@@ -26,6 +26,12 @@ public abstract class AbstractController {
     @Resource
     private MessageSource messageSource;
 
+    /**
+     * Adds a new error message
+     * @param model A model which stores the the error message.
+     * @param code  A message code which is used to fetch the correct message from the message source.
+     * @param params    The parameters attached to the actual error message.
+     */
     protected void addErrorMessage(RedirectAttributes model, String code, Object... params) {
         LOGGER.debug("adding error message with code: " + code + " and params: " + params);
         Locale current = LocaleContextHolder.getLocale();
@@ -35,6 +41,12 @@ public abstract class AbstractController {
         model.addFlashAttribute(FLASH_ERROR_MESSAGE, localizedErrorMessage);
     }
 
+    /**
+     * Adds a new feedback message.
+     * @param model A model which stores the feedback message.
+     * @param code  A message code which is used to fetch the actual message from the message source.
+     * @param params    The parameters which are attached to the actual feedback message.
+     */
     protected void addFeedbackMessage(RedirectAttributes model, String code, Object... params) {
         LOGGER.debug("Adding feedback message with code: " + code + " and params: " + params);
         Locale current = LocaleContextHolder.getLocale();

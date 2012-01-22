@@ -4,6 +4,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
+ * A DTO object which is used as a form object
+ * in create person and edit person forms.
  * @author Petri Kainulainen
  */
 public class PersonDTO {

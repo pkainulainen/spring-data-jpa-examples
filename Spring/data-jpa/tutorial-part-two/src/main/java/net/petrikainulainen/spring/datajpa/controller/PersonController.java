@@ -44,6 +44,12 @@ public class PersonController extends AbstractController {
     @Resource
     private PersonService personService;
 
+    /**
+     * Processes delete person requests.
+     * @param id    The id of the deleted person.
+     * @param attributes
+     * @return
+     */
     @RequestMapping(value = "/person/delete/{id}", method = RequestMethod.GET)
     public String delete(@PathVariable("id") Long id, RedirectAttributes attributes) {
         LOGGER.debug("Deleting person with id: " + id);
@@ -58,7 +64,12 @@ public class PersonController extends AbstractController {
 
         return createRedirectViewPath(REQUEST_MAPPING_LIST);
     }
-    
+
+    /**
+     * Processes create person requests.
+     * @param model
+     * @return  The name of the create person form view.
+     */
     @RequestMapping(value = "/person/create", method = RequestMethod.GET) 
     public String showCreatePersonForm(Model model) {
         LOGGER.debug("Rendering create person form");
@@ -67,7 +78,14 @@ public class PersonController extends AbstractController {
 
         return PERSON_ADD_FORM_VIEW;
     }
-    
+
+    /**
+     * Processes the submissions of create person form.
+     * @param created   The information of the created persons.
+     * @param bindingResult
+     * @param attributes
+     * @return
+     */
     @RequestMapping(value = "/person/create", method = RequestMethod.POST)
     public String submitCreatePersonForm(@Valid @ModelAttribute(MODEL_ATTIRUTE_PERSON) PersonDTO created, BindingResult bindingResult, RedirectAttributes attributes) {
         LOGGER.debug("Create person form was submitted with information: " + created);
@@ -82,7 +100,14 @@ public class PersonController extends AbstractController {
 
         return createRedirectViewPath(REQUEST_MAPPING_LIST);
     }
-    
+
+    /**
+     * Processes edit person requests.
+     * @param id    The id of the edited person.
+     * @param model
+     * @param attributes
+     * @return  The name of the edit person form view.
+     */
     @RequestMapping(value = "/person/edit/{id}", method = RequestMethod.GET)
     public String showEditPersonForm(@PathVariable("id") Long id, Model model, RedirectAttributes attributes) {
         LOGGER.debug("Rendering edit person form for person with id: " + id);
@@ -98,7 +123,14 @@ public class PersonController extends AbstractController {
         
         return PERSON_EDIT_FORM_VIEW;
     }
-    
+
+    /**
+     * Processes the submissions of edit person form.
+     * @param updated   The information of the edited person.
+     * @param bindingResult
+     * @param attributes
+     * @return
+     */
     @RequestMapping(value = "/person/edit", method = RequestMethod.POST)
     public String submitEditPersonForm(@Valid @ModelAttribute(MODEL_ATTIRUTE_PERSON) PersonDTO updated, BindingResult bindingResult, RedirectAttributes attributes) {
         LOGGER.debug("Edit person form was submitted with information: " + updated);
@@ -128,7 +160,12 @@ public class PersonController extends AbstractController {
         
         return formObject;
     }
-    
+
+    /**
+     * Processes requests to home page which lists all available persons.
+     * @param model
+     * @return  The name of the person list view.
+     */
     @RequestMapping(value = REQUEST_MAPPING_LIST, method = RequestMethod.GET)
     public String showList(Model model) {
         LOGGER.debug("Rendering person list page");
