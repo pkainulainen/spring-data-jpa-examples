@@ -2,6 +2,7 @@ package net.petrikainulainen.spring.datajpa.controller;
 
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
+import net.petrikainulainen.spring.datajpa.model.PersonTestUtil;
 import net.petrikainulainen.spring.datajpa.service.PersonNotFoundException;
 import net.petrikainulainen.spring.datajpa.service.PersonService;
 import org.junit.Before;
@@ -48,7 +49,7 @@ public class PersonControllerTest extends AbstractTestController {
     
     @Test
     public void delete() throws PersonNotFoundException {
-        Person deleted = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        Person deleted = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         when(personServiceMock.delete(PERSON_ID)).thenReturn(deleted);
         
         initMessageSourceForFeedbackMessage(PersonController.FEEDBACK_MESSAGE_KEY_PERSON_DELETED);
@@ -103,8 +104,8 @@ public class PersonControllerTest extends AbstractTestController {
     public void submitCreatePersonForm() {        
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/create", "POST");
         
-        PersonDTO created = createDTO(PERSON_ID, FIRST_NAME, LAST_NAME);
-        Person model = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        PersonDTO created = PersonTestUtil.createDTO(PERSON_ID, FIRST_NAME, LAST_NAME);
+        Person model = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         when(personServiceMock.create(created)).thenReturn(model);
 
         initMessageSourceForFeedbackMessage(PersonController.FEEDBACK_MESSAGE_KEY_PERSON_CREATED);
@@ -147,7 +148,7 @@ public class PersonControllerTest extends AbstractTestController {
     public void submitCreatePersonFormWithEmptyFirstName() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/create", "POST");
 
-        PersonDTO created = createDTO(null, null, LAST_NAME);
+        PersonDTO created = PersonTestUtil.createDTO(null, null, LAST_NAME);
 
         RedirectAttributes attributes = new RedirectAttributesModelMap();
         BindingResult result = bindAndValidate(mockRequest, created);
@@ -164,7 +165,7 @@ public class PersonControllerTest extends AbstractTestController {
     public void submitCreatePersonFormWithEmptyLastName() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/create", "POST");
 
-        PersonDTO created = createDTO(null, FIRST_NAME, null);
+        PersonDTO created = PersonTestUtil.createDTO(null, FIRST_NAME, null);
 
         RedirectAttributes attributes = new RedirectAttributesModelMap();
         BindingResult result = bindAndValidate(mockRequest, created);
@@ -179,7 +180,7 @@ public class PersonControllerTest extends AbstractTestController {
     
     @Test
     public void showEditPersonForm() {
-        Person person = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        Person person = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         when(personServiceMock.findById(PERSON_ID)).thenReturn(person);
         
         Model model = new BindingAwareModelMap();
@@ -223,8 +224,8 @@ public class PersonControllerTest extends AbstractTestController {
     @Test
     public void submitEditPersonForm() throws PersonNotFoundException {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/edit", "POST");
-        PersonDTO updated = createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
-        Person person = createModelObject(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
+        Person person = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
         
         when(personServiceMock.update(updated)).thenReturn(person);
         
@@ -250,7 +251,7 @@ public class PersonControllerTest extends AbstractTestController {
     @Test
     public void submitEditPersonFormWhenPersonIsNotFound() throws PersonNotFoundException {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/edit", "POST");
-        PersonDTO updated = createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
         
         when(personServiceMock.update(updated)).thenThrow(new PersonNotFoundException());
         initMessageSourceForErrorMessage(PersonController.ERROR_MESSAGE_KEY_EDITED_PERSON_WAS_NOT_FOUND);
@@ -272,7 +273,7 @@ public class PersonControllerTest extends AbstractTestController {
     @Test
     public void submitEmptyEditPersonForm() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/edit", "POST");
-        PersonDTO updated = createDTO(PERSON_ID, null, null);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, null, null);
         
         BindingResult bindingResult = bindAndValidate(mockRequest, updated);
         RedirectAttributes attributes = new RedirectAttributesModelMap();
@@ -288,7 +289,7 @@ public class PersonControllerTest extends AbstractTestController {
     @Test
     public void submitEditPersonFormWhenFirstNameIsEmpty() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/edit", "POST");
-        PersonDTO updated = createDTO(PERSON_ID, null, LAST_NAME_UPDATED);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, null, LAST_NAME_UPDATED);
 
         BindingResult bindingResult = bindAndValidate(mockRequest, updated);
         RedirectAttributes attributes = new RedirectAttributesModelMap();
@@ -304,7 +305,7 @@ public class PersonControllerTest extends AbstractTestController {
     @Test
     public void submitEditPersonFormWhenLastNameIsEmpty() {
         MockHttpServletRequest mockRequest = new MockHttpServletRequest("/person/edit", "POST");
-        PersonDTO updated = createDTO(PERSON_ID, FIRST_NAME_UPDATED, null);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, FIRST_NAME_UPDATED, null);
 
         BindingResult bindingResult = bindAndValidate(mockRequest, updated);
         RedirectAttributes attributes = new RedirectAttributesModelMap();
@@ -330,23 +331,5 @@ public class PersonControllerTest extends AbstractTestController {
         
         assertEquals(PersonController.PERSON_LIST_VIEW, view);
         assertEquals(persons, model.asMap().get(PersonController.MODEL_ATTRIBUTE_PERSONS));
-    }
-
-    private PersonDTO createDTO(Long id, String firstName, String lastName) {
-        PersonDTO dto = new PersonDTO();
-
-        dto.setId(id);
-        dto.setFirstName(firstName);
-        dto.setLastName(lastName);
-
-        return dto;
-    }
-
-    private Person createModelObject(Long id, String firstName, String lastName) {
-        Person model = Person.getBuilder(firstName, lastName).build();
-
-        model.setId(id);
-
-        return model;
     }
 }

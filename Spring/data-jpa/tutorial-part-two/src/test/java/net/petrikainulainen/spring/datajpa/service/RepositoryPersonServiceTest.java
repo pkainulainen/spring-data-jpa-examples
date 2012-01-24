@@ -2,6 +2,7 @@ package net.petrikainulainen.spring.datajpa.service;
 
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
+import net.petrikainulainen.spring.datajpa.model.PersonTestUtil;
 import net.petrikainulainen.spring.datajpa.repository.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,8 +39,8 @@ public class RepositoryPersonServiceTest {
     
     @Test
     public void create() {
-        PersonDTO created = createDTO(null, FIRST_NAME, LAST_NAME);
-        Person persisted = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        PersonDTO created = PersonTestUtil.createDTO(null, FIRST_NAME, LAST_NAME);
+        Person persisted = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         
         when(personRepositoryMock.save(any(Person.class))).thenReturn(persisted);
         
@@ -55,7 +56,7 @@ public class RepositoryPersonServiceTest {
     
     @Test
     public void delete() throws PersonNotFoundException {
-        Person deleted = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        Person deleted = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         when(personRepositoryMock.findOne(PERSON_ID)).thenReturn(deleted);
         
         Person returned = personService.delete(PERSON_ID);
@@ -92,7 +93,7 @@ public class RepositoryPersonServiceTest {
     
     @Test
     public void findById() {
-        Person person = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        Person person = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         when(personRepositoryMock.findOne(PERSON_ID)).thenReturn(person);
         
         Person returned = personService.findById(PERSON_ID);
@@ -105,8 +106,8 @@ public class RepositoryPersonServiceTest {
     
     @Test
     public void update() throws PersonNotFoundException {
-        PersonDTO updated = createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
-        Person person = createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
+        Person person = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
         
         when(personRepositoryMock.findOne(updated.getId())).thenReturn(person);
         
@@ -120,7 +121,7 @@ public class RepositoryPersonServiceTest {
     
     @Test(expected = PersonNotFoundException.class)
     public void updateWhenPersonIsNotFound() throws PersonNotFoundException {
-        PersonDTO updated = createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
+        PersonDTO updated = PersonTestUtil.createDTO(PERSON_ID, FIRST_NAME_UPDATED, LAST_NAME_UPDATED);
         
         when(personRepositoryMock.findOne(updated.getId())).thenReturn(null);
 
@@ -135,22 +136,5 @@ public class RepositoryPersonServiceTest {
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getLastName(), expected.getLastName());
     }
-    
-    private PersonDTO createDTO(Long id, String firstName, String lastName) {
-        PersonDTO dto = new PersonDTO();
-        
-        dto.setId(id);
-        dto.setFirstName(firstName);
-        dto.setLastName(lastName);
-        
-        return dto;
-    }
-    
-    private Person createModelObject(Long id, String firstName, String lastName) {
-        Person model = Person.getBuilder(firstName, lastName).build();
-        
-        model.setId(id);
-        
-        return model;
-    }
+
 }

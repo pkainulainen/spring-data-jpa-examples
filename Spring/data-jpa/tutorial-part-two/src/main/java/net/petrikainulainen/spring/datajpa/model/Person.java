@@ -133,7 +133,7 @@ public class Person {
      * This setter method should only be used by unit tests.
      * @param id
      */
-    public void setId(Long id) {
+    protected void setId(Long id) {
         this.id = id;
     }
 }
