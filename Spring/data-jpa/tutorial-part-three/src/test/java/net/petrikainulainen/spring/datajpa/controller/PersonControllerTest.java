@@ -2,6 +2,7 @@ package net.petrikainulainen.spring.datajpa.controller;
 
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.dto.SearchDTO;
+import net.petrikainulainen.spring.datajpa.dto.SearchType;
 import net.petrikainulainen.spring.datajpa.model.Person;
 import net.petrikainulainen.spring.datajpa.model.PersonTestUtil;
 import net.petrikainulainen.spring.datajpa.service.PersonNotFoundException;
@@ -81,6 +82,32 @@ public class PersonControllerTest extends AbstractTestController {
         
         String expectedView = createExpectedRedirectViewPath(PersonController.REQUEST_MAPPING_LIST);
         assertEquals(expectedView, view);
+    }
+    
+    @Test
+    public void search() {
+        SearchDTO searchCriteria = createSearchCriteria(LAST_NAME, SearchType.METHOD_NAME);
+        List<Person> expected = new ArrayList<Person>();
+        when(personServiceMock.search(searchCriteria)).thenReturn(expected);
+        
+        BindingAwareModelMap model = new BindingAwareModelMap();
+        String view = controller.search(searchCriteria, model);
+        
+        verify(personServiceMock, times(1)).search(searchCriteria);
+        verifyNoMoreInteractions(personServiceMock);
+        
+        assertEquals(PersonController.PERSON_SEARCH_RESULT_VIEW, view);
+        List<Person> actual = (List<Person>) model.asMap().get(PersonController.MODEL_ATTRIBUTE_PERSONS);
+        assertEquals(expected, actual);
+    }
+    
+    private SearchDTO createSearchCriteria(String searchTerm, SearchType searchType) {
+        SearchDTO searchCriteria = new SearchDTO();
+        
+        searchCriteria.setSearchTerm(searchTerm);
+        searchCriteria.setSearchType(searchType);
+        
+        return searchCriteria;
     }
     
     @Test
