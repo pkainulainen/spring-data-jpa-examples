@@ -8,15 +8,8 @@
 </head>
 <body>
 <jsp:include page="navigation.jsp"/>
-<div class="messages">
-    <c:if test="${feedbackMessage != null}">
-        <div class="messageblock"><c:out value="${feedbackMessage}"/></div>
-    </c:if>
-    <c:if test="${errorMessage != null}">
-        <div class="errorblock"><c:out value="${errorMessage}"/></div>
-    </c:if>
-</div>
 <jsp:include page="searchForm.jsp"/>
+<h1><spring:message code="person.search.result.page.title"/>: <c:out value="${searchCriteria.searchTerm}"/></h1>
 <jsp:include page="personList.jsp"/>
 </body>
 </html>

@@ -40,6 +40,7 @@ public class PersonController extends AbstractController {
     protected static final String PERSON_ADD_FORM_VIEW = "person/create";
     protected static final String PERSON_EDIT_FORM_VIEW = "person/edit";
     protected static final String PERSON_LIST_VIEW = "person/list";
+    protected static final String PERSON_SEARCH_RESULT_VIEW = "person/searchResults";
     
     protected static final String REQUEST_MAPPING_LIST = "/";
     
@@ -76,7 +77,7 @@ public class PersonController extends AbstractController {
 
         model.addAttribute(MODEL_ATTRIBUTE_PERSONS, persons);
         
-        return PERSON_LIST_VIEW;
+        return PERSON_SEARCH_RESULT_VIEW;
     }
     
     /**

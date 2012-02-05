@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="/static/css/styles.css" type="text/css"/>
 </head>
 <body>
-<div>
-    <a href="/"><spring:message code="person.list.link.label"/></a>
-</div>
+<jsp:include page="navigation.jsp"/>
 <h1><spring:message code="person.edit.page.title"/></h1>
 <div>
     <form:form action="/person/edit" commandName="person" method="POST">
