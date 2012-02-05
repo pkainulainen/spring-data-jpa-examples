@@ -20,7 +20,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
      * @return  A list of persons whose last name is an exact match with the given last name.
      *          If no persons is found, this method returns an empty list.
      */
-    @Query("SELECT p FROM Person p WHERE p.lastName = :lastName")
+    @Query("SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(:lastName)")
     public List<Person> find(@Param("lastName") String lastName);
 
     /**

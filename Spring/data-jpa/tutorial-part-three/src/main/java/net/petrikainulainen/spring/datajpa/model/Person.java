@@ -10,7 +10,7 @@ import java.util.Date;
  * @author Petri Kainulainen
  */
 @Entity
-@NamedQuery(name = "Person.findByName", query = "SELECT p FROM Person p WHERE p.lastName = ?1")
+@NamedQuery(name = "Person.findByName", query = "SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(?1)")
 @Table(name = "persons")
 public class Person {
     
