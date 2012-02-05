@@ -3,6 +3,7 @@ package net.petrikainulainen.spring.datajpa.dto;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
+ * A DTO class which is used as a form object in the search form.
  * @author Petri Kainulainen
  */
 public class SearchDTO {
