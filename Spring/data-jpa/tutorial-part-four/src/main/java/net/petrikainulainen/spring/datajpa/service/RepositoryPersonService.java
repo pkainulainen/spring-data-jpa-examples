@@ -70,7 +70,8 @@ public class RepositoryPersonService implements PersonService {
     @Override
     public List<Person> search(String searchTerm) {
         LOGGER.debug("Searching persons with search term: " + searchTerm);
-         
+
+        //Passes the specification created by PersonSpecifications class to the repository.
         return personRepository.findAll(lastNameIsLike(searchTerm));
     }
 
