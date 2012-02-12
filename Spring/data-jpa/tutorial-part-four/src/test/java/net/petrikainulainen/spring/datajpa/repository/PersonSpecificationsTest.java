@@ -52,7 +52,7 @@ public class PersonSpecificationsTest {
         verify(criteriaBuilderMock, times(1)).like(lastNameToLowerExpressionMock, SEARCH_TERM_LIKE_PATTERN);
         verifyNoMoreInteractions(criteriaBuilderMock);
 
-        verifyZeroInteractions(criteriaQueryMock);
+        verifyZeroInteractions(criteriaQueryMock, lastNamePathMock, lastNameIsLikePredicateMock);
 
         assertEquals(lastNameIsLikePredicateMock, actualPredicate);
     }
