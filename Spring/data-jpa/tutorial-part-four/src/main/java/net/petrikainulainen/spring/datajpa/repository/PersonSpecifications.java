@@ -27,7 +27,6 @@ public class PersonSpecifications {
             @Override
             public Predicate toPredicate(Root<Person> personRoot, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 String likePattern = getLikePattern(searchTerm);
-                
                 return cb.like(cb.lower(personRoot.<String>get(Person_.lastName)), likePattern);
             }
             
