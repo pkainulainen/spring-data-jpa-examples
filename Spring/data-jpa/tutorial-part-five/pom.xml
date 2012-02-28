@@ -253,6 +253,7 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
+            <!-- Maven APT Plugin -->
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>maven-apt-plugin</artifactId>
@@ -264,7 +265,9 @@
                             <goal>process</goal>
                         </goals>
                         <configuration>
+                            <!-- Specifies the directory in which the query types are generated -->
                             <outputDirectory>target/generated-sources</outputDirectory>
+                            <!-- States that the APT code generator should look for JPA annotations -->
                             <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
                         </configuration>
                     </execution>
