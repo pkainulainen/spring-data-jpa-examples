@@ -12,7 +12,7 @@ import static junit.framework.Assert.assertEquals;
 public class PersonPredicatesTest {
     
     private static final String SEARCH_TERM = "Foo";
-    private static final String EXPECTED_PREDICATE_STRING = "lower(person.lastName) like foo%";
+    private static final String EXPECTED_PREDICATE_STRING = "startsWithIgnoreCase(person.lastName,Foo)";
 
     @Test
     public void lastNameLike() {
