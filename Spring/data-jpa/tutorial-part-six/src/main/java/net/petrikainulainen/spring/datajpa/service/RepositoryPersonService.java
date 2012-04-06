@@ -1,7 +1,10 @@
 package net.petrikainulainen.spring.datajpa.service;
 
+import com.mysema.query.types.Order;
+import com.mysema.query.types.OrderSpecifier;
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
+import net.petrikainulainen.spring.datajpa.model.QPerson;
 import net.petrikainulainen.spring.datajpa.repository.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +61,15 @@ public class RepositoryPersonService implements PersonService {
     @Override
     public List<Person> findAll() {
         LOGGER.debug("Finding all persons");
-        return personRepository.findAll();
+        return personRepository.findAll(sortByLastNameAsc());
+    }
+
+    /**
+     * Returns a Sort object which sorts persons in ascending order by using the last name.
+     * @return
+     */
+    private Sort sortByLastNameAsc() {
+        return new Sort(Sort.Direction.ASC, "lastName");
     }
 
     @Transactional(readOnly = true)
@@ -74,12 +85,13 @@ public class RepositoryPersonService implements PersonService {
         LOGGER.debug("Searching persons with search term: " + searchTerm);
 
         //Passes the specification created by PersonPredicates class to the repository.
-        Iterable<Person> persons = personRepository.findAll(lastNameIsLike(searchTerm));
+        Iterable<Person> persons = personRepository.findAll(lastNameIsLike(searchTerm), orderByLastNameAsc());
+
         return constructList(persons);
     }
 
-    private Sort sortByLastNameDesc() {
-        return new Sort(Order.DESC, "lastName");
+    private OrderSpecifier<String> orderByLastNameAsc() {
+        return new OrderSpecifier<String>(Order.ASC, QPerson.person.lastName);
     }
 
     private List<Person> constructList(Iterable<Person> persons) {
