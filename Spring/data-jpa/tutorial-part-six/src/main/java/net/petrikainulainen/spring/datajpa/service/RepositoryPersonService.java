@@ -61,6 +61,7 @@ public class RepositoryPersonService implements PersonService {
     @Override
     public List<Person> findAll() {
         LOGGER.debug("Finding all persons");
+        //Passes the Sort object to the repository.
         return personRepository.findAll(sortByLastNameAsc());
     }
 
@@ -84,12 +85,16 @@ public class RepositoryPersonService implements PersonService {
     public List<Person> search(String searchTerm) {
         LOGGER.debug("Searching persons with search term: " + searchTerm);
 
-        //Passes the specification created by PersonPredicates class to the repository.
+        //Passes the specification created by PersonPredicates class and the OrderSpecifier object to the repository.
         Iterable<Person> persons = personRepository.findAll(lastNameIsLike(searchTerm), orderByLastNameAsc());
 
         return constructList(persons);
     }
 
+    /**
+     * Returns an OrderSpecifier object which sorts person in ascending order by using the last name.
+     * @return
+     */
     private OrderSpecifier<String> orderByLastNameAsc() {
         return new OrderSpecifier<String>(Order.ASC, QPerson.person.lastName);
     }

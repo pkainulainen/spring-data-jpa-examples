@@ -1,13 +1,17 @@
 package net.petrikainulainen.spring.datajpa.service;
 
+import com.mysema.query.types.Order;
+import com.mysema.query.types.OrderSpecifier;
 import com.mysema.query.types.expr.BooleanExpression;
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
+import net.petrikainulainen.spring.datajpa.model.QPerson;
 import net.petrikainulainen.spring.datajpa.model.PersonTestUtil;
 import net.petrikainulainen.spring.datajpa.repository.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -84,13 +88,18 @@ public class RepositoryPersonServiceTest {
     @Test
     public void findAll() {
         List<Person> persons = new ArrayList<Person>();
-        when(personRepositoryMock.findAll()).thenReturn(persons);
+        when(personRepositoryMock.findAll(any(Sort.class))).thenReturn(persons);
         
         List<Person> returned = personService.findAll();
-        
-        verify(personRepositoryMock, times(1)).findAll();
+
+        ArgumentCaptor<Sort> sortArgument = ArgumentCaptor.forClass(Sort.class);
+        verify(personRepositoryMock, times(1)).findAll(sortArgument.capture());
+
         verifyNoMoreInteractions(personRepositoryMock);
-        
+
+        Sort actualSort = sortArgument.getValue();
+        assertEquals(Sort.Direction.ASC, actualSort.getOrderFor("lastName").getDirection());
+
         assertEquals(persons, returned);
     }
     
@@ -110,13 +119,19 @@ public class RepositoryPersonServiceTest {
     @Test
     public void search() {
         List<Person> expected = new ArrayList<Person>();
-        when(personRepositoryMock.findAll(any(BooleanExpression.class))).thenReturn(expected);
+        when(personRepositoryMock.findAll(any(BooleanExpression.class), any(OrderSpecifier.class))).thenReturn(expected);
         
         List<Person> actual = personService.search(SEARCH_TERM);
-        
-        verify(personRepositoryMock, times(1)).findAll(any(BooleanExpression.class));
+
+        ArgumentCaptor<OrderSpecifier> orderArgument = ArgumentCaptor.forClass(OrderSpecifier.class);
+        verify(personRepositoryMock, times(1)).findAll(any(BooleanExpression.class), orderArgument.capture());
+
         verifyNoMoreInteractions(personRepositoryMock);
-        
+
+        OrderSpecifier actualOrder = orderArgument.getValue();
+        assertEquals(Order.ASC, actualOrder.getOrder());
+        assertEquals(QPerson.person.lastName, actualOrder.getTarget());
+
         assertEquals(expected, actual);
     }
     
