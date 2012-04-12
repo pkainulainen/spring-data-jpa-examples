@@ -1,6 +1,7 @@
 package net.petrikainulainen.spring.datajpa.repository;
 
 import net.petrikainulainen.spring.datajpa.model.Person;
+import net.petrikainulainen.spring.datajpa.model.Person_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

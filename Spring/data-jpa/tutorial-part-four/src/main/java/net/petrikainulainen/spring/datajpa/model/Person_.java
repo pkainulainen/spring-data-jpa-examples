@@ -1,4 +1,4 @@
-package net.petrikainulainen.spring.datajpa.repository;
+package net.petrikainulainen.spring.datajpa.model;
 
 import net.petrikainulainen.spring.datajpa.model.Person;
 
