@@ -96,7 +96,7 @@ public class RepositoryPersonService implements PersonService {
      * @return
      */
     private OrderSpecifier<String> orderByLastNameAsc() {
-        return new OrderSpecifier<String>(Order.ASC, QPerson.person.lastName);
+        return QPerson.person.lastName.asc();
     }
 
     private List<Person> constructList(Iterable<Person> persons) {
