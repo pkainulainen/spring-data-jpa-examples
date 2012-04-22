@@ -22,10 +22,12 @@
 <jsp:include page="searchForm.jsp"/>
 <h1><spring:message code="person.search.result.page.title"/>: <c:out value="${searchCriteria.searchTerm}"/></h1>
 <div class="pagination-holder"></div>
+<div class="pagination-clear"></div>
 <div id="person-list-holder">
 
 </div>
 <div class="pagination-holder"></div>
+<div class="pagination-clear"></div>
 
 <script id="template-person-list" type="text/x-handlebars-template">
     {{#if persons}}

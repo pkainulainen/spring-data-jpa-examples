@@ -33,3 +33,7 @@ body {
 .hidden {
     display: none;
 }
+
+.pagination-clear {
+    clear: both;
+}
