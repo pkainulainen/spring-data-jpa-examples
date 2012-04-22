@@ -71,7 +71,7 @@ public class RepositoryPersonService implements PersonService {
     @Override
     public List<Person> findAll() {
         LOGGER.debug("Finding all persons");
-        return personRepository.findAll();
+        return personRepository.findAll(sortByLastNameAsc());
     }
 
     @Transactional(readOnly = true)
