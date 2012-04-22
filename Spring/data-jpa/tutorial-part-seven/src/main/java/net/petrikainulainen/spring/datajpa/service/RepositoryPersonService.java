@@ -92,6 +92,11 @@ public class RepositoryPersonService implements PersonService {
         return requestedPage.getContent();
     }
 
+    /**
+     * Returns a new object which specifies the the wanted result page.
+     * @param pageIndex The index of the wanted result page
+     * @return
+     */
     private Pageable constructPageSpecification(int pageIndex) {
         Pageable pageSpecification = new PageRequest(pageIndex, NUMBER_OF_PERSONS_PER_PAGE, sortByLastNameAsc());
         return pageSpecification;

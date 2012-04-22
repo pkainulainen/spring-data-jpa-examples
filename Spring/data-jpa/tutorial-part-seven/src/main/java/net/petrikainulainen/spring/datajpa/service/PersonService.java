@@ -48,7 +48,7 @@ public interface PersonService {
     public Person findById(Long id);
 
     /**
-     * Searches persons for a given page by using the given search term as a parameter.
+     * Searches persons for a given page by using the given search term.
      * @param searchTerm
      * @param pageIndex
      * @return  A list of persons whose last name begins with the given search term and who are belonging to the given page.
