@@ -62,19 +62,6 @@ public class RepositoryPersonServiceTest {
         assertPerson(created, personArgument.getValue());
         assertEquals(persisted, returned);
     }
-
-    @Ignore
-    @Test
-    public void count() {
-        when(personRepositoryMock.count(any(Predicate.class))).thenReturn(PERSON_COUNT);
-
-        long personCount = personService.count(SEARCH_TERM);
-
-        verify(personRepositoryMock, times(1)).count(any(Predicate.class));
-        verifyNoMoreInteractions(personRepositoryMock);
-
-        assertEquals(PERSON_COUNT, personCount);
-    }
     
     @Test
     public void delete() throws PersonNotFoundException {
@@ -98,25 +85,6 @@ public class RepositoryPersonServiceTest {
         
         verify(personRepositoryMock, times(1)).findOne(PERSON_ID);
         verifyNoMoreInteractions(personRepositoryMock);
-    }
-
-    @Ignore
-    @Test
-    public void findAll() {
-        List<Person> persons = new ArrayList<Person>();
-        when(personRepositoryMock.findAll(any(Sort.class))).thenReturn(persons);
-
-        List<Person> returned = personService.findAll();
-
-        ArgumentCaptor<Sort> sortArgument = ArgumentCaptor.forClass(Sort.class);
-        verify(personRepositoryMock, times(1)).findAll(sortArgument.capture());
-
-        verifyNoMoreInteractions(personRepositoryMock);
-
-        Sort actualSort = sortArgument.getValue();
-        assertEquals(Sort.Direction.ASC, actualSort.getOrderFor("lastName").getDirection());
-
-        assertEquals(persons, returned);
     }
     
     @Test
