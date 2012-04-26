@@ -45,7 +45,15 @@ public class RepositoryPersonServiceTest {
         personRepositoryMock = mock(PersonRepository.class);
         personService.setPersonRepository(personRepositoryMock);
     }
-    
+
+    @Test
+    public void count() {
+        personService.count(SEARCH_TERM);
+
+        verify(personRepositoryMock, times(1)).findPersonCount(SEARCH_TERM);
+        verifyNoMoreInteractions(personRepositoryMock);
+    }
+
     @Test
     public void create() {
         PersonDTO created = PersonTestUtil.createDTO(null, FIRST_NAME, LAST_NAME);
@@ -86,7 +94,20 @@ public class RepositoryPersonServiceTest {
         verify(personRepositoryMock, times(1)).findOne(PERSON_ID);
         verifyNoMoreInteractions(personRepositoryMock);
     }
-    
+
+    @Test
+    public void findAll() {
+        List<Person> persons = new ArrayList<Person>();
+        when(personRepositoryMock.findAll()).thenReturn(persons);
+
+        List<Person> returned = personService.findAll();
+
+        verify(personRepositoryMock, times(1)).findAll();
+        verifyNoMoreInteractions(personRepositoryMock);
+
+        assertEquals(persons, returned);
+    }
+
     @Test
     public void findById() {
         Person person = PersonTestUtil.createModelObject(PERSON_ID, FIRST_NAME, LAST_NAME);
@@ -102,23 +123,10 @@ public class RepositoryPersonServiceTest {
     
     @Test
     public void search() {
-        List<Person> expected = new ArrayList<Person>();
-        Page expectedPage = new PageImpl(expected);
-        when(personRepositoryMock.findAll(any(Predicate.class), any(Pageable.class))).thenReturn(expectedPage);
-        
-        List<Person> actual = personService.search(SEARCH_TERM, PAGE_INDEX);
+        personService.search(SEARCH_TERM, PAGE_INDEX);
 
-        ArgumentCaptor<Pageable> pageArgument = ArgumentCaptor.forClass(Pageable.class);
-        verify(personRepositoryMock, times(1)).findAll(any(Predicate.class), pageArgument.capture());
+        verify(personRepositoryMock, times(1)).findPersonsForPage(SEARCH_TERM, PAGE_INDEX);
         verifyNoMoreInteractions(personRepositoryMock);
-
-        Pageable pageSpecification = pageArgument.getValue();
-
-        assertEquals(PAGE_INDEX, pageSpecification.getPageNumber());
-        assertEquals(RepositoryPersonService.NUMBER_OF_PERSONS_PER_PAGE, pageSpecification.getPageSize());
-        assertEquals(Sort.Direction.ASC, pageSpecification.getSort().getOrderFor("lastName").getDirection());
-        
-        assertEquals(expected, actual);
     }
     
     @Test

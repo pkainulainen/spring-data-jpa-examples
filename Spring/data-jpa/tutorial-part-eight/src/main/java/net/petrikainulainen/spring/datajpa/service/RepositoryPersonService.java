@@ -45,9 +45,6 @@ public class RepositoryPersonService implements PersonService {
     @Override
     public long count(String searchTerm) {
         LOGGER.debug("Getting person count for search term: " + searchTerm);
-
-        //Passes the specification created by PersonPredicates class to the repository.
-        //return personRepository.count(lastNameIsLike(searchTerm));
         return personRepository.findPersonCount(searchTerm);
     }
 
