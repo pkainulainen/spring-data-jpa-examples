@@ -1,0 +1,13 @@
+This an example application of my blog entry:
+
+Spring Data JPA Tutorial Part Seven: Pagination
+
+http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-seven-pagination/
+
+RUNNING THE APPLICATION:
+
+- Download and install Maven 3 (http://maven.apache.org/download.html#Installation). If you 
+  have already installed Maven 3, you can skip this step.
+- Go the root directory of project (The one which contains the pom.xml file)
+- Run command mvn clean jetty:run
+- Start your browser and go to the location: http://localhost:8080
