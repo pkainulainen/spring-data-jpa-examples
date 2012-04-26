@@ -41,7 +41,7 @@
         <tbody>
             {{#each persons}}
             <tr>
-                <td>{{lastName}}"</td>
+                <td>{{lastName}}</td>
                 <td>{{firstName}}</td>
                 <td><a href="/person/edit/{{id}}"><spring:message code="person.edit.link.label"/></a></td>
                 <td><a href="/person/delete/{{id}}"><spring:message code="person.delete.link.label"/></a></td>
