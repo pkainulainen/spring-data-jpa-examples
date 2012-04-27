@@ -5,16 +5,11 @@ import net.petrikainulainen.spring.datajpa.model.Person;
 import net.petrikainulainen.spring.datajpa.repository.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-import static net.petrikainulainen.spring.datajpa.repository.PersonPredicates.lastNameIsLike;
 
 /**
  * This implementation of the PersonService interface communicates with
