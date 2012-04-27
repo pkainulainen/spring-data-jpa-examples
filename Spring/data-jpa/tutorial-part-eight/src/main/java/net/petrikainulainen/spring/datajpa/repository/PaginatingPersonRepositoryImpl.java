@@ -85,4 +85,12 @@ public class PaginatingPersonRepositoryImpl implements PaginatingPersonRepositor
         JpaEntityInformation<Person, Long> personEntityInfo = new JpaMetamodelEntityInformation<Person, Long>(Person.class, entityManager.getMetamodel());
         personRepository = new QueryDslJpaRepository<Person, Long>(personEntityInfo, entityManager);
     }
+
+    /**
+     * This setter method should be used only by unit tests
+     * @param personRepository
+     */
+    protected void setPersonRepository(QueryDslJpaRepository<Person, Long> personRepository) {
+        this.personRepository = personRepository;
+    }
 }
