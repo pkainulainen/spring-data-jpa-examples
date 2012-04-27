@@ -1,5 +1,6 @@
 package net.petrikainulainen.spring.datajpa.service;
 
+import com.mysema.query.types.Predicate;
 import com.mysema.query.types.expr.BooleanExpression;
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
@@ -110,11 +111,11 @@ public class RepositoryPersonServiceTest {
     @Test
     public void search() {
         List<Person> expected = new ArrayList<Person>();
-        when(personRepositoryMock.findAll(any(BooleanExpression.class))).thenReturn(expected);
+        when(personRepositoryMock.findAll(any(Predicate.class))).thenReturn(expected);
         
         List<Person> actual = personService.search(SEARCH_TERM);
         
-        verify(personRepositoryMock, times(1)).findAll(any(BooleanExpression.class));
+        verify(personRepositoryMock, times(1)).findAll(any(Predicate.class));
         verifyNoMoreInteractions(personRepositoryMock);
         
         assertEquals(expected, actual);
