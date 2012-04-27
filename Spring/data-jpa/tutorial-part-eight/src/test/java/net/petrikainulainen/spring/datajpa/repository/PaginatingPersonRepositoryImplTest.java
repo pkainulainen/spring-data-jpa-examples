@@ -25,6 +25,7 @@ public class PaginatingPersonRepositoryImplTest {
 
     private static final int PAGE_INDEX = 2;
     private static final long PERSON_COUNT = 5;
+    private static final String PROPERTY_LASTNAME = "lastName";
     private static final String SEARCH_TERM = "searchTerm";
 
     private PaginatingPersonRepositoryImpl repository;
@@ -37,6 +38,17 @@ public class PaginatingPersonRepositoryImplTest {
 
         personRepositoryMock = mock(QueryDslJpaRepository.class);
         repository.setPersonRepository(personRepositoryMock);
+    }
+
+    @Test
+    public void findAllPersons() {
+        repository.findAllPersons();
+
+        ArgumentCaptor<Sort> sortArgument = ArgumentCaptor.forClass(Sort.class);
+        verify(personRepositoryMock, times(1)).findAll(sortArgument.capture());
+
+        Sort sort = sortArgument.getValue();
+        assertEquals(Sort.Direction.ASC, sort.getOrderFor(PROPERTY_LASTNAME).getDirection());
     }
 
     @Test
@@ -68,7 +80,7 @@ public class PaginatingPersonRepositoryImplTest {
 
         assertEquals(PAGE_INDEX, pageSpecification.getPageNumber());
         assertEquals(PaginatingPersonRepositoryImpl.NUMBER_OF_PERSONS_PER_PAGE, pageSpecification.getPageSize());
-        assertEquals(Sort.Direction.ASC, pageSpecification.getSort().getOrderFor("lastName").getDirection());
+        assertEquals(Sort.Direction.ASC, pageSpecification.getSort().getOrderFor(PROPERTY_LASTNAME).getDirection());
 
         assertEquals(expected, actual);
     }

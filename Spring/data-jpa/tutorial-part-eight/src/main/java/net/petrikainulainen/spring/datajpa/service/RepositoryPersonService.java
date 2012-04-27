@@ -68,7 +68,7 @@ public class RepositoryPersonService implements PersonService {
     @Override
     public List<Person> findAll() {
         LOGGER.debug("Finding all persons");
-        return personRepository.findAll(sortByLastNameAsc());
+        return personRepository.findAllPersons();
     }
 
     @Transactional(readOnly = true)
@@ -83,14 +83,6 @@ public class RepositoryPersonService implements PersonService {
     public List<Person> search(String searchTerm, int pageIndex) {
         LOGGER.debug("Searching persons with search term: " + searchTerm);
         return personRepository.findPersonsForPage(searchTerm, pageIndex);
-    }
-
-    /**
-     * Returns a Sort object which sorts persons in ascending order by using the last name.
-     * @return
-     */
-    private Sort sortByLastNameAsc() {
-        return new Sort(Sort.Direction.ASC, "lastName");
     }
 
     @Transactional(rollbackFor = PersonNotFoundException.class)

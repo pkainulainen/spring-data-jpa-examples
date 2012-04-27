@@ -46,6 +46,13 @@ public class PaginatingPersonRepositoryImpl implements PaginatingPersonRepositor
     }
 
     @Override
+    public List<Person> findAllPersons() {
+        LOGGER.debug("Finding all persons");
+
+        return personRepository.findAll(sortByLastNameAsc());
+    }
+
+    @Override
     public long findPersonCount(String searchTerm) {
         LOGGER.debug("Finding person count with search term: " + searchTerm);
 

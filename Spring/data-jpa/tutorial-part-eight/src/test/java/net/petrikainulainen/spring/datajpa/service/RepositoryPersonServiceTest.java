@@ -98,16 +98,12 @@ public class RepositoryPersonServiceTest {
     @Test
     public void findAll() {
         List<Person> persons = new ArrayList<Person>();
-        when(personRepositoryMock.findAll(any(Sort.class))).thenReturn(persons);
+        when(personRepositoryMock.findAllPersons()).thenReturn(persons);
 
         List<Person> returned = personService.findAll();
 
-        ArgumentCaptor<Sort> sortArgument = ArgumentCaptor.forClass(Sort.class);
-        verify(personRepositoryMock, times(1)).findAll(sortArgument.capture());
+        verify(personRepositoryMock, times(1)).findAllPersons();
         verifyNoMoreInteractions(personRepositoryMock);
-
-        Sort sort = sortArgument.getValue();
-        assertEquals(Sort.Direction.ASC, sort.getOrderFor("lastName").getDirection());
 
         assertEquals(persons, returned);
     }
