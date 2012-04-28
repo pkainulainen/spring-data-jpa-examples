@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Declares the methods of the custom person repository.
+ * Declares the custom methods added to the person repository.
  * @author Petri Kainulainen
  */
 public interface PaginatingPersonRepository {
