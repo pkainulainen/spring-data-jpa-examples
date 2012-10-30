@@ -1,6 +1,5 @@
 package net.petrikainulainen.spring.datajpa.service;
 
-import com.mysema.query.types.Order;
 import com.mysema.query.types.OrderSpecifier;
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
