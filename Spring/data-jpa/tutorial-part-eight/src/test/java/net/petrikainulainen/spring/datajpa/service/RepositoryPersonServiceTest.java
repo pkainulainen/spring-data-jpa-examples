@@ -1,18 +1,12 @@
 package net.petrikainulainen.spring.datajpa.service;
 
-import com.mysema.query.types.Predicate;
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
 import net.petrikainulainen.spring.datajpa.model.PersonTestUtil;
 import net.petrikainulainen.spring.datajpa.repository.PersonRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
