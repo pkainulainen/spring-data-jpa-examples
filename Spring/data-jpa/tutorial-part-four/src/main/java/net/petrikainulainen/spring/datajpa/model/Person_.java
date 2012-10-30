@@ -1,7 +1,5 @@
 package net.petrikainulainen.spring.datajpa.model;
 
-import net.petrikainulainen.spring.datajpa.model.Person;
-
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
