@@ -1,7 +1,6 @@
 package net.petrikainulainen.spring.datajpa.service;
 
 import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
 import net.petrikainulainen.spring.datajpa.dto.PersonDTO;
 import net.petrikainulainen.spring.datajpa.model.Person;
 import net.petrikainulainen.spring.datajpa.model.PersonTestUtil;
@@ -9,7 +8,6 @@ import net.petrikainulainen.spring.datajpa.repository.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;

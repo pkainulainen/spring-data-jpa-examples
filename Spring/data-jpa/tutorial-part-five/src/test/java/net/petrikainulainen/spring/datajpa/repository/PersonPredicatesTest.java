@@ -1,7 +1,6 @@
 package net.petrikainulainen.spring.datajpa.repository;
 
 import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
