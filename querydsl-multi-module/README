@@ -1,5 +1,6 @@
 This is an example application of my blog post:
 
-Spring Data JPA Tutorial: Using Querydsl in a Multi-module Maven Project - Not published yet
+Spring Data JPA Tutorial: Using Querydsl in a Multi-module Maven Project
+http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-using-querydsl-in-a-multi-module-maven-project/
 
 You can run the tests by running the command: mvn clean test at the command prompt.
