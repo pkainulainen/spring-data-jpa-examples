@@ -1,0 +1,5 @@
+This is an example application of my blog post:
+
+Spring Data JPA Tutorial: Using Querydsl in a Multi-module Maven Project - Not published yet
+
+You can run the tests by running the command: mvn clean test at the command prompt.
