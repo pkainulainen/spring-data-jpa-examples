@@ -1,0 +1,39 @@
+body {
+    font-family: Verdana
+}
+
+.error {
+    color: #ff0000;
+}
+
+.messageblock {
+    color: #000;
+    background-color: #cbf7c8;
+    border: 3px solid #3bdb2a;
+    border-radius: 5px;
+    border-style: solid;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 8px;
+    margin: 16px;
+}
+
+.errorblock {
+    color: #000;
+    background-color: #ffEEEE;
+    border: 3px solid #ff0000;
+    border-radius: 5px;
+    border-style: solid;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 8px;
+    margin: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+.pagination-clear {
+    clear: both;
+}
