@@ -1,0 +1,10 @@
+This is an example application of my blog post:
+
+- Spring Data JPA Tutorial: Integration Testing - Not published yet.
+
+RUNNING THE APPLICATION:
+
+RUNNING TESTS:
+
+- You can run integration tests by using a command: mvn clean verify -P integration-test
+
