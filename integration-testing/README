@@ -2,6 +2,10 @@ This is an example application of my blog post:
 
 - Spring Data JPA Tutorial: Integration Testing - Not published yet.
 
+If you want to get more information about the build process, read the following blog post:
+
+- http://www.petrikainulainen.net/programming/maven/integration-testing-with-maven/
+
 RUNNING THE APPLICATION:
 
 RUNNING TESTS:

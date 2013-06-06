@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-    @Query("Select t FROM Todo t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    @Query(
+            "Select t FROM Todo t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+            "OR LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))"
+    )
     public List<Todo> search(@Param("searchTerm") String searchTerm);
 }

@@ -1,6 +1,7 @@
 package net.petrikainulainen.spring.datajpa.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -11,7 +12,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -37,7 +37,7 @@ public class PersistenceContext {
 
     private static final String PROPERTY_PACKAGES_TO_SCAN = "net.petrikainulainen.spring.datajpa.todo.model";
 
-    @Resource
+    @Autowired
     private Environment environment;
 
     @Bean

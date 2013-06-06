@@ -49,10 +49,27 @@ public class ITTodoRepositoryTest {
         List<Todo> todoEntries = repository.search("foo");
 
         assertThat(todoEntries.size(), is(1));
+        assertThat(todoEntries.get(0), allOf(
+                hasProperty("id", is(1L)),
+                hasProperty("title", is("Foo")),
+                hasProperty("description", is("Lorem ipsum"))
+        ));
+    }
+
+    @Test
+    public void search_TwoTodoEntriesFound_ShouldReturnAListOfTwoEntries() {
+        List<Todo> todoEntries = repository.search("Ips");
+
+        assertThat(todoEntries.size(), is(2));
         assertThat(todoEntries, contains(
                 allOf(
                         hasProperty("id", is(1L)),
                         hasProperty("title", is("Foo")),
+                        hasProperty("description", is("Lorem ipsum"))
+                ),
+                allOf(
+                        hasProperty("id", is(2L)),
+                        hasProperty("title", is("Bar")),
                         hasProperty("description", is("Lorem ipsum"))
                 )
         ));
