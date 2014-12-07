@@ -1,6 +1,6 @@
 This blog post is the example application of the following blog posts:
 
-* Spring Data JPA Tutorial: Getting the Required Dependencies (TBD)
+* [Spring Data JPA Tutorial: Getting the Required Dependencies](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-getting-the-required-dependencies/)
 * Spring Data JPA Tutorial: Configuration (TBD)
 * Spring Data JPA Tutorial: CRUD (TBD)
 * Spring Data JPA Tutorial: Query Methods (TBD)
