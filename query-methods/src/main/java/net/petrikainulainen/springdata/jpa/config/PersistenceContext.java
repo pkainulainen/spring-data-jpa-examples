@@ -2,7 +2,6 @@ package net.petrikainulainen.springdata.jpa.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -46,11 +45,8 @@ class PersistenceContext {
     private static final String PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY = "hibernate.ejb.naming_strategy";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 
-    @Autowired
-    private Environment env;
-
     @Bean(destroyMethod = "close")
-    DataSource dataSource() {
+    DataSource dataSource(Environment env) {
         HikariConfig dataSourceConfig = new HikariConfig();
         dataSourceConfig.setMaximumPoolSize(100);
         dataSourceConfig.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DB_DRIVER_CLASS));
@@ -61,7 +57,7 @@ class PersistenceContext {
     }
 
     @Bean
-    LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+    LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, Environment env) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
