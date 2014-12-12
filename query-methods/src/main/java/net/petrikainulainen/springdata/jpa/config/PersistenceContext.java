@@ -48,7 +48,6 @@ class PersistenceContext {
     @Bean(destroyMethod = "close")
     DataSource dataSource(Environment env) {
         HikariConfig dataSourceConfig = new HikariConfig();
-        dataSourceConfig.setMaximumPoolSize(100);
         dataSourceConfig.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DB_DRIVER_CLASS));
         dataSourceConfig.setJdbcUrl(env.getRequiredProperty(PROPERTY_NAME_DB_URL));
         dataSourceConfig.setUsername(env.getRequiredProperty(PROPERTY_NAME_DB_USER));
