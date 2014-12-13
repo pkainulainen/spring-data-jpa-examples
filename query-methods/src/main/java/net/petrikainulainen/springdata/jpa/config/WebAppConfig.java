@@ -30,6 +30,9 @@ public class WebAppConfig implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
         rootContext.register(ExampleApplicationContext.class);
 
+        //XmlWebApplicationContext rootContext = new XmlWebApplicationContext();
+        //rootContext.setConfigLocation("classpath:applicationContext.xml");
+
         configureDispatcherServlet(servletContext, rootContext);
         EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
         configureCharacterEncodingFilter(servletContext, dispatcherTypes);
