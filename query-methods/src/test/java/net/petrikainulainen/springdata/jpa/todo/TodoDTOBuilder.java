@@ -10,7 +10,7 @@ public class TodoDTOBuilder {
     private ZonedDateTime creationTime;
     private String description;
     private Long id;
-    private ZonedDateTime modificationtime;
+    private ZonedDateTime modificationTime;
     private String title;
 
     public TodoDTOBuilder() {}
@@ -30,8 +30,8 @@ public class TodoDTOBuilder {
         return this;
     }
 
-    public TodoDTOBuilder modificationtime(String modificationTime) {
-        this.modificationtime = TestUtil.parseDateTime(modificationTime);
+    public TodoDTOBuilder modificationTime(String modificationTime) {
+        this.modificationTime = TestUtil.parseDateTime(modificationTime);
         return this;
     }
 
@@ -46,7 +46,7 @@ public class TodoDTOBuilder {
         build.setCreationTime(creationTime);
         build.setDescription(description);
         build.setId(id);
-        build.setModificationTime(modificationtime);
+        build.setModificationTime(modificationTime);
         build.setTitle(title);
 
         return build;

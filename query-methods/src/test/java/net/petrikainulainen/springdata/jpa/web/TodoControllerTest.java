@@ -84,7 +84,7 @@ public class TodoControllerTest {
                 .creationTime(CREATION_TIME)
                 .description(DESCRIPTION)
                 .id(ID)
-                .modificationtime(MODIFICATION_TIME)
+                .modificationTime(MODIFICATION_TIME)
                 .title(TITLE)
                 .build();
 
