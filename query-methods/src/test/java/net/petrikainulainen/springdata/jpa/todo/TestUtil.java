@@ -1,5 +1,8 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * @author Petri Kainulainen
  */
@@ -15,5 +18,9 @@ public final class TestUtil {
         }
 
         return string.toString();
+    }
+
+    public static ZonedDateTime parseDateTime(String dateAndTime) {
+        return ZonedDateTime.parse(dateAndTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);
     }
 }

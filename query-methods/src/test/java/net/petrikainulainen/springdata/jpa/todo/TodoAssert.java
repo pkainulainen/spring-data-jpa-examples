@@ -2,7 +2,7 @@ package net.petrikainulainen.springdata.jpa.todo;
 
 import org.assertj.core.api.AbstractAssert;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +40,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
     public TodoAssert hasNoCreationTime() {
         isNotNull();
 
-        LocalDateTime actualCreationTime = actual.getCreationTime();
+        ZonedDateTime actualCreationTime = actual.getCreationTime();
         assertThat(actualCreationTime)
                 .overridingErrorMessage(
                         "Expected creation time to be <null> but was <%s>",
@@ -76,7 +76,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
     public TodoAssert hasNoModificationTime() {
         isNotNull();
 
-        LocalDateTime actualModificationTime = actual.getModificationTime();
+        ZonedDateTime actualModificationTime = actual.getModificationTime();
         assertThat(actualModificationTime)
                 .overridingErrorMessage(
                         "Expected modification time to be <null> but was <%s>.",

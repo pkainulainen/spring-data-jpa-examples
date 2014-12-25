@@ -14,7 +14,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
  * @author Petri Kainulainen
  */
 @Configuration
-@ComponentScan("net.petrikainulainen.springdata.jpa.todo")
+@ComponentScan("net.petrikainulainen.springdata.jpa")
 @Import({WebMvcContext.class, PersistenceContext.class})
 public class ExampleApplicationContext {
 

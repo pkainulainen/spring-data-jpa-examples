@@ -1,5 +1,7 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,8 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import static net.petrikainulainen.springdata.jpa.todo.PreCondition.isTrue;
 import static net.petrikainulainen.springdata.jpa.todo.PreCondition.notEmpty;
@@ -33,13 +34,15 @@ final class Todo {
     private Long id;
 
     @Column(name = "creation_time", nullable = false)
-    private Date creationTime;
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentZonedDateTime")
+    private ZonedDateTime creationTime;
 
     @Column(name = "description", length = MAX_LENGTH_DESCRIPTION)
     private String description;
 
     @Column(name = "modification_time")
-    private Date modificationTime;
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentZonedDateTime")
+    private ZonedDateTime modificationTime;
 
     @Column(name = "title", nullable = false, length = MAX_LENGTH_TITLE)
     private String title;
@@ -65,13 +68,7 @@ final class Todo {
         return id;
     }
 
-    LocalDateTime getCreationTime() {
-        LocalDateTime creationTime = null;
-
-        if (this.creationTime != null) {
-            creationTime = LocalDateTime.from(this.creationTime.toInstant());
-        }
-
+    ZonedDateTime getCreationTime() {
         return creationTime;
     }
 
@@ -79,13 +76,7 @@ final class Todo {
         return description;
     }
 
-    LocalDateTime getModificationTime() {
-        LocalDateTime modificationTime = null;
-
-        if (this.modificationTime != null) {
-            modificationTime = LocalDateTime.from(this.modificationTime.toInstant());
-        }
-
+    ZonedDateTime getModificationTime() {
         return modificationTime;
     }
 
