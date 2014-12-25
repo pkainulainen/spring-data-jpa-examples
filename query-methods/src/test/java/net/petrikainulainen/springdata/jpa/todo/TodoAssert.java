@@ -12,17 +12,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Petri Kainulainen
  */
-public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
+final class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
 
     private TodoAssert(Todo actual) {
         super(actual, TodoAssert.class);
     }
 
-    public static TodoAssert assertThatTodoEntry(Todo actual) {
+    static TodoAssert assertThatTodoEntry(Todo actual) {
         return new TodoAssert(actual);
     }
 
-    public TodoAssert hasDescription(String expectedDescription) {
+    TodoAssert hasDescription(String expectedDescription) {
         isNotNull();
 
         String actualDescription = actual.getDescription();
@@ -37,7 +37,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
         return this;
     }
 
-    public TodoAssert hasNoCreationTime() {
+    TodoAssert hasNoCreationTime() {
         isNotNull();
 
         ZonedDateTime actualCreationTime = actual.getCreationTime();
@@ -51,7 +51,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
         return this;
     }
 
-    public TodoAssert hasNoDescription() {
+    TodoAssert hasNoDescription() {
         isNotNull();
 
         String actualDescription = actual.getDescription();
@@ -62,7 +62,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
         return this;
     }
 
-    public TodoAssert hasNoId() {
+    TodoAssert hasNoId() {
         isNotNull();
 
         Long actualId = actual.getId();
@@ -73,7 +73,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
         return this;
     }
 
-    public TodoAssert hasNoModificationTime() {
+    TodoAssert hasNoModificationTime() {
         isNotNull();
 
         ZonedDateTime actualModificationTime = actual.getModificationTime();
@@ -87,7 +87,7 @@ public class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
         return this;
     }
 
-    public TodoAssert hasTitle(String expectedTitle) {
+    TodoAssert hasTitle(String expectedTitle) {
         isNotNull();
 
         String actualTitle = actual.getTitle();
