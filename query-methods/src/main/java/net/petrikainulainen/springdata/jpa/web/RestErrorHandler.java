@@ -34,6 +34,12 @@ final class RestErrorHandler {
         this.messageSource = messageSource;
     }
 
+    /**
+     * Processes an error that occurs when the requested todo entry is not found.
+     * @param ex                The exception that was thrown when the todo entry was not found.
+     * @param currentLocale     The current locale.
+     * @return                  An error object that contains the error code and message.
+     */
     @ExceptionHandler(TodoNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody

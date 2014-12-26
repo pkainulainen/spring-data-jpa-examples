@@ -31,6 +31,11 @@ final class TodoController {
         this.crudService = crudService;
     }
 
+    /**
+     * Finds all todo entries.
+     *
+     * @return The information of all todo entries.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public List<TodoDTO> findAll() {
         LOGGER.info("Finding all todo entries");
@@ -41,6 +46,12 @@ final class TodoController {
         return todoEntries;
     }
 
+    /**
+     * Finds a single todo entry.
+     * @param id    The id of the requested todo entry.
+     * @return      The information of the requested todo entry.
+     * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found by using the given id.
+     */
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     public TodoDTO findById(@PathVariable("id") Long id) {
         LOGGER.info("Finding todo entry by using id: {}", id);
