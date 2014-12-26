@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.todo;
+package net.petrikainulainen.springdata.jpa.common;
 
 /**
  * This class provides static utility methods that are used to ensure that a constructor or a method was invoked properly.
@@ -8,7 +8,7 @@ package net.petrikainulainen.springdata.jpa.todo;
  *
  * @author Petri Kainulainen
  */
-final class PreCondition {
+public final class PreCondition {
 
     private PreCondition() {}
 
@@ -21,7 +21,7 @@ final class PreCondition {
      * @param errorMessageArguments The arguments that are used when the message of the thrown exception is constructed.
      * @throws java.lang.IllegalArgumentException if the inspected exception is false.
      */
-    static void isTrue(boolean expression, String errorMessageTemplate, Object... errorMessageArguments) {
+    public static void isTrue(boolean expression, String errorMessageTemplate, Object... errorMessageArguments) {
         isTrue(expression, String.format(errorMessageTemplate, errorMessageArguments));
     }
     /**
@@ -31,7 +31,7 @@ final class PreCondition {
      * if the expression is false.
      * @throws java.lang.IllegalArgumentException if the inspected expression is false.
      */
-    static void isTrue(boolean expression, String errorMessage) {
+    public static void isTrue(boolean expression, String errorMessage) {
         if (!expression) {
             throw new IllegalArgumentException(errorMessage);
         }
@@ -43,7 +43,7 @@ final class PreCondition {
      * the string is empty.
      * @throws java.lang.IllegalArgumentException if the inspected string is empty.
      */
-    static void notEmpty(String string, String errorMessage) {
+    public static void notEmpty(String string, String errorMessage) {
         if (string.isEmpty()) {
             throw new IllegalArgumentException(errorMessage);
         }
@@ -55,7 +55,7 @@ final class PreCondition {
      * the object given as a method parameter is null.
      * @throws java.lang.NullPointerException If the object given as a method parameter is null.
      */
-    static void notNull(Object reference, String errorMessage) {
+    public static void notNull(Object reference, String errorMessage) {
         if (reference == null) {
             throw new NullPointerException(errorMessage);
         }

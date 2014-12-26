@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.todo;
+package net.petrikainulainen.springdata.jpa.common;
 
 /**
  * This class is used to capture the Throwable object thrown by the tested
@@ -8,10 +8,10 @@ package net.petrikainulainen.springdata.jpa.todo;
  * <a href="http://www.codeaffine.com/2014/07/28/clean-junit-throwable-tests-with-java-8-lambdas/">Clean JUnit Throwable-Tests with Java 8 Lambdas</a>
  * @author Petri Kainulainen
  */
-final class ThrowableCaptor {
+public final class ThrowableCaptor {
 
     @FunctionalInterface
-    interface Actor {
+    public interface Actor {
         void act() throws Throwable;
     }
 
@@ -25,7 +25,7 @@ final class ThrowableCaptor {
      * @param actor
      * @return The captured Throwable object of null if none is thrown.
      */
-    static Throwable thrown(Actor actor) {
+    public static Throwable thrown(Actor actor) {
         Throwable thrown = null;
         try {
             actor.act();

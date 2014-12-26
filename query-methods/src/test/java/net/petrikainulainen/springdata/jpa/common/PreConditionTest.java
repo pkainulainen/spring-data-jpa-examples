@@ -1,8 +1,8 @@
-package net.petrikainulainen.springdata.jpa.todo;
+package net.petrikainulainen.springdata.jpa.common;
 
 import org.junit.Test;
 
-import static net.petrikainulainen.springdata.jpa.todo.ThrowableCaptor.thrown;
+import static net.petrikainulainen.springdata.jpa.common.ThrowableCaptor.thrown;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

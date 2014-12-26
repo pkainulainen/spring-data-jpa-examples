@@ -12,9 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import java.time.ZonedDateTime;
 
-import static net.petrikainulainen.springdata.jpa.todo.PreCondition.isTrue;
-import static net.petrikainulainen.springdata.jpa.todo.PreCondition.notEmpty;
-import static net.petrikainulainen.springdata.jpa.todo.PreCondition.notNull;
+import static net.petrikainulainen.springdata.jpa.common.PreCondition.isTrue;
+import static net.petrikainulainen.springdata.jpa.common.PreCondition.notEmpty;
+import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;
 
 /**
  * This entity class contains the information of a single todo entry

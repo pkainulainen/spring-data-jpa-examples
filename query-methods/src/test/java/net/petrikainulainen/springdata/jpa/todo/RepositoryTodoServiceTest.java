@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static net.petrikainulainen.springdata.jpa.todo.ThrowableCaptor.thrown;
+import static net.petrikainulainen.springdata.jpa.common.ThrowableCaptor.thrown;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
