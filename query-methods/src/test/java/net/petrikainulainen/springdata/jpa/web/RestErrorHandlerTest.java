@@ -63,6 +63,11 @@ public class RestErrorHandlerTest {
 
     @Test
     public void handleTodoEntryNotFound_ShouldFindErrorMessageByUsingCurrentLocale() {
+        given(messageSource.getMessage(
+                isA(MessageSourceResolvable.class),
+                isA(Locale.class))
+        ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
+
         errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
         verify(messageSource, times(1)).getMessage(isA(MessageSourceResolvable.class), eq(CURRENT_LOCALE));
@@ -70,6 +75,11 @@ public class RestErrorHandlerTest {
 
     @Test
     public void handleTodoEntryNotFound_ShouldFindErrorMessageByUsingCorrectMessageCode() {
+        given(messageSource.getMessage(
+                        isA(MessageSourceResolvable.class),
+                        isA(Locale.class))
+        ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
+
         errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
         ArgumentCaptor<MessageSourceResolvable> messageRequestArgument = ArgumentCaptor.forClass(MessageSourceResolvable.class);
@@ -82,6 +92,11 @@ public class RestErrorHandlerTest {
 
     @Test
     public void handleTodoEntryNotFound_ShouldFindErrorMessageByUsingCorrectId() {
+        given(messageSource.getMessage(
+                        isA(MessageSourceResolvable.class),
+                        isA(Locale.class))
+        ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
+
         errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
         ArgumentCaptor<MessageSourceResolvable> messageRequestArgument = ArgumentCaptor.forClass(MessageSourceResolvable.class);

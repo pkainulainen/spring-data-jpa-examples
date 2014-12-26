@@ -169,6 +169,10 @@ public class TodoControllerTest {
     @Test
     public void findById_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         given(crudService.findById(ID)).willThrow(new TodoNotFoundException(ID));
+        given(messageSource.getMessage(
+                        isA(MessageSourceResolvable.class),
+                        isA(Locale.class))
+        ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
 
         mockMvc.perform(get("/api/todo/{id}", ID))
                 .andExpect(status().isNotFound());
