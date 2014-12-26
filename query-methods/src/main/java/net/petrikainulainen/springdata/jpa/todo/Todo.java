@@ -1,5 +1,6 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -86,6 +87,18 @@ final class Todo {
 
     long getVersion() {
         return version;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("creationTime", this.creationTime)
+                .append("description", this.description)
+                .append("id", this.id)
+                .append("modificationTime", this.modificationTime)
+                .append("title", this.title)
+                .append("version", this.version)
+                .toString();
     }
 
     /**

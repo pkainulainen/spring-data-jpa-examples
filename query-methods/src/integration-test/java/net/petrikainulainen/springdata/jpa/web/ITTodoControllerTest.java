@@ -79,4 +79,40 @@ public class ITTodoControllerTest {
                 .andExpect(jsonPath("$[0].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
                 .andExpect(jsonPath("$[0].title", is(TodoConstants.TITLE)));
     }
+
+    @Test
+    @DatabaseSetup("no-todo-entries.xml")
+    public void findById_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DatabaseSetup("no-todo-entries.xml")
+    public void findById_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.code", is(TodoConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
+                .andExpect(jsonPath("$.message", is(TodoConstants.ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
+
+    }
+
+    @Test
+    @DatabaseSetup("todo-entries.xml")
+    public void findById_TodoEntryFound_ShouldReturnResponseStatusOk() throws Exception {
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DatabaseSetup("todo-entries.xml")
+    public void findById_TodoEntryFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
+                .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
+                .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$.modificationTime", is(TodoConstants.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.title", is(TodoConstants.TITLE)));
+    }
 }

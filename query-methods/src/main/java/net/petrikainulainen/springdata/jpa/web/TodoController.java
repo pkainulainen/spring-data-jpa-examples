@@ -5,6 +5,7 @@ import net.petrikainulainen.springdata.jpa.todo.TodoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +39,15 @@ final class TodoController {
         LOGGER.info("Found {} todo entries.", todoEntries.size());
 
         return todoEntries;
+    }
+
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    public TodoDTO findById(@PathVariable("id") Long id) {
+        LOGGER.info("Finding todo entry by using id: {}", id);
+
+        TodoDTO todoEntry = crudService.findById(id);
+        LOGGER.info("Found todo entry: {}", todoEntry);
+
+        return todoEntry;
     }
 }

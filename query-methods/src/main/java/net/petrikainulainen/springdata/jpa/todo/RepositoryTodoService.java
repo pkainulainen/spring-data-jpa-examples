@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -24,6 +26,7 @@ final class RepositoryTodoService implements TodoCrudService {
         this.repository = repository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<TodoDTO> findAll() {
         LOGGER.info("Finding all todo entries.");
@@ -39,6 +42,19 @@ final class RepositoryTodoService implements TodoCrudService {
         return entities.stream()
                 .map(this::transformIntoDTO)
                 .collect(toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public TodoDTO findById(Long id) {
+        LOGGER.info("Finding todo entry by using id: {}", id);
+
+        Optional<Todo> todoResult = repository.findOne(id);
+        Todo todoEntry = todoResult.orElseThrow(() -> new TodoNotFoundException(id));
+
+        LOGGER.info("Found todo entry: {}", todoEntry);
+
+        return transformIntoDTO(todoEntry);
     }
 
     private TodoDTO transformIntoDTO(Todo entity) {

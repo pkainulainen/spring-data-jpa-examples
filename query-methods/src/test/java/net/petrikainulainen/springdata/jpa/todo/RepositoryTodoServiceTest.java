@@ -9,7 +9,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static net.petrikainulainen.springdata.jpa.todo.ThrowableCaptor.thrown;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -66,6 +68,40 @@ public class RepositoryTodoServiceTest {
                 .hasId(ID)
                 .hasTitle(TITLE)
                 .hasDescription(DESCRIPTION)
+                .wasCreatedAt(CREATION_TIME)
+                .wasModifiedAt(MODIFICATION_TIME);
+    }
+
+    @Test
+    public void findOne_TodoEntryNotFound_ShouldThrowExceptionWithCorrectId() {
+        given(repository.findOne(ID)).willReturn(Optional.empty());
+
+        Throwable thrown = thrown(() -> service.findById(ID));
+
+        assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
+
+        TodoNotFoundException exception = (TodoNotFoundException) thrown;
+        assertThat(exception.getId()).isEqualTo(ID);
+    }
+
+    @Test
+    public void findOne_TodoEntryIsFound_ShouldReturnTheInformationOfFoundTodoEntry() {
+        Todo found = new TodoBuilder()
+                .id(ID)
+                .creationTime(CREATION_TIME)
+                .description(DESCRIPTION)
+                .modificationTime(MODIFICATION_TIME)
+                .title(TITLE)
+                .build();
+
+        given(repository.findOne(ID)).willReturn(Optional.of(found));
+
+        TodoDTO returned = service.findById(ID);
+
+        assertThatTodoDTO(returned)
+                .hasDescription(DESCRIPTION)
+                .hasId(ID)
+                .hasTitle(TITLE)
                 .wasCreatedAt(CREATION_TIME)
                 .wasModifiedAt(MODIFICATION_TIME);
     }
