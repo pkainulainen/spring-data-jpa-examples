@@ -8,6 +8,13 @@ import java.util.List;
 public interface TodoCrudService {
 
     /**
+     * Creates a new todo entry.
+     * @param newTodoEntry   The information of the created todo entry.
+     * @return               The information of the created todo entry.
+     */
+    public TodoDTO create(TodoDTO newTodoEntry);
+
+    /**
      * Finds all todo entries that are saved to the database.
      * @return
      */

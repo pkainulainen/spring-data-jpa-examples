@@ -9,17 +9,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Petri Kainulainen
  */
-final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> {
+public final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> {
 
     private TodoDTOAssert(TodoDTO actual) {
         super(actual, TodoDTOAssert.class);
     }
 
-    static TodoDTOAssert assertThatTodoDTO(TodoDTO actual) {
+    public static TodoDTOAssert assertThatTodoDTO(TodoDTO actual) {
         return new TodoDTOAssert(actual);
     }
 
-    TodoDTOAssert hasDescription(String expectedDescription) {
+    public TodoDTOAssert hasDescription(String expectedDescription) {
         isNotNull();
 
         String actualDescription = actual.getDescription();
@@ -34,7 +34,7 @@ final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> {
         return this;
     }
 
-    TodoDTOAssert hasId(Long expectedId) {
+    public TodoDTOAssert hasId(Long expectedId) {
         isNotNull();
 
         Long actualId = actual.getId();
@@ -49,7 +49,40 @@ final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> {
         return this;
     }
 
-    TodoDTOAssert hasTitle(String expectedTitle) {
+    public TodoDTOAssert hasNoCreationTime() {
+        isNotNull();
+
+        ZonedDateTime actualCreationTime = actual.getCreationTime();
+        assertThat(actualCreationTime)
+                .overridingErrorMessage("Expected creation time to be <null> but was <%s>", actualCreationTime)
+                .isNull();
+
+        return this;
+    }
+
+    public TodoDTOAssert hasNoId() {
+        isNotNull();
+
+        Long actualId = actual.getId();
+        assertThat(actualId)
+                .overridingErrorMessage("Expected id to be <null> but was <%d>", actualId)
+                .isNull();
+
+        return this;
+    }
+
+    public TodoDTOAssert hasNoModificationTime() {
+        isNotNull();
+
+        ZonedDateTime actualModificationTime = actual.getModificationTime();
+        assertThat(actualModificationTime)
+                .overridingErrorMessage("Expected modification time to be <null> but was <%d>", actualModificationTime)
+                .isNull();
+
+        return this;
+    }
+
+    public TodoDTOAssert hasTitle(String expectedTitle) {
         isNotNull();
 
         String actualTitle = actual.getTitle();
@@ -64,7 +97,7 @@ final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> {
         return this;
     }
 
-    TodoDTOAssert wasCreatedAt(String creationTime) {
+    public TodoDTOAssert wasCreatedAt(String creationTime) {
         isNotNull();
 
         ZonedDateTime expectedCreationTime = TestUtil.parseDateTime(creationTime);
@@ -81,7 +114,7 @@ final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> {
         return this;
     }
 
-    TodoDTOAssert wasModifiedAt(String modificationTime) {
+    public TodoDTOAssert wasModifiedAt(String modificationTime) {
         isNotNull();
 
         ZonedDateTime expectedModificationTime = TestUtil.parseDateTime(modificationTime);

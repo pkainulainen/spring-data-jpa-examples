@@ -16,4 +16,6 @@ interface TodoRepository extends Repository<Todo, Long> {
     List<Todo> findAll();
 
     Optional<Todo> findOne(Long id);
+
+    Todo save(Todo persisted);
 }

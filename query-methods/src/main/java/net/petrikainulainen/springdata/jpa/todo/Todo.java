@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import java.time.ZonedDateTime;
@@ -27,8 +28,8 @@ import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;
 @Table(name = "todos")
 final class Todo {
 
-    private static final int MAX_LENGTH_DESCRIPTION = 500;
-    private static final int MAX_LENGTH_TITLE = 100;
+    static final int MAX_LENGTH_DESCRIPTION = 500;
+    static final int MAX_LENGTH_TITLE = 100;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -87,6 +88,13 @@ final class Todo {
 
     long getVersion() {
         return version;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        ZonedDateTime now = ZonedDateTime.now();
+        this.creationTime = now;
+        this.modificationTime = now;
     }
 
     @Override

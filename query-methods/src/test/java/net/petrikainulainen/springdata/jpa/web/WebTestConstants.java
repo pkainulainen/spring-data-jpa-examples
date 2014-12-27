@@ -14,6 +14,15 @@ final class WebTestConstants {
             Charset.forName("utf8")
     );
 
+    static final String ERROR_CODE_TODO_ENTRY_NOT_FOUND = "NOT_FOUND";
+    static final String ERROR_CODE_VALIDATION_FAILED = "BAD_REQUEST";
+
+    static final String FIELD_NAME_DESCRIPTION = "description";
+    static final String FIELD_NAME_TITLE = "title";
+
+    static final int MAX_LENGTH_DESCRIPTION = 500;
+    static final int MAX_LENGTH_TITLE = 100;
+
     /**
      * Prevents instantiation.
      */

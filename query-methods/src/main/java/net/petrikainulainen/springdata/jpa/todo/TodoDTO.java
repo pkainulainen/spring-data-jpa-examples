@@ -1,7 +1,9 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 
 /**
@@ -11,12 +13,15 @@ public class TodoDTO {
 
     private ZonedDateTime creationTime;
 
+    @Size(max = Todo.MAX_LENGTH_DESCRIPTION)
     private String description;
 
     private Long id;
 
     private ZonedDateTime modificationTime;
 
+    @NotEmpty
+    @Size(max = Todo.MAX_LENGTH_TITLE)
     private String title;
 
     public TodoDTO() {}

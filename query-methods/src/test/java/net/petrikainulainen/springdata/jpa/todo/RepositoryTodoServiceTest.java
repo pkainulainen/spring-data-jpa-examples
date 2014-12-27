@@ -3,6 +3,7 @@ package net.petrikainulainen.springdata.jpa.todo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -12,9 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.petrikainulainen.springdata.jpa.common.ThrowableCaptor.thrown;
+import static net.petrikainulainen.springdata.jpa.todo.TodoAssert.assertThatTodoEntry;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * @author Petri Kainulainen
@@ -36,6 +42,58 @@ public class RepositoryTodoServiceTest {
     @Before
     public void setUp() {
         service = new RepositoryTodoService(repository);
+    }
+
+    @Test
+    public void create_ShouldPersistNewTodoEntry() {
+        given(repository.save(isA(Todo.class))).willAnswer(
+                invocationOnMock -> invocationOnMock.getArguments()[0]
+        );
+
+        TodoDTO newTodoEntry = new TodoDTOBuilder()
+                .description(DESCRIPTION)
+                .title(TITLE)
+                .build();
+
+        service.create(newTodoEntry);
+
+        ArgumentCaptor<Todo> persistedArgument = ArgumentCaptor.forClass(Todo.class);
+        verify(repository, times(1)).save(persistedArgument.capture());
+        verifyNoMoreInteractions(repository);
+
+        Todo persisted = persistedArgument.getValue();
+        assertThatTodoEntry(persisted)
+                .hasNoCreationTime()
+                .hasDescription(DESCRIPTION)
+                .hasNoId()
+                .hasNoModificationTime()
+                .hasTitle(TITLE);
+    }
+
+    @Test
+    public void create_ShouldReturnInformationOfPersistedTodoEntry() {
+        given(repository.save(isA(Todo.class))).willAnswer(
+                invocationOnMock -> new TodoBuilder()
+                        .creationTime(CREATION_TIME)
+                        .description(DESCRIPTION)
+                        .id(ID)
+                        .modificationTime(MODIFICATION_TIME)
+                        .title(TITLE)
+                        .build()
+        );
+
+        TodoDTO newTodoEntry = new TodoDTOBuilder()
+                .description(DESCRIPTION)
+                .title(TITLE)
+                .build();
+
+        TodoDTO created = service.create(newTodoEntry);
+        assertThatTodoDTO(created)
+                .hasDescription(DESCRIPTION)
+                .hasId(ID)
+                .hasTitle(TITLE)
+                .wasCreatedAt(CREATION_TIME)
+                .wasModifiedAt(MODIFICATION_TIME);
     }
 
     @Test

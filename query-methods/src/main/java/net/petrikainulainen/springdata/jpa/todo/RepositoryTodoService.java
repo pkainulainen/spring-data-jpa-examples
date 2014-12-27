@@ -26,6 +26,22 @@ final class RepositoryTodoService implements TodoCrudService {
         this.repository = repository;
     }
 
+    @Transactional
+    @Override
+    public TodoDTO create(TodoDTO newTodoEntry) {
+        LOGGER.info("Creating a new todo entry by using information: {}", newTodoEntry);
+
+        Todo created = Todo.getBuilder()
+                .description(newTodoEntry.getDescription())
+                .title(newTodoEntry.getTitle())
+                .build();
+
+        created = repository.save(created);
+        LOGGER.info("Created a new todo entry: {}", created);
+
+        return transformIntoDTO(created);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<TodoDTO> findAll() {
