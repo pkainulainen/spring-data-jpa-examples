@@ -384,7 +384,7 @@ public class TodoControllerTest {
 
         mockMvc.perform(get("/api/todo/{id}", ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.code", is("NOT_FOUND")))
+                .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
                 .andExpect(jsonPath("message", is(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
     }
 

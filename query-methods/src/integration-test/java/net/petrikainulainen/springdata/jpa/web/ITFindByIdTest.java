@@ -64,7 +64,7 @@ public class ITFindByIdTest {
     public void findById_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.code", is(TodoConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
+                .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
                 .andExpect(jsonPath("$.message", is(TodoConstants.ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
 
     }
