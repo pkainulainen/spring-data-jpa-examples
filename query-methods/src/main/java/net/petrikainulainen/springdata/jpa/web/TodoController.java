@@ -37,7 +37,7 @@ final class TodoController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public TodoDTO create(@RequestBody @Valid TodoDTO newTodoEntry) {
+    TodoDTO create(@RequestBody @Valid TodoDTO newTodoEntry) {
         LOGGER.info("Creating a new todo entry by using information: {}", newTodoEntry);
 
         TodoDTO created = crudService.create(newTodoEntry);
@@ -52,7 +52,7 @@ final class TodoController {
      * @return The information of all todo entries.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<TodoDTO> findAll() {
+    List<TodoDTO> findAll() {
         LOGGER.info("Finding all todo entries");
 
         List<TodoDTO> todoEntries = crudService.findAll();
@@ -68,7 +68,7 @@ final class TodoController {
      * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found by using the given id.
      */
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public TodoDTO findById(@PathVariable("id") Long id) {
+    TodoDTO findById(@PathVariable("id") Long id) {
         LOGGER.info("Finding todo entry by using id: {}", id);
 
         TodoDTO todoEntry = crudService.findById(id);
@@ -84,7 +84,7 @@ final class TodoController {
      * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found by using the given id.
      */
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-    public TodoDTO update(@RequestBody @Valid TodoDTO updatedTodoEntry) {
+    TodoDTO update(@RequestBody @Valid TodoDTO updatedTodoEntry) {
         LOGGER.info("Updating the information of a todo entry by using information: {}", updatedTodoEntry);
 
         TodoDTO updated = crudService.update(updatedTodoEntry);
