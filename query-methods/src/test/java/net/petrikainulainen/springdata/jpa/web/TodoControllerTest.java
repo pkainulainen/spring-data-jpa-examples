@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -323,5 +324,230 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.id", is(ID.intValue())))
                 .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
                 .andExpect(jsonPath("$.title", is(TITLE)));
+    }
+
+    @Test
+    public void update_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .id(ID)
+                .build();
+
+        given(crudService.update(isA(TodoDTO.class))).willThrow(new TodoNotFoundException(ID));
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void update_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .id(ID)
+                .build();
+
+        given(crudService.update(isA(TodoDTO.class))).willThrow(new TodoNotFoundException(ID));
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
+                .andExpect(jsonPath("message", is(ERROR_MESSAGE_KEY_TODO_ENTRY_NOT_FOUND)));
+    }
+
+    @Test
+    public void update_TitleAndDescriptionAreMissing_ShouldReturnResponseStatusBadRequest() throws Exception {
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(null)
+                .id(ID)
+                .title(null)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                    .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                    .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void update_TitleAndDescriptionAreMissing_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(null)
+                .id(ID)
+                .title(null)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_VALIDATION_FAILED)))
+                .andExpect(jsonPath("$.fieldErrors", hasSize(1)))
+                .andExpect(jsonPath("$.fieldErrors[0].field", is(WebTestConstants.FIELD_NAME_TITLE)))
+                .andExpect(jsonPath("$.fieldErrors[0].message", is(ERROR_MESSAGE_KEY_MISSING_TITLE)));
+    }
+
+    @Test
+    public void update_TitleAndDescriptionAreMissing_ShouldNotUpdateTodoEntry() throws Exception {
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(null)
+                .id(ID)
+                .title(null)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        );
+
+        verifyZeroInteractions(crudService);
+    }
+
+    @Test
+    public void update_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
+        String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
+        String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
+
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(tooLongDescription)
+                .id(ID)
+                .title(tooLongTitle)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void update_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
+        String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
+        String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
+
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(tooLongDescription)
+                .id(ID)
+                .title(tooLongTitle)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_VALIDATION_FAILED)))
+                .andExpect(jsonPath("$.fieldErrors", hasSize(2)))
+                .andExpect(jsonPath("$.fieldErrors[*].field", containsInAnyOrder(
+                        WebTestConstants.FIELD_NAME_DESCRIPTION,
+                        WebTestConstants.FIELD_NAME_TITLE
+                )))
+                .andExpect(jsonPath("$.fieldErrors[*].message", containsInAnyOrder(
+                        ERROR_MESSAGE_KEY_TOO_LONG_DESCRIPTION,
+                        ERROR_MESSAGE_KEY_TOO_LONG_TITLE
+                )));
+    }
+
+    @Test
+    public void update_TooLongTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
+        String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
+        String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
+
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(tooLongDescription)
+                .id(ID)
+                .title(tooLongTitle)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        );
+
+        verifyZeroInteractions(crudService);
+    }
+
+    @Test
+    public void update_MaxLengthTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
+        String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
+        String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
+
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(maxLengthDescription)
+                .id(ID)
+                .title(maxLengthTitle)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void update_MaxLengthTitleAndDescription_ShouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
+        String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
+        String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
+
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(maxLengthDescription)
+                .id(ID)
+                .title(maxLengthTitle)
+                .build();
+
+        TodoDTO updated = new TodoDTOBuilder()
+                .creationTime(CREATION_TIME)
+                .description(maxLengthDescription)
+                .id(ID)
+                .modificationTime(MODIFICATION_TIME)
+                .title(maxLengthTitle)
+                .build();
+        given(crudService.update(isA(TodoDTO.class))).willReturn(updated);
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
+                .andExpect(jsonPath("$.description", is(maxLengthDescription)))
+                .andExpect(jsonPath("$.id", is(ID.intValue())))
+                .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.title", is(maxLengthTitle)));
+    }
+
+    @Test
+    public void update_MaxLengthTitleAndDescription_ShouldUpdateTodoEntryWithCorrectInformation() throws Exception {
+        String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
+        String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
+
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .description(maxLengthDescription)
+                .id(ID)
+                .title(maxLengthTitle)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+        );
+
+        ArgumentCaptor<TodoDTO> updatedArgument = ArgumentCaptor.forClass(TodoDTO.class);
+        verify(crudService, times(1)).update(updatedArgument.capture());
+
+        TodoDTO updated = updatedArgument.getValue();
+        assertThatTodoDTO(updated)
+                .hasDescription(maxLengthDescription)
+                .hasId(ID)
+                .hasTitle(maxLengthTitle)
+                .hasNoCreationTime()
+                .hasNoModificationTime();
     }
 }

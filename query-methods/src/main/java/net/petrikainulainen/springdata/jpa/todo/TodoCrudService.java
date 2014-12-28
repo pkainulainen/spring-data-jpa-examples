@@ -27,4 +27,12 @@ public interface TodoCrudService {
      * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found with the given id.
      */
     public TodoDTO findById(Long id);
+
+    /**
+     * Updates the information of an existing information.
+     * @param updatedTodoEntry  The new information of an existing todo entry.
+     * @return                  The information of the updated todo entry.
+     * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found with the given id.
+     */
+    public TodoDTO update(TodoDTO updatedTodoEntry);
 }

@@ -65,12 +65,27 @@ final class RepositoryTodoService implements TodoCrudService {
     public TodoDTO findById(Long id) {
         LOGGER.info("Finding todo entry by using id: {}", id);
 
-        Optional<Todo> todoResult = repository.findOne(id);
-        Todo todoEntry = todoResult.orElseThrow(() -> new TodoNotFoundException(id));
-
+        Todo todoEntry = findTodoEntryById(id);
         LOGGER.info("Found todo entry: {}", todoEntry);
 
         return transformIntoDTO(todoEntry);
+    }
+
+    @Transactional
+    @Override
+    public TodoDTO update(TodoDTO updatedTodoEntry) {
+        LOGGER.info("Updating the information of a todo entry by using information: {}", updatedTodoEntry);
+
+        Todo updated = findTodoEntryById(updatedTodoEntry.getId());
+        updated.update(updatedTodoEntry.getTitle(), updatedTodoEntry.getDescription());
+        LOGGER.info("Updated the information of the todo entry: {}", updated);
+
+        return transformIntoDTO(updated);
+    }
+
+    private Todo findTodoEntryById(Long id) {
+        Optional<Todo> todoResult = repository.findOne(id);
+        return todoResult.orElseThrow(() -> new TodoNotFoundException(id));
     }
 
     private TodoDTO transformIntoDTO(Todo entity) {

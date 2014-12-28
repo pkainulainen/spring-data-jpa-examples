@@ -14,6 +14,9 @@ final class TodoConstants {
     static final String MODIFICATION_TIME = "2014-12-25T13:13:28+02:00";
     static final String TITLE = "title";
 
+    static final String UPDATED_DESCRIPTION = "updatedDescription";
+    static final String UPDATED_TITLE = "updatedTitle";
+
     static final String ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND = "No todo entry was found by using id: 1";
     static final String ERROR_MESSAGE_MISSING_TITLE = "The title cannot be empty";
     static final String ERROR_MESSAGE_TOO_LONG_DESCRIPTION = "The maximum length of description is 500 characters";

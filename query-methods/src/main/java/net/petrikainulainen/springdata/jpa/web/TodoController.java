@@ -76,4 +76,20 @@ final class TodoController {
 
         return todoEntry;
     }
+
+    /**
+     * Updates the information of an existing todo entry.
+     * @param updatedTodoEntry  The new information of the updated todo entry.
+     * @return                  The updated information of the updated todo entry.
+     * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found by using the given id.
+     */
+    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    public TodoDTO update(@RequestBody @Valid TodoDTO updatedTodoEntry) {
+        LOGGER.info("Updating the information of a todo entry by using information: {}", updatedTodoEntry);
+
+        TodoDTO updated = crudService.update(updatedTodoEntry);
+        LOGGER.info("Updated the information of the todo entrY: {}", updated);
+
+        return updated;
+    }
 }

@@ -62,6 +62,20 @@ final class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
         return this;
     }
 
+    TodoAssert hasId(Long expectedId) {
+        isNotNull();
+
+        Long actualId = actual.getId();
+        assertThat(actualId)
+                .overridingErrorMessage("Expected id to be <%d> but was <%d>",
+                        expectedId,
+                        actualId
+                )
+                .isEqualTo(expectedId);
+
+        return this;
+    }
+
     TodoAssert hasNoId() {
         isNotNull();
 
@@ -98,6 +112,40 @@ final class TodoAssert extends AbstractAssert<TodoAssert, Todo> {
                         actualTitle
                 )
                 .isEqualTo(actualTitle);
+
+        return this;
+    }
+
+    public TodoAssert wasCreatedAt(String creationTime) {
+        isNotNull();
+
+        ZonedDateTime expectedCreationTime = TestUtil.parseDateTime(creationTime);
+        ZonedDateTime actualCreationTime = actual.getCreationTime();
+
+        assertThat(actualCreationTime)
+                .overridingErrorMessage(
+                        "Expected creation time to be <%s> but was <%s>",
+                        expectedCreationTime,
+                        actualCreationTime
+                )
+                .isEqualTo(expectedCreationTime);
+
+        return this;
+    }
+
+    public TodoAssert wasModifiedAt(String modificationTime) {
+        isNotNull();
+
+        ZonedDateTime expectedModificationTime = TestUtil.parseDateTime(modificationTime);
+        ZonedDateTime actualModificationTime = actual.getModificationTime();
+
+        assertThat(actualModificationTime)
+                .overridingErrorMessage(
+                        "Expected modification time to be <%s> but was <%s>",
+                        expectedModificationTime,
+                        actualModificationTime
+                )
+                .isEqualTo(actualModificationTime);
 
         return this;
     }

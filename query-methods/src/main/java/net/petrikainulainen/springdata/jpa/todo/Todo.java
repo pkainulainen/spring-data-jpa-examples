@@ -97,6 +97,27 @@ final class Todo {
         this.modificationTime = now;
     }
 
+    void update(String newTitle, String newDescription) {
+        requireValidTitleAndDescription(newTitle, newDescription);
+
+        this.title = newTitle;
+        this.description = newDescription;
+    }
+
+    private void requireValidTitleAndDescription(String title, String description) {
+        notNull(title, "Title cannot be null.");
+        notEmpty(title, "Title cannot be empty.");
+        isTrue(title.length() <= MAX_LENGTH_TITLE,
+                "The maximum length of the title is <%d> characters.",
+                MAX_LENGTH_TITLE
+        );
+
+        isTrue((description == null) || (description.length() <= MAX_LENGTH_DESCRIPTION),
+                "The maximum length of the description is <%d> characters.",
+                MAX_LENGTH_DESCRIPTION
+        );
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -133,17 +154,7 @@ final class Todo {
         Todo build() {
             Todo build = new Todo(this);
 
-            notNull(build.getTitle(), "Title cannot be null.");
-            notEmpty(build.getTitle(), "Title cannot be empty.");
-            isTrue(build.getTitle().length() <= MAX_LENGTH_TITLE,
-                    "The maximum length of the title is <%d> characters.",
-                    MAX_LENGTH_TITLE
-            );
-            String description = build.getDescription();
-            isTrue((description == null) || (description.length() <= MAX_LENGTH_DESCRIPTION),
-                    "The maximum length of the description is <%d> characters.",
-                    MAX_LENGTH_DESCRIPTION
-            );
+            build.requireValidTitleAndDescription(build.getTitle(), build.getDescription());
 
             return build;
         }

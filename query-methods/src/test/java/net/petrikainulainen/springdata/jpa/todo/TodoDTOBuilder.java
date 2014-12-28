@@ -11,7 +11,7 @@ public class TodoDTOBuilder {
     private String description;
     private Long id;
     private ZonedDateTime modificationTime;
-    private String title;
+    private String title = "NOT_IMPORTANT";
 
     public TodoDTOBuilder() {}
 
