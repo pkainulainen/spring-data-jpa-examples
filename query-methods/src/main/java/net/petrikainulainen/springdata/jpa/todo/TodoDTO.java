@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 /**
  * @author Petri Kainulainen
  */
-public class TodoDTO {
+public final class TodoDTO {
 
     private ZonedDateTime creationTime;
 
