@@ -164,7 +164,7 @@ public class ITCreateTest {
     }
 
     @Test
-    public void create_TitleAndDescriptionGiven_ShouldReturnResponseStatusCreated() throws Exception {
+    public void create_ValidTitleAndDescription_ShouldReturnResponseStatusCreated() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
                 .title(TodoConstants.TITLE)
@@ -178,7 +178,7 @@ public class ITCreateTest {
     }
 
     @Test
-    public void create_TitleAndDescriptionGiven_ShouldReturnInformationOfCreatedTodoEntryAsJson() throws Exception {
+    public void create_ValidTitleAndDescription_ShouldReturnInformationOfCreatedTodoEntryAsJson() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
                 .title(TodoConstants.TITLE)
@@ -198,7 +198,7 @@ public class ITCreateTest {
 
     @Test
     @ExpectedDatabase(value = "create-todo-entry-expected.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
-    public void create_EmptyTodoEntry_ShouldSaveTodoEntry() throws Exception {
+    public void create_ValidTitleAndDescription_ShouldSaveTodoEntry() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
                 .title(TodoConstants.TITLE)
