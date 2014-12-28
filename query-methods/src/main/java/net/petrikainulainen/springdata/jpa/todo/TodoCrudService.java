@@ -3,6 +3,9 @@ package net.petrikainulainen.springdata.jpa.todo;
 import java.util.List;
 
 /**
+ * This service provides CRUD operations for {@link net.petrikainulainen.springdata.jpa.todo.Todo}
+ * objects.
+ *
  * @author Petri Kainulainen
  */
 public interface TodoCrudService {
