@@ -11,8 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.StaticMessageSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -45,9 +44,8 @@ public class TodoControllerTest {
     private static final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
     private static final String DESCRIPTION = "description";
 
-    private static final String ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND = "No todo entry was found by using id: 1";
-
     private static final String ERROR_MESSAGE_KEY_MISSING_TITLE = "NotEmpty.todoDTO.title";
+    private static final String ERROR_MESSAGE_KEY_TODO_ENTRY_NOT_FOUND = "error.todo.entry.not.found";
     private static final String ERROR_MESSAGE_KEY_TOO_LONG_DESCRIPTION = "Size.todoDTO.description";
     private static final String ERROR_MESSAGE_KEY_TOO_LONG_TITLE = "Size.todoDTO.title";
 
@@ -60,11 +58,13 @@ public class TodoControllerTest {
     @Mock
     private TodoCrudService crudService;
 
-    @Mock
-    private MessageSource messageSource;
+    private StaticMessageSource messageSource;
 
     @Before
     public void setUp() {
+        messageSource = new StaticMessageSource();
+        messageSource.setUseCodeAsDefaultMessage(true);
+
         mockMvc = MockMvcBuilders.standaloneSetup(new TodoController(crudService))
                 .setHandlerExceptionResolvers(WebTestConfig.restErrorHandler(messageSource))
                 .setLocaleResolver(WebTestConfig.fixedLocaleResolver(CURRENT_LOCALE))
@@ -289,10 +289,6 @@ public class TodoControllerTest {
     @Test
     public void findById_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         given(crudService.findById(ID)).willThrow(new TodoNotFoundException(ID));
-        given(messageSource.getMessage(
-                        isA(MessageSourceResolvable.class),
-                        isA(Locale.class))
-        ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
 
         mockMvc.perform(get("/api/todo/{id}", ID))
                 .andExpect(status().isNotFound());
@@ -301,15 +297,11 @@ public class TodoControllerTest {
     @Test
     public void findId_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         given(crudService.findById(ID)).willThrow(new TodoNotFoundException(ID));
-        given(messageSource.getMessage(
-                isA(MessageSourceResolvable.class),
-                isA(Locale.class))
-        ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
 
         mockMvc.perform(get("/api/todo/{id}", ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
-                .andExpect(jsonPath("message", is(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
+                .andExpect(jsonPath("message", is(ERROR_MESSAGE_KEY_TODO_ENTRY_NOT_FOUND)));
     }
 
     @Test

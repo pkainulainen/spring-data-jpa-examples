@@ -96,7 +96,7 @@ final class RestErrorHandler {
 
         //If the message was not found, return the most accurate field error code instead.
         //You can remove this check if you prefer to get the default error message.
-        if ((localizedErrorMessage == null) || localizedErrorMessage.equals(fieldError.getDefaultMessage())) {
+        if (localizedErrorMessage.equals(fieldError.getDefaultMessage())) {
             String[] fieldErrorCodes = fieldError.getCodes();
             localizedErrorMessage = fieldErrorCodes[0];
         }
