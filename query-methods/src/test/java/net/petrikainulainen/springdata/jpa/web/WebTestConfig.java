@@ -19,6 +19,10 @@ import java.util.Arrays;
 import java.util.Locale;
 
 /**
+ * This factory class provides methods that can be used to create objects that are useful
+ * when we are writing unit tests for our controller methods by using the Spring MVC Test
+ * framework.
+ *
  * @author Petri Kainulainen
  */
 final class WebTestConfig {
