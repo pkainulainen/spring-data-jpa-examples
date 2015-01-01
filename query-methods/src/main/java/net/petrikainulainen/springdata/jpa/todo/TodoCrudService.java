@@ -15,13 +15,13 @@ public interface TodoCrudService {
      * @param newTodoEntry   The information of the created todo entry.
      * @return               The information of the created todo entry.
      */
-    public TodoDTO create(TodoDTO newTodoEntry);
+    TodoDTO create(TodoDTO newTodoEntry);
 
     /**
      * Finds all todo entries that are saved to the database.
      * @return
      */
-    public List<TodoDTO> findAll();
+    List<TodoDTO> findAll();
 
     /**
      * Finds a todo entry by using the id given as a method parameter.
@@ -29,7 +29,7 @@ public interface TodoCrudService {
      * @return      The information of the requested todo entry.
      * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found with the given id.
      */
-    public TodoDTO findById(Long id);
+    TodoDTO findById(Long id);
 
     /**
      * Updates the information of an existing information.
@@ -37,5 +37,5 @@ public interface TodoCrudService {
      * @return                  The information of the updated todo entry.
      * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if no todo entry is found with the given id.
      */
-    public TodoDTO update(TodoDTO updatedTodoEntry);
+    TodoDTO update(TodoDTO updatedTodoEntry);
 }
