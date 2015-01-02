@@ -18,6 +18,7 @@ import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatT
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -92,6 +93,59 @@ public class RepositoryTodoServiceTest {
 
         TodoDTO created = service.create(newTodoEntry);
         assertThatTodoDTO(created)
+                .hasDescription(DESCRIPTION)
+                .hasId(ID)
+                .hasTitle(TITLE)
+                .wasCreatedAt(CREATION_TIME)
+                .wasModifiedAt(MODIFICATION_TIME);
+    }
+
+    @Test
+    public void delete_TodoEntryNotFound_ShouldThrowExceptionWithCorrectId() {
+        given(repository.findOne(ID)).willReturn(Optional.empty());
+
+        Throwable thrown = thrown(() -> service.delete(ID));
+
+        assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
+
+        TodoNotFoundException ex = (TodoNotFoundException) thrown;
+        assertThat(ex.getId()).isEqualTo(ID);
+    }
+
+    @Test
+    public void delete_TodoEntryNotFound_ShouldNotDeleteTodoEntry() {
+        given(repository.findOne(ID)).willReturn(Optional.empty());
+
+        thrown(() -> service.delete(ID));
+
+        verify(repository, never()).delete(isA(Todo.class));
+    }
+
+    @Test
+    public void delete_TodoEntryFound_ShouldDeleteFoundTodoEntry() {
+        Todo found = new TodoBuilder().build();
+        given(repository.findOne(ID)).willReturn(Optional.of(found));
+
+        service.delete(ID);
+
+        verify(repository, times(1)).delete(found);
+    }
+
+    @Test
+    public void delete_TodoEntryFound_ShouldReturnInformationOfDeletedTodoEntry() {
+        Todo found = new TodoBuilder()
+                .creationTime(CREATION_TIME)
+                .description(DESCRIPTION)
+                .id(ID)
+                .modificationTime(MODIFICATION_TIME)
+                .title(TITLE)
+                .build();
+
+        given(repository.findOne(ID)).willReturn(Optional.of(found));
+
+        TodoDTO deleted = service.delete(ID);
+
+        assertThatTodoDTO(deleted)
                 .hasDescription(DESCRIPTION)
                 .hasId(ID)
                 .hasTitle(TITLE)

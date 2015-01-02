@@ -28,6 +28,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -248,6 +249,45 @@ public class TodoControllerTest {
                 .hasNoCreationTime()
                 .hasNoId()
                 .hasNoModificationTime();
+    }
+
+    @Test
+    public void delete_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+        given(crudService.delete(ID)).willThrow(new TodoNotFoundException(ID));
+
+        mockMvc.perform(delete("/api/todo/{id}", ID))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void delete_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+        given(crudService.delete(ID)).willThrow(new TodoNotFoundException(ID));
+
+        mockMvc.perform(delete("/api/todo/{id}", ID))
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
+                .andExpect(jsonPath("message", is(ERROR_MESSAGE_KEY_TODO_ENTRY_NOT_FOUND)));
+    }
+
+    @Test
+    public void delete_TodoEntryFound_ShouldReturnInformationOfDeletedTodoEntryAsJson() throws Exception {
+        TodoDTO deleted = new TodoDTOBuilder()
+                .creationTime(CREATION_TIME)
+                .description(DESCRIPTION)
+                .id(ID)
+                .modificationTime(MODIFICATION_TIME)
+                .title(TITLE)
+                .build();
+
+        given(crudService.delete(ID)).willReturn(deleted);
+
+        mockMvc.perform(delete("/api/todo/{id}", ID))
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
+                .andExpect(jsonPath("$.description", is(DESCRIPTION)))
+                .andExpect(jsonPath("$.id", is(ID.intValue())))
+                .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.title", is(TITLE)));
     }
 
     @Test

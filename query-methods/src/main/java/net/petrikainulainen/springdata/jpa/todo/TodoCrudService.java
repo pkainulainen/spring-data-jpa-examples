@@ -18,6 +18,14 @@ public interface TodoCrudService {
     TodoDTO create(TodoDTO newTodoEntry);
 
     /**
+     * Deletes a todo entry from the database.
+     * @param id    The id of the deleted todo entry.
+     * @return      The information of the deleted todo entry.
+     * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if the deleted todo entry is not found.
+     */
+    TodoDTO delete(Long id);
+
+    /**
      * Finds all todo entries that are saved to the database.
      * @return
      */

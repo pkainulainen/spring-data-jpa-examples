@@ -13,6 +13,8 @@ import java.util.Optional;
  */
 interface TodoRepository extends Repository<Todo, Long> {
 
+    void delete(Todo deleted);
+
     List<Todo> findAll();
 
     Optional<Todo> findOne(Long id);

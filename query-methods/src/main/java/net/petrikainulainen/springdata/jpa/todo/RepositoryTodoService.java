@@ -42,6 +42,20 @@ final class RepositoryTodoService implements TodoCrudService {
         return transformIntoDTO(created);
     }
 
+    @Transactional
+    @Override
+    public TodoDTO delete(Long id) {
+        LOGGER.info("Deleting a todo entry with id: {}", id);
+
+        Todo deleted = findTodoEntryById(id);
+        LOGGER.debug("Found todo entry: {}", deleted);
+
+        repository.delete(deleted);
+        LOGGER.info("Deleted todo entry: {}", deleted);
+
+        return transformIntoDTO(deleted);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<TodoDTO> findAll() {

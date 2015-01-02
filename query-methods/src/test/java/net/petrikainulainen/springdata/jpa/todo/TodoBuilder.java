@@ -13,7 +13,7 @@ class TodoBuilder {
     private ZonedDateTime creationTime;
     private String description;
     private ZonedDateTime modificationTime;
-    private String title;
+    private String title = "NOT_IMPORTANT";
 
     TodoBuilder() {}
 

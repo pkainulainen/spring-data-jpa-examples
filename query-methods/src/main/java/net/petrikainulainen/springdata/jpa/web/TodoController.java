@@ -47,6 +47,22 @@ final class TodoController {
     }
 
     /**
+     * Deletes a todo entry.
+     * @param id    The id of the deleted todo entry.
+     * @return      The information of the deleted todo entry.
+     * @throws net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException if the deleted todo entry is not found.
+     */
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    public TodoDTO delete(@PathVariable("id") Long id) {
+        LOGGER.info("Deleting a todo entry with id: {}", id);
+
+        TodoDTO deleted = crudService.delete(id);
+        LOGGER.info("Deleted the todo entry: {}", deleted);
+
+        return deleted;
+    }
+
+    /**
      * Finds all todo entries.
      *
      * @return The information of all todo entries.
