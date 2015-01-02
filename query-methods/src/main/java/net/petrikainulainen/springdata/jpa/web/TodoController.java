@@ -35,6 +35,11 @@ final class TodoController {
         this.crudService = crudService;
     }
 
+    /**
+     * Create a new todo entry.
+     * @param newTodoEntry  The information of the created todo entry.
+     * @return              The information of the created todo entry.
+     */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     TodoDTO create(@RequestBody @Valid TodoDTO newTodoEntry) {
