@@ -1,48 +1,63 @@
 package net.petrikainulainen.springdata.jpa.web;
 
+import com.nitorcreations.junit.runners.NestedRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Petri Kainulainen
  */
+@RunWith(NestedRunner.class)
 public class FieldErrorDTOTest {
 
     private static final String FIELD = "field";
     private static final String MESSAGE = "message";
 
-    @Test(expected = NullPointerException.class)
-    public void createNew_FieldIsNull_ShouldThrowException() {
-        new FieldErrorDTO(null, MESSAGE);
-    }
+    public class CreateNew {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createNew_FieldIsEmpty_ShouldThrowException() {
-        new FieldErrorDTO("", MESSAGE);
-    }
+        public class WhenFieldIsInvalid {
 
-    @Test(expected = NullPointerException.class)
-    public void createNew_MessageIsNull_ShouldThrowException() {
-        new FieldErrorDTO(FIELD, null);
-    }
+            @Test(expected = NullPointerException.class)
+            public void shouldThrowExceptionWhenFieldIsNull() {
+                new FieldErrorDTO(null, MESSAGE);
+            }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createNew_MessageIsEmpty_ShouldThrowException() {
-        new FieldErrorDTO(FIELD, "");
-    }
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowExceptionWhenFieldIsEmpty() {
+                new FieldErrorDTO("", MESSAGE);
+            }
+        }
 
-    @Test
-    public void createNew_LegalFieldAndMessageGiven_ShouldCreateNewObjectAndSetField() {
-        FieldErrorDTO fieldError = new FieldErrorDTO(FIELD, MESSAGE);
+        public class WhenMessageIsInvalid {
 
-        assertThat(fieldError.getField()).isEqualTo(FIELD);
-    }
+            @Test(expected = NullPointerException.class)
+            public void shouldThrowExceptionWhenMessageIsNull() {
+                new FieldErrorDTO(FIELD, null);
+            }
 
-    @Test
-    public void createNew_LegalFieldAndMessageGiven_ShouldCreateNewObjectAndSetMessage() {
-        FieldErrorDTO fieldError = new FieldErrorDTO(FIELD, MESSAGE);
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowExceptionWhenMessageIsEmpty() {
+                new FieldErrorDTO(FIELD, "");
+            }
+        }
 
-        assertThat(fieldError.getMessage()).isEqualTo(MESSAGE);
+        public class WhenFieldAndMessageAreValid {
+
+            @Test
+            public void shouldCreateNewObjectAndSetField() {
+                FieldErrorDTO fieldError = new FieldErrorDTO(FIELD, MESSAGE);
+
+                assertThat(fieldError.getField()).isEqualTo(FIELD);
+            }
+
+            @Test
+            public void shouldCreateNewObjectAndSetMessage() {
+                FieldErrorDTO fieldError = new FieldErrorDTO(FIELD, MESSAGE);
+
+                assertThat(fieldError.getMessage()).isEqualTo(MESSAGE);
+            }
+        }
     }
 }
