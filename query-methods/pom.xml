@@ -143,6 +143,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.nitorcreations</groupId>
+            <artifactId>junit-runners</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>1.7.0</version>
