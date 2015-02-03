@@ -1,11 +1,10 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import com.nitorcreations.junit.runners.NestedRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +17,7 @@ import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatT
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 /**
  * @author Petri Kainulainen
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(NestedRunner.class)
 public class RepositoryTodoServiceTest {
 
     private static final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
@@ -38,258 +38,320 @@ public class RepositoryTodoServiceTest {
     private static final String UPDATED_DESCRIPTION = "updatedDescription";
     private static final String UPDATED_TITLE = "updatedTitle";
 
-    @Mock
     private TodoRepository repository;
 
     private RepositoryTodoService service;
 
     @Before
     public void setUp() {
+        repository = mock(TodoRepository.class);
         service = new RepositoryTodoService(repository);
     }
 
-    @Test
-    public void create_ShouldPersistNewTodoEntry() {
-        given(repository.save(isA(Todo.class))).willAnswer(
-                invocationOnMock -> invocationOnMock.getArguments()[0]
-        );
+    public class Create {
 
-        TodoDTO newTodoEntry = new TodoDTOBuilder()
-                .description(DESCRIPTION)
-                .title(TITLE)
-                .build();
+        @Test
+        public void shouldPersistNewTodoEntryWithCorrectInformation() {
+            given(repository.save(isA(Todo.class))).willAnswer(
+                    invocationOnMock -> invocationOnMock.getArguments()[0]
+            );
 
-        service.create(newTodoEntry);
+            TodoDTO newTodoEntry = new TodoDTOBuilder()
+                    .description(DESCRIPTION)
+                    .title(TITLE)
+                    .build();
 
-        ArgumentCaptor<Todo> persistedArgument = ArgumentCaptor.forClass(Todo.class);
-        verify(repository, times(1)).save(persistedArgument.capture());
-        verifyNoMoreInteractions(repository);
+            service.create(newTodoEntry);
 
-        Todo persisted = persistedArgument.getValue();
-        assertThatTodoEntry(persisted)
-                .hasNoCreationTime()
-                .hasDescription(DESCRIPTION)
-                .hasNoId()
-                .hasNoModificationTime()
-                .hasTitle(TITLE);
+            ArgumentCaptor<Todo> persistedArgument = ArgumentCaptor.forClass(Todo.class);
+            verify(repository, times(1)).save(persistedArgument.capture());
+            verifyNoMoreInteractions(repository);
+
+            Todo persisted = persistedArgument.getValue();
+            assertThatTodoEntry(persisted)
+                    .hasNoCreationTime()
+                    .hasDescription(DESCRIPTION)
+                    .hasNoId()
+                    .hasNoModificationTime()
+                    .hasTitle(TITLE);
+        }
+
+        @Test
+        public void shouldReturnTheInformationOfPersistedTodoEntry() {
+            given(repository.save(isA(Todo.class))).willAnswer(
+                    invocationOnMock -> new TodoBuilder()
+                            .creationTime(CREATION_TIME)
+                            .description(DESCRIPTION)
+                            .id(ID)
+                            .modificationTime(MODIFICATION_TIME)
+                            .title(TITLE)
+                            .build()
+            );
+
+            TodoDTO newTodoEntry = new TodoDTOBuilder()
+                    .description(DESCRIPTION)
+                    .title(TITLE)
+                    .build();
+
+            TodoDTO created = service.create(newTodoEntry);
+            assertThatTodoDTO(created)
+                    .hasDescription(DESCRIPTION)
+                    .hasId(ID)
+                    .hasTitle(TITLE)
+                    .wasCreatedAt(CREATION_TIME)
+                    .wasModifiedAt(MODIFICATION_TIME);
+        }
     }
 
-    @Test
-    public void create_ShouldReturnInformationOfPersistedTodoEntry() {
-        given(repository.save(isA(Todo.class))).willAnswer(
-                invocationOnMock -> new TodoBuilder()
+    public class Delete {
+
+        public class WhenTodoEntryIsNotFound {
+
+            @Test
+            public void shouldThrowExceptionWithCorrectId() {
+                given(repository.findOne(ID)).willReturn(Optional.empty());
+
+                Throwable thrown = thrown(() -> service.delete(ID));
+
+                assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
+
+                TodoNotFoundException ex = (TodoNotFoundException) thrown;
+                assertThat(ex.getId()).isEqualTo(ID);
+            }
+
+            @Test
+            public void shouldNotDeleteTodoEntry() {
+                given(repository.findOne(ID)).willReturn(Optional.empty());
+
+                thrown(() -> service.delete(ID));
+
+                verify(repository, never()).delete(isA(Todo.class));
+            }
+        }
+
+        public class WhenTodoEntryIsFound {
+
+            @Test
+            public void shouldDeleteFoundTodoEntry() {
+                Todo found = new TodoBuilder().build();
+                given(repository.findOne(ID)).willReturn(Optional.of(found));
+
+                service.delete(ID);
+
+                verify(repository, times(1)).delete(found);
+            }
+
+            @Test
+            public void shouldReturnTheInformationOfDeletedTodoEntry() {
+                Todo found = new TodoBuilder()
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
-                        .build()
-        );
+                        .build();
 
-        TodoDTO newTodoEntry = new TodoDTOBuilder()
-                .description(DESCRIPTION)
-                .title(TITLE)
-                .build();
+                given(repository.findOne(ID)).willReturn(Optional.of(found));
 
-        TodoDTO created = service.create(newTodoEntry);
-        assertThatTodoDTO(created)
-                .hasDescription(DESCRIPTION)
-                .hasId(ID)
-                .hasTitle(TITLE)
-                .wasCreatedAt(CREATION_TIME)
-                .wasModifiedAt(MODIFICATION_TIME);
+                TodoDTO deleted = service.delete(ID);
+
+                assertThatTodoDTO(deleted)
+                        .hasDescription(DESCRIPTION)
+                        .hasId(ID)
+                        .hasTitle(TITLE)
+                        .wasCreatedAt(CREATION_TIME)
+                        .wasModifiedAt(MODIFICATION_TIME);
+            }
+        }
     }
 
-    @Test
-    public void delete_TodoEntryNotFound_ShouldThrowExceptionWithCorrectId() {
-        given(repository.findOne(ID)).willReturn(Optional.empty());
+    public class FindAll {
 
-        Throwable thrown = thrown(() -> service.delete(ID));
+        public class WhenNoTodoEntryAreFound {
 
-        assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
+            @Test
+            public void shouldReturnEmptyList() {
+                given(repository.findAll()).willReturn(new ArrayList<>());
 
-        TodoNotFoundException ex = (TodoNotFoundException) thrown;
-        assertThat(ex.getId()).isEqualTo(ID);
+                List<TodoDTO> todoEntries = service.findAll();
+
+                assertThat(todoEntries).isEmpty();
+            }
+        }
+
+        public class WhenOneTodoEntryIsFound {
+
+            @Test
+            public void shouldReturnInformationOfFoundTodoEntry() {
+                Todo found = new TodoBuilder()
+                        .id(ID)
+                        .creationTime(CREATION_TIME)
+                        .description(DESCRIPTION)
+                        .modificationTime(MODIFICATION_TIME)
+                        .title(TITLE)
+                        .build();
+
+                given(repository.findAll()).willReturn(Arrays.asList(found));
+
+                List<TodoDTO> todoEntries = service.findAll();
+
+                assertThat(todoEntries).hasSize(1);
+                TodoDTO todoEntry = todoEntries.iterator().next();
+
+                assertThatTodoDTO(todoEntry)
+                        .hasId(ID)
+                        .hasTitle(TITLE)
+                        .hasDescription(DESCRIPTION)
+                        .wasCreatedAt(CREATION_TIME)
+                        .wasModifiedAt(MODIFICATION_TIME);
+            }
+        }
     }
 
-    @Test
-    public void delete_TodoEntryNotFound_ShouldNotDeleteTodoEntry() {
-        given(repository.findOne(ID)).willReturn(Optional.empty());
+    public class FindOne {
 
-        thrown(() -> service.delete(ID));
+        public class WhenTodoEntryIsNotFound {
 
-        verify(repository, never()).delete(isA(Todo.class));
+            @Test
+            public void shouldThrowExceptionWithCorrectId() {
+                given(repository.findOne(ID)).willReturn(Optional.empty());
+
+                Throwable thrown = thrown(() -> service.findById(ID));
+
+                assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
+
+                TodoNotFoundException exception = (TodoNotFoundException) thrown;
+                assertThat(exception.getId()).isEqualTo(ID);
+            }
+        }
+
+        public class WhenTodoEntryIsFound {
+
+            @Test
+            public void shouldReturnInformationOfFoundTodoEntry() {
+                Todo found = new TodoBuilder()
+                        .id(ID)
+                        .creationTime(CREATION_TIME)
+                        .description(DESCRIPTION)
+                        .modificationTime(MODIFICATION_TIME)
+                        .title(TITLE)
+                        .build();
+
+                given(repository.findOne(ID)).willReturn(Optional.of(found));
+
+                TodoDTO returned = service.findById(ID);
+
+                assertThatTodoDTO(returned)
+                        .hasDescription(DESCRIPTION)
+                        .hasId(ID)
+                        .hasTitle(TITLE)
+                        .wasCreatedAt(CREATION_TIME)
+                        .wasModifiedAt(MODIFICATION_TIME);
+            }
+        }
     }
 
-    @Test
-    public void delete_TodoEntryFound_ShouldDeleteFoundTodoEntry() {
-        Todo found = new TodoBuilder().build();
-        given(repository.findOne(ID)).willReturn(Optional.of(found));
+    public class Update {
 
-        service.delete(ID);
+        public class WhenTodoEntryIsNotFound {
 
-        verify(repository, times(1)).delete(found);
-    }
+            @Test
+            public void shouldThrowExceptionWithCorrectId() {
+                TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                        .id(ID)
+                        .build();
 
-    @Test
-    public void delete_TodoEntryFound_ShouldReturnInformationOfDeletedTodoEntry() {
-        Todo found = new TodoBuilder()
-                .creationTime(CREATION_TIME)
-                .description(DESCRIPTION)
-                .id(ID)
-                .modificationTime(MODIFICATION_TIME)
-                .title(TITLE)
-                .build();
+                given(repository.findOne(ID)).willReturn(Optional.empty());
 
-        given(repository.findOne(ID)).willReturn(Optional.of(found));
+                Throwable thrown = thrown(() -> service.update(updatedTodoEntry));
 
-        TodoDTO deleted = service.delete(ID);
+                assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
 
-        assertThatTodoDTO(deleted)
-                .hasDescription(DESCRIPTION)
-                .hasId(ID)
-                .hasTitle(TITLE)
-                .wasCreatedAt(CREATION_TIME)
-                .wasModifiedAt(MODIFICATION_TIME);
-    }
+                TodoNotFoundException exception = (TodoNotFoundException) thrown;
+                assertThat(exception.getId()).isEqualTo(ID);
+            }
+        }
 
-    @Test
-    public void findAll_NoTodoEntriesFound_ShouldReturnEmptyList() {
-        given(repository.findAll()).willReturn(new ArrayList<>());
+        public class WhenTodoEntryIsFound {
 
-        List<TodoDTO> todoEntries = service.findAll();
+            @Test
+            public void shouldUpdateTitleAndDescription() {
+                TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                        .id(ID)
+                        .description(UPDATED_DESCRIPTION)
+                        .title(UPDATED_TITLE)
+                        .build();
 
-        assertThat(todoEntries).isEmpty();
-    }
+                Todo updated = new TodoBuilder()
+                        .creationTime(CREATION_TIME)
+                        .description(DESCRIPTION)
+                        .id(ID)
+                        .modificationTime(MODIFICATION_TIME)
+                        .title(TITLE)
+                        .build();
 
-    @Test
-    public void findAll_OneTodoEntryFound_ShouldReturnInformationOfFoundTodoEntry() {
-        Todo found = new TodoBuilder()
-                .id(ID)
-                .creationTime(CREATION_TIME)
-                .description(DESCRIPTION)
-                .modificationTime(MODIFICATION_TIME)
-                .title(TITLE)
-                .build();
+                given(repository.findOne(ID)).willReturn(Optional.of(updated));
 
-        given(repository.findAll()).willReturn(Arrays.asList(found));
+                service.update(updatedTodoEntry);
 
-        List<TodoDTO> todoEntries = service.findAll();
+                assertThatTodoEntry(updated)
+                        .wasCreatedAt(CREATION_TIME)
+                        .wasModifiedAt(MODIFICATION_TIME);
+            }
 
-        assertThat(todoEntries).hasSize(1);
-        TodoDTO todoEntry = todoEntries.iterator().next();
+            @Test
+            public void shouldNotUpdateIdOrTimestamps() {
+                TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                        .id(ID)
+                        .description(UPDATED_DESCRIPTION)
+                        .title(UPDATED_TITLE)
+                        .build();
 
-        assertThatTodoDTO(todoEntry)
-                .hasId(ID)
-                .hasTitle(TITLE)
-                .hasDescription(DESCRIPTION)
-                .wasCreatedAt(CREATION_TIME)
-                .wasModifiedAt(MODIFICATION_TIME);
-    }
+                Todo updated = new TodoBuilder()
+                        .creationTime(CREATION_TIME)
+                        .description(DESCRIPTION)
+                        .id(ID)
+                        .modificationTime(MODIFICATION_TIME)
+                        .title(TITLE)
+                        .build();
 
-    @Test
-    public void findOne_TodoEntryNotFound_ShouldThrowExceptionWithCorrectId() {
-        given(repository.findOne(ID)).willReturn(Optional.empty());
+                given(repository.findOne(ID)).willReturn(Optional.of(updated));
 
-        Throwable thrown = thrown(() -> service.findById(ID));
+                service.update(updatedTodoEntry);
 
-        assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
+                assertThatTodoEntry(updated)
+                        .hasId(ID)
+                        .wasCreatedAt(CREATION_TIME)
+                        .wasModifiedAt(MODIFICATION_TIME);
+            }
 
-        TodoNotFoundException exception = (TodoNotFoundException) thrown;
-        assertThat(exception.getId()).isEqualTo(ID);
-    }
+            @Test
+            public void shouldReturnInformationOfUpdatedTodoEntry() {
+                TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                        .id(ID)
+                        .description(UPDATED_DESCRIPTION)
+                        .title(UPDATED_TITLE)
+                        .build();
 
-    @Test
-    public void findOne_TodoEntryIsFound_ShouldReturnTheInformationOfFoundTodoEntry() {
-        Todo found = new TodoBuilder()
-                .id(ID)
-                .creationTime(CREATION_TIME)
-                .description(DESCRIPTION)
-                .modificationTime(MODIFICATION_TIME)
-                .title(TITLE)
-                .build();
+                Todo updated = new TodoBuilder()
+                        .creationTime(CREATION_TIME)
+                        .description(DESCRIPTION)
+                        .id(ID)
+                        .modificationTime(MODIFICATION_TIME)
+                        .title(TITLE)
+                        .build();
 
-        given(repository.findOne(ID)).willReturn(Optional.of(found));
+                given(repository.findOne(ID)).willReturn(Optional.of(updated));
 
-        TodoDTO returned = service.findById(ID);
+                TodoDTO returnedTodoEntry = service.update(updatedTodoEntry);
 
-        assertThatTodoDTO(returned)
-                .hasDescription(DESCRIPTION)
-                .hasId(ID)
-                .hasTitle(TITLE)
-                .wasCreatedAt(CREATION_TIME)
-                .wasModifiedAt(MODIFICATION_TIME);
-    }
-
-    @Test
-    public void update_TodoEntryIsNotFound_ShouldThrowExceptionWithCorrectId() {
-        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(ID)
-                .build();
-
-        given(repository.findOne(ID)).willReturn(Optional.empty());
-
-        Throwable thrown = thrown(() -> service.update(updatedTodoEntry));
-
-        assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
-
-        TodoNotFoundException exception = (TodoNotFoundException) thrown;
-        assertThat(exception.getId()).isEqualTo(ID);
-    }
-
-    @Test
-    public void update_TodoEntryIsFound_ShouldUpdateOnlyTitleAndDescription() {
-        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(ID)
-                .description(UPDATED_DESCRIPTION)
-                .title(UPDATED_TITLE)
-                .build();
-
-        Todo updated = new TodoBuilder()
-                .creationTime(CREATION_TIME)
-                .description(DESCRIPTION)
-                .id(ID)
-                .modificationTime(MODIFICATION_TIME)
-                .title(TITLE)
-                .build();
-
-        given(repository.findOne(ID)).willReturn(Optional.of(updated));
-
-        service.update(updatedTodoEntry);
-
-        assertThatTodoEntry(updated)
-                .hasDescription(UPDATED_DESCRIPTION)
-                .hasId(ID)
-                .hasTitle(UPDATED_TITLE)
-                .wasCreatedAt(CREATION_TIME)
-                .wasModifiedAt(MODIFICATION_TIME);
-    }
-
-    @Test
-    public void update_TodoEntryIsFound_ShouldReturnTheInformationOfUpdatedTodoEntry() {
-        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(ID)
-                .description(UPDATED_DESCRIPTION)
-                .title(UPDATED_TITLE)
-                .build();
-
-        Todo updated = new TodoBuilder()
-                .creationTime(CREATION_TIME)
-                .description(DESCRIPTION)
-                .id(ID)
-                .modificationTime(MODIFICATION_TIME)
-                .title(TITLE)
-                .build();
-
-        given(repository.findOne(ID)).willReturn(Optional.of(updated));
-
-        TodoDTO returnedTodoEntry = service.update(updatedTodoEntry);
-
-        assertThatTodoDTO(returnedTodoEntry)
-                .hasDescription(UPDATED_DESCRIPTION)
-                .hasId(ID)
-                .hasTitle(UPDATED_TITLE)
-                .wasCreatedAt(CREATION_TIME)
-                .wasModifiedAt(MODIFICATION_TIME);
+                assertThatTodoDTO(returnedTodoEntry)
+                        .hasDescription(UPDATED_DESCRIPTION)
+                        .hasId(ID)
+                        .hasTitle(UPDATED_TITLE)
+                        .wasCreatedAt(CREATION_TIME)
+                        .wasModifiedAt(MODIFICATION_TIME);
+            }
+        }
     }
 }
