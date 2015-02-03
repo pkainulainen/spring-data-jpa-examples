@@ -1,6 +1,8 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import com.nitorcreations.junit.runners.NestedRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.time.ZonedDateTime;
 
@@ -10,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Petri Kainulainen
  */
+@RunWith(NestedRunner.class)
 public class TodoTest {
 
     private static final int MAX_LENGTH_DESCRIPTION = 500;
@@ -21,189 +24,263 @@ public class TodoTest {
     private static final String UPDATED_DESCRIPTION = "updatedDescription";
     private static final String UPDATED_TITLE = "updatedTitle";
 
-    @Test(expected = NullPointerException.class)
-    public void build_TitleIsNull_ShouldThrowException() {
-        Todo.getBuilder()
-                .title(null)
-                .description(DESCRIPTION)
-                .build();
+    public class Build {
+
+        public class WhenTitleIsInvalid {
+
+            @Test(expected = NullPointerException.class)
+            public void shouldThrowExceptionWhenTitleIsNull() {
+                Todo.getBuilder()
+                        .title(null)
+                        .description(DESCRIPTION)
+                        .build();
+            }
+
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowExceptionWhenTitleIsEmpty() {
+                Todo.getBuilder()
+                        .title("")
+                        .description(DESCRIPTION)
+                        .build();
+            }
+
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowExceptionWhenTitleIsTooLong() {
+                String tooLongTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE + 1);
+
+                Todo.getBuilder()
+                        .title(tooLongTitle)
+                        .description(DESCRIPTION)
+                        .build();
+            }
+        }
+
+        public class WhenDescriptionIsTooLong {
+
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowException() {
+                String tooLongDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION + 1);
+
+                Todo.getBuilder()
+                        .title(TITLE)
+                        .description(tooLongDescription)
+                        .build();
+            }
+        }
+
+        public class WhenTitleAndDescriptionAreValid {
+
+            @Test
+            public void shouldCreateNewObjectWhenMaxLengthTitleIsGiven() {
+                String maxLengthTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE);
+
+                Todo build = Todo.getBuilder()
+                        .title(maxLengthTitle)
+                        .description(DESCRIPTION)
+                        .build();
+
+                assertThatTodoEntry(build)
+                        .hasTitle(maxLengthTitle)
+                        .hasDescription(DESCRIPTION)
+                        .hasNoCreationTime()
+                        .hasNoId()
+                        .hasNoModificationTime();
+            }
+
+            @Test
+            public void shouldCreateNewObjectWhenMaxLengthDescriptionIsGiven() {
+                String maxLengthDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION);
+
+                Todo build = Todo.getBuilder()
+                        .title(TITLE)
+                        .description(maxLengthDescription)
+                        .build();
+
+                assertThatTodoEntry(build)
+                        .hasTitle(TITLE)
+                        .hasDescription(maxLengthDescription)
+                        .hasNoId()
+                        .hasNoCreationTime()
+                        .hasNoModificationTime();
+            }
+
+            @Test
+            public void shouldCreateNewObjectWhenNoDescriptionIsGiven() {
+                Todo build = Todo.getBuilder()
+                        .title(TITLE)
+                        .build();
+
+                assertThatTodoEntry(build)
+                        .hasTitle(TITLE)
+                        .hasNoId()
+                        .hasNoCreationTime()
+                        .hasNoDescription()
+                        .hasNoModificationTime();
+            }
+        }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void build_TitleIsEmpty_ShouldThrowException() {
-        Todo.getBuilder()
-                .title("")
-                .description(DESCRIPTION)
-                .build();
+    public class PrePersist {
+
+        @Test
+        public void shouldUseSameTimeAsCreationTimeAndModificationTime() {
+            Todo newTodoEntry = Todo.getBuilder()
+                    .title(TITLE)
+                    .build();
+
+            newTodoEntry.prePersist();
+
+            ZonedDateTime creationTime = newTodoEntry.getCreationTime();
+            ZonedDateTime modificationTime = newTodoEntry.getModificationTime();
+
+            assertThat(creationTime).isNotNull();
+            assertThat(modificationTime).isNotNull();
+            assertThat(creationTime).isEqualTo(modificationTime);
+        }
     }
 
-    @Test
-    public void build_MaxLengthTitleGiven_ShouldCreateNewObject() {
-        String maxLengthTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE);
+    public class Update {
 
-        Todo build = Todo.getBuilder()
-                .title(maxLengthTitle)
-                .description(DESCRIPTION)
-                .build();
+        public class WhenNewTitleIsInvalid {
 
-        assertThatTodoEntry(build)
-                .hasTitle(maxLengthTitle)
-                .hasDescription(DESCRIPTION)
-                .hasNoCreationTime()
-                .hasNoId()
-                .hasNoModificationTime();
-    }
+            @Test(expected = NullPointerException.class)
+            public void shouldThrowExceptionWhenNewTitleIsNull() {
+                Todo updated = Todo.getBuilder()
+                        .title(TITLE)
+                        .build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void build_TooLongTitleGiven_ShouldThrowException() {
-        String maxLengthTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE + 1);
+                updated.update(null, UPDATED_DESCRIPTION);
+            }
 
-        Todo.getBuilder()
-                .title(maxLengthTitle)
-                .description(DESCRIPTION)
-                .build();
-    }
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowExceptionWhenNewTitleIsEmpty() {
+                Todo updated = Todo.getBuilder()
+                        .title(TITLE)
+                        .build();
 
-    @Test
-    public void build_NoDescriptionGiven_ShouldCreateNewObject() {
-        Todo build = Todo.getBuilder()
-                .title(TITLE)
-                .build();
+                updated.update("", UPDATED_DESCRIPTION);
+            }
 
-        assertThatTodoEntry(build)
-                .hasTitle(TITLE)
-                .hasNoId()
-                .hasNoCreationTime()
-                .hasNoDescription()
-                .hasNoModificationTime();
-    }
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowExceptionWhenNewTitleIsTooLong() {
+                String tooLongTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE + 1);
 
-    @Test
-    public void build_MaxLengthDescriptionGiven_ShouldCreateNewObject() {
-        String maxLengthDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION);
+                Todo updated = Todo.getBuilder()
+                        .title(TITLE)
+                        .build();
 
-        Todo build = Todo.getBuilder()
-                .title(TITLE)
-                .description(maxLengthDescription)
-                .build();
+                updated.update(tooLongTitle, UPDATED_DESCRIPTION);
+            }
+        }
 
-        assertThatTodoEntry(build)
-                .hasTitle(TITLE)
-                .hasDescription(maxLengthDescription)
-                .hasNoId()
-                .hasNoCreationTime()
-                .hasNoModificationTime();
-    }
+        public class WhenNewDescriptionIsTooLong {
+            @Test(expected = IllegalArgumentException.class)
+            public void shouldThrowException() {
+                String tooLongDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION + 1);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void build_TooLongDescriptionGiven_ShouldThrowException() {
-        String tooLongDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION + 1);
+                Todo updated = Todo.getBuilder()
+                        .description(DESCRIPTION)
+                        .title(TITLE)
+                        .build();
 
-        Todo.getBuilder()
-                .title(TITLE)
-                .description(tooLongDescription)
-                .build();
-    }
+                updated.update(UPDATED_TITLE, tooLongDescription);
+            }
+        }
 
-    @Test
-    public void prePersist_ShouldUseSameTimeAsCreationTimeAndModificationTime() {
-        Todo newTodoEntry = Todo.getBuilder()
-                .title(TITLE)
-                .build();
+        public class WhenNewTitleAndNewDescriptionAreValid {
 
-        newTodoEntry.prePersist();
+            public class WhenMaxLengthTitleAndNewDescriptionAreGiven {
 
-        ZonedDateTime creationTime = newTodoEntry.getCreationTime();
-        ZonedDateTime modificationTime = newTodoEntry.getModificationTime();
+                @Test
+                public void shouldUpdateTitle() {
+                    String maxLengthTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE);
 
-        assertThat(creationTime).isNotNull();
-        assertThat(modificationTime).isNotNull();
-        assertThat(creationTime).isEqualTo(modificationTime);
-    }
+                    Todo updated = Todo.getBuilder()
+                            .title(TITLE)
+                            .build();
 
-    @Test(expected = NullPointerException.class)
-    public void update_NewTitleIsNull_ShouldThrowException() {
-        Todo updated = Todo.getBuilder()
-                .title(TITLE)
-                .build();
+                    updated.update(maxLengthTitle, UPDATED_DESCRIPTION);
 
-        updated.update(null, UPDATED_DESCRIPTION);
-    }
+                    assertThatTodoEntry(updated)
+                            .hasTitle(maxLengthTitle);
+                }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void update_NewTitleIsEmpty_ShouldThrowException() {
-        Todo updated = Todo.getBuilder()
-                .title(TITLE)
-                .build();
+                @Test
+                public void shouldUpdateDescription() {
+                    String maxLengthTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE);
 
-        updated.update("", UPDATED_DESCRIPTION);
-    }
+                    Todo updated = Todo.getBuilder()
+                            .title(TITLE)
+                            .build();
 
-    @Test
-    public void update_MaxLengthTitleGiven_ShouldUpdateTitleAndDescription() {
-        String maxLengthTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE);
+                    updated.update(maxLengthTitle, UPDATED_DESCRIPTION);
 
-        Todo updated = Todo.getBuilder()
-                .title(TITLE)
-                .build();
+                    assertThatTodoEntry(updated)
+                            .hasDescription(UPDATED_DESCRIPTION);
+                }
+            }
 
-        updated.update(maxLengthTitle, UPDATED_DESCRIPTION);
+            public class WhenNewTitleIsGivenAndNewDescriptionIsNull {
 
-        assertThatTodoEntry(updated)
-                .hasDescription(UPDATED_DESCRIPTION)
-                .hasTitle(maxLengthTitle);
-    }
+                @Test
+                public void shouldUpdateTitle() {
+                    Todo updated = Todo.getBuilder()
+                            .description(DESCRIPTION)
+                            .title(TITLE)
+                            .build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void update_NewTitleIsTooLong_ShouldThrowException() {
-        String tooLongTitle = TestUtil.createStringWithLength(MAX_LENGTH_TITLE + 1);
+                    updated.update(UPDATED_TITLE, null);
 
-        Todo updated = Todo.getBuilder()
-                .title(TITLE)
-                .build();
+                    assertThatTodoEntry(updated)
+                            .hasTitle(UPDATED_TITLE);
+                }
 
-        updated.update(tooLongTitle, UPDATED_DESCRIPTION);
-    }
+                @Test
+                public void shouldRemoveDescription() {
+                    Todo updated = Todo.getBuilder()
+                            .description(DESCRIPTION)
+                            .title(TITLE)
+                            .build();
 
-    @Test
-    public void update_NewDescriptionIsNull_ShouldUpdateTitleAndRemoveDescription() {
-        Todo updated = Todo.getBuilder()
-                .description(DESCRIPTION)
-                .title(TITLE)
-                .build();
+                    updated.update(UPDATED_TITLE, null);
 
-        updated.update(UPDATED_TITLE, null);
+                    assertThatTodoEntry(updated)
+                            .hasNoDescription();
+                }
+            }
 
-        assertThatTodoEntry(updated)
-                .hasNoDescription()
-                .hasTitle(UPDATED_TITLE);
-    }
+            public class WhenNewTitleIsGivenAndMaxLengthDescriptionAreGiven {
 
-    @Test
-    public void update_MaxLengthDescriptionGiven_ShouldUpdateTitleAndDescription() {
-        String maxLengthDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION);
+                @Test
+                public void shouldUpdateTitle() {
+                    String maxLengthDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION);
 
-        Todo updated = Todo.getBuilder()
-                .description(DESCRIPTION)
-                .title(TITLE)
-                .build();
+                    Todo updated = Todo.getBuilder()
+                            .description(DESCRIPTION)
+                            .title(TITLE)
+                            .build();
 
-        updated.update(UPDATED_TITLE, maxLengthDescription);
+                    updated.update(UPDATED_TITLE, maxLengthDescription);
 
-        assertThatTodoEntry(updated)
-                .hasDescription(maxLengthDescription)
-                .hasTitle(UPDATED_TITLE);
-    }
+                    assertThatTodoEntry(updated)
+                            .hasTitle(UPDATED_TITLE);
+                }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void update_NewDescriptionIsTooLong_ShouldThrowException() {
-        String tooLongDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION + 1);
+                @Test
+                public void shouldUpdateDescription() {
+                    String maxLengthDescription = TestUtil.createStringWithLength(MAX_LENGTH_DESCRIPTION);
 
-        Todo updated = Todo.getBuilder()
-                .description(DESCRIPTION)
-                .title(TITLE)
-                .build();
+                    Todo updated = Todo.getBuilder()
+                            .description(DESCRIPTION)
+                            .title(TITLE)
+                            .build();
 
-        updated.update(UPDATED_TITLE, tooLongDescription);
+                    updated.update(UPDATED_TITLE, maxLengthDescription);
+
+                    assertThatTodoEntry(updated)
+                            .hasDescription(maxLengthDescription);
+                }
+            }
+        }
     }
 }
