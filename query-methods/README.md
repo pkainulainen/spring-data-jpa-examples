@@ -57,3 +57,8 @@ Running the Application
 You can run the application by using the following command:
 
     mvn clean jetty:run -P dev
+    
+Credits
+=========
+
+* Kyösti Herrala. The Gulp build script and its Maven integration are based on Kyösti's ideas.
