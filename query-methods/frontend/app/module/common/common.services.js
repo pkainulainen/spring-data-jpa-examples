@@ -6,13 +6,13 @@ angular.module('app.common.services', [])
 
         function displayNotification(message, type) {
             if (type === 'success') {
-                growl.addSuccessMessage(message);
+                growl.success(message);
             } else if (type === 'warn') {
-                growl.addWarnMessage(message);
+                growl.warning(message);
             } else if (type === 'info') {
-                growl.addInfoMessage(message);
+                growl.info(message);
             } else {
-                growl.addErrorMessage(message);
+                growl.error(message);
             }
         }
 

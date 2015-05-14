@@ -36,7 +36,7 @@ module.exports = {
             './bower_components/angular-ui-utils/ui-utils.min.js',
             './bower_components/angular-ui-utils/ui-utils-ieshiv.min.js',
             './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-            './bower_components/angular-growl/build/angular-growl.min.js'
+            './bower_components/angular-growl-v2/build/angular-growl.min.js'
         ]
     },
 

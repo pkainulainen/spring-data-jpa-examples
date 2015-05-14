@@ -17,6 +17,7 @@ angular.module('app.common.config', [])
         });
 
         $translateProvider.preferredLanguage('en');
+        $translateProvider.useSanitizeValueStrategy('escaped');
         $translateProvider.useLocalStorage();
         $translateProvider.useMissingTranslationHandlerLog();
     }])
