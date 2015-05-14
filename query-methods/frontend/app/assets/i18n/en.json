@@ -1,0 +1,10 @@
+{
+    "app.title.label": "Spring Data JPA Tutorial - Query Methods",
+    "footer.message": "Spring Data JPA example application by Petri Kainulainen",
+    "header.brand.label": "Spring Data JPA Tutorial",
+    "pages": {
+        "list.page": {
+            "title": "Things to do"
+        }
+    }
+}
