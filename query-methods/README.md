@@ -12,8 +12,33 @@ Prerequisites
 
 You need to install the following tools if you want to run this application:
 
+Backend
+---------
+
 * [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * [Maven](http://maven.apache.org/) (the application is tested with Maven 3.2.1)
+
+Frontend
+----------
+
+* [Node.js](http://nodejs.org/)
+* [NPM](https://www.npmjs.org/)
+* [Bower](http://bower.io/)
+* [Gulp](http://gulpjs.com/)
+
+You can install these tools by following these steps:
+
+1.  Install Node.js by using a [downloaded binary](http://nodejs.org/download/) or a [package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
+    You can also read this blog post: [How to install Node.js and NPM](http://blog.nodeknockout.com/post/65463770933/how-to-install-node-js-and-npm)
+
+2.  Install Bower by using the following command:
+
+        npm install -g bower
+
+3. Install Gulp by using the following command:
+
+        npm install -g gulp
+
 
 Running the Tests
 =================
