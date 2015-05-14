@@ -2,8 +2,7 @@ package net.petrikainulainen.springdata.jpa.common;
 
 import org.junit.Test;
 
-import static net.petrikainulainen.springdata.jpa.common.ThrowableCaptor.thrown;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Petri Kainulainen
@@ -19,9 +18,7 @@ public class PreConditionTest {
 
     @Test
     public void isTrueWithDynamicErrorMessage_ExpressionIsFalse_ShouldThrowException() {
-        Throwable thrown = thrown(() -> PreCondition.isTrue(false, "Dynamic error message with parameter: %d", 1L));
-
-        assertThat(thrown)
+        assertThatThrownBy(() -> PreCondition.isTrue(false, "Dynamic error message with parameter: %d", 1L))
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Dynamic error message with parameter: 1");
     }
@@ -33,9 +30,7 @@ public class PreConditionTest {
 
     @Test
     public void isTrueWithStaticErrorMessage_ExpressionIsFalse_ShouldThrowException() {
-        Throwable thrown = thrown(() -> PreCondition.isTrue(false, STATIC_ERROR_MESSAGE));
-
-        assertThat(thrown)
+        assertThatThrownBy(() -> PreCondition.isTrue(false, STATIC_ERROR_MESSAGE))
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasMessage(STATIC_ERROR_MESSAGE);
     }
@@ -47,9 +42,7 @@ public class PreConditionTest {
 
     @Test
     public void notEmpty_StringIsEmpty_ShouldThrowException() {
-        Throwable thrown = thrown(() -> PreCondition.notEmpty("", STATIC_ERROR_MESSAGE));
-
-        assertThat(thrown)
+        assertThatThrownBy(() -> PreCondition.notEmpty("", STATIC_ERROR_MESSAGE))
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasMessage(STATIC_ERROR_MESSAGE);
     }
@@ -61,9 +54,7 @@ public class PreConditionTest {
 
     @Test
     public void notNull_ObjectIsNull_ShouldThrowException() {
-        Throwable thrown = thrown(() -> PreCondition.notNull(null, STATIC_ERROR_MESSAGE));
-
-        assertThat(thrown)
+        assertThatThrownBy(() -> PreCondition.notNull(null, STATIC_ERROR_MESSAGE))
                 .isExactlyInstanceOf(NullPointerException.class)
                 .hasMessage(STATIC_ERROR_MESSAGE);
     }

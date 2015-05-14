@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import static net.petrikainulainen.springdata.jpa.common.ThrowableCaptor.thrown;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 /**
  * @author Petri Kainulainen
@@ -34,7 +34,7 @@ public class ValidationErrorDTOTest {
                 public void shouldNotCreateNewFieldError() {
                     ValidationErrorDTO validationErrors = new ValidationErrorDTO();
 
-                    thrown(() -> validationErrors.addFieldError(null, MESSAGE));
+                    catchThrowable(() -> validationErrors.addFieldError(null, MESSAGE));
 
                     assertThat(validationErrors.getFieldErrors()).isEmpty();
                 }
@@ -52,7 +52,7 @@ public class ValidationErrorDTOTest {
                 public void shouldNotCreateNewFieldError() {
                     ValidationErrorDTO validationErrors = new ValidationErrorDTO();
 
-                    thrown(() -> validationErrors.addFieldError("", MESSAGE));
+                    catchThrowable(() -> validationErrors.addFieldError("", MESSAGE));
 
                     assertThat(validationErrors.getFieldErrors()).isEmpty();
                 }
@@ -73,7 +73,7 @@ public class ValidationErrorDTOTest {
                 public void shouldNotCreateNewFieldError() {
                     ValidationErrorDTO validationErrors = new ValidationErrorDTO();
 
-                    thrown(() -> validationErrors.addFieldError(FIELD, null));
+                    catchThrowable(() -> validationErrors.addFieldError(FIELD, null));
 
                     assertThat(validationErrors.getFieldErrors()).isEmpty();
                 }
@@ -91,7 +91,7 @@ public class ValidationErrorDTOTest {
                 public void shouldNotCreateNewFieldError() {
                     ValidationErrorDTO validationErrors = new ValidationErrorDTO();
 
-                    thrown(() -> validationErrors.addFieldError(FIELD, ""));
+                    catchThrowable(() -> validationErrors.addFieldError(FIELD, ""));
 
                     assertThat(validationErrors.getFieldErrors()).isEmpty();
                 }

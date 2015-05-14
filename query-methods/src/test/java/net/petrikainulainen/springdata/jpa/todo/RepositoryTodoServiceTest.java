@@ -11,10 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static net.petrikainulainen.springdata.jpa.common.ThrowableCaptor.thrown;
 import static net.petrikainulainen.springdata.jpa.todo.TodoAssert.assertThatTodoEntry;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -111,7 +111,7 @@ public class RepositoryTodoServiceTest {
             public void shouldThrowExceptionWithCorrectId() {
                 given(repository.findOne(ID)).willReturn(Optional.empty());
 
-                Throwable thrown = thrown(() -> service.delete(ID));
+                Throwable thrown = catchThrowable(() -> service.delete(ID));
 
                 assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
 
@@ -123,7 +123,7 @@ public class RepositoryTodoServiceTest {
             public void shouldNotDeleteTodoEntry() {
                 given(repository.findOne(ID)).willReturn(Optional.empty());
 
-                thrown(() -> service.delete(ID));
+                catchThrowable(() -> service.delete(ID));
 
                 verify(repository, never()).delete(isA(Todo.class));
             }
@@ -216,7 +216,7 @@ public class RepositoryTodoServiceTest {
             public void shouldThrowExceptionWithCorrectId() {
                 given(repository.findOne(ID)).willReturn(Optional.empty());
 
-                Throwable thrown = thrown(() -> service.findById(ID));
+                Throwable thrown = catchThrowable(() -> service.findById(ID));
 
                 assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
 
@@ -263,7 +263,7 @@ public class RepositoryTodoServiceTest {
 
                 given(repository.findOne(ID)).willReturn(Optional.empty());
 
-                Throwable thrown = thrown(() -> service.update(updatedTodoEntry));
+                Throwable thrown = catchThrowable(() -> service.update(updatedTodoEntry));
 
                 assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
 
