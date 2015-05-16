@@ -56,3 +56,15 @@ small.ng-error {
 a:hover {
   cursor: pointer;
 }
+
+.striped-list {
+  > .row:nth-of-type(odd) {
+    background-color: @table-bg-accent;
+  }
+}
+
+.striped-list .row {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 0.5em;
+}
