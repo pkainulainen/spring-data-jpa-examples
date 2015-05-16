@@ -37,25 +37,14 @@ gulp.task('appPartials', function () {
             spare: true,
             quotes: true
         }))
-        //Copies the HTML templates into the target directory
-        .pipe(gulp.dest(config.target.partials))
         //Loads the HTML templates into AngularJS $templateCache
-        .pipe(plugins.ngHtml2js({
-            moduleName: 'app.partials',
-            prefix: 'frontend/partials/',
-            declareModule: false
+        .pipe(plugins.angularTemplatecache('partials.js', {
+            standalone: true
         }))
-        .pipe(plugins.concat('partials.js'))
-        //Creates an AngularJS module called 'app.partials'
-        .pipe(plugins.insert.prepend("angular.module('app.partials',[]);"))
-        //Minifies the created Javascript file
-        .pipe(plugins.uglify({
-            mangle: false
-        }))
-        //Copy the created Javascript file into the target directory
+        //Copy the created Javascript file to the target directory
         .pipe(gulp.dest(config.target.js))
         //Reports the size of created Javascript file
-        .pipe(plugins.size({title: 'templates'}))
+        .pipe(plugins.size({showFiles: true}))
 });
 
 //Processes the LESS files of our application.

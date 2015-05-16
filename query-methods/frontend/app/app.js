@@ -15,7 +15,7 @@ var App = angular.module('app', [
     'angularMoment',
 
     //Partials
-    'app.partials',
+    'templates',
 
     //Common
     'app.common.config', 'app.common.directives', 'app.common.services',
