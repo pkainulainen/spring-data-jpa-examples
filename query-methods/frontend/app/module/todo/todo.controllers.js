@@ -90,7 +90,17 @@ angular.module('app.todo.controllers', [])
         console.log('Rendering todo entry list page for todo entries: ', todoEntries);
         $scope.todoEntries = todoEntries;
     }])
-    .controller('ViewTodoController', ['$scope', 'todoEntry', function($scope, todoEntry) {
-        console.log('Rending view todo entry page for todo entry: ', todoEntry);
-        $scope.todoEntry = todoEntry;
+    .controller('ViewTodoController', ['$scope', '$state', 'NotificationService', 'todoEntry',
+        function($scope, $state, NotificationService, todoEntry) {
+            console.log('Rending view todo entry page for todo entry: ', todoEntry);
+            $scope.todoEntry = todoEntry;
+
+            $scope.onDeleteSuccess = function() {
+                NotificationService.flashMessage('todo.notifications.delete.success', 'success');
+                $state.go('todo.list');
+            };
+
+            $scope.onDeleteError = function() {
+                NotificationService.flashMessage('todo.notifications.delete.error', 'error');
+            };
     }]);

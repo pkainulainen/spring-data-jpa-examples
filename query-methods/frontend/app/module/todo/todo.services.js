@@ -21,6 +21,18 @@ angular.module('app.todo.services', ['ngResource'])
                         errorCallback(error);
                     });
             },
+            delete: function(todo, successCallback, errorCallback) {
+                return api.delete(todo,
+                    function(deleted) {
+                        console.log('Deleted todo entry: ', deleted);
+                        successCallback(deleted);
+                    },
+                    function(error) {
+                        console.log('Deleting the todo entry failed because of an error: ', error);
+                        errorCallback(error);
+                    }
+                );
+            },
             findAll: function() {
                 return api.query();
             },

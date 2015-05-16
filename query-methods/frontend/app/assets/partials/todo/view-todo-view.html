@@ -13,7 +13,11 @@
             </p>
         </div>
         <div>
-            <a ui-sref="todo.edit({id: todoEntry.id})" translate="pages.edit.page.link.label"></a>
+            <a ui-sref="todo.edit({id: todoEntry.id})" translate="pages.edit.page.link.label"></a> |
+            <span delete-todo-entry-link
+                  on-error="onDeleteError()"
+                  on-success="onDeleteSuccess()";
+                  todo-entry="todoEntry"></span>
         </div>
     </div>
 </div>
