@@ -4,7 +4,10 @@
     "header.brand.label": "Spring Data JPA Tutorial",
     "pages": {
         "list.page": {
-            "title": "Things to do"
+            "title": "Things to do",
+            "texts": {
+                "no.todo.entries.found": "Nothing to do (yet)."
+            }
         }
     }
 }

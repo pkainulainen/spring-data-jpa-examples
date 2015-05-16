@@ -21,7 +21,7 @@ var App = angular.module('app', [
     'app.common.config', 'app.common.directives', 'app.common.services',
 
     //Todo
-    'app.todo.controllers'
+    'app.todo.controllers', 'app.todo.directives', 'app.todo.services'
 
 ]);
 

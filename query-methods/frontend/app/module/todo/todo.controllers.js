@@ -12,10 +12,16 @@ angular.module('app.todo.controllers', [])
                 .state('todo.list', {
                     url: '',
                     controller: 'TodoListController',
-                    templateUrl: 'todo/todo-list.html'
+                    templateUrl: 'todo/todo-list-view.html',
+                    resolve: {
+                        todoEntries: ['Todos', function(Todos) {
+                            return Todos.findAll();
+                        }]
+                    }
                 });
         }
     ])
-    .controller('TodoListController', [function () {
-            console.log('Rendering todo entry list page');
+    .controller('TodoListController', ['$scope', 'todoEntries', function ($scope, todoEntries) {
+            console.log('Rendering todo entry list page for todo entries: ', todoEntries);
+            $scope.todoEntries = todoEntries;
         }]);
