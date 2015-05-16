@@ -23,8 +23,8 @@
 
     <script>
         // include angular loader, which allows the files to load in any order
-        <%@ include file="/static/lib/angular-loader.js" %>
-        <%@ include file="/static/lib/script-loader.js" %>
+        <%@ include file="/js/lib/angular-loader.min.js" %>
+        <%@ include file="/js/lib/script.min.js" %>
 
         // load all of the dependencies asynchronously.
         $script([
