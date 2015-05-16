@@ -58,8 +58,7 @@ angular.module('app.todo.controllers', [])
         console.log('Rendering todo entry list page for todo entries: ', todoEntries);
         $scope.todoEntries = todoEntries;
     }])
-    .controller('ViewTodoController', ['$scope', '$state', 'NotificationService', 'todoEntry',
-        function($scope, $state, NotificationService, todoEntry) {
+    .controller('ViewTodoController', ['$scope', 'todoEntry', function($scope, todoEntry) {
             console.log('Rendering view todo entry page for todo entry: ', todoEntry);
             $scope.todoEntry = todoEntry;
     }]);
