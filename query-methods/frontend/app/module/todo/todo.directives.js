@@ -46,6 +46,41 @@ angular.module('app.todo.directives', [])
             }
         };
     }])
+    .directive('todoEntryForm', ['$state', 'NotificationService', 'TodoService', function($state, NotificationService, TodoService) {
+        return {
+            link: function (scope, element, attr) {
+                scope.saveTodoEntry = function() {
+                    console.log('Saving todo entry: ', scope.todoEntry);
+
+                    var onSuccess = function(saved) {
+                        NotificationService.flashMessage(scope.successMessageKey, 'success');
+                        $state.go('todo.view', {id: saved.id});
+                    };
+
+                    var onError = function() {
+                        NotificationService.flashMessage(scope.errorMessageKey, 'errors');
+                    };
+
+                    if (scope.formType === 'add') {
+                        TodoService.add(scope.todoEntry, onSuccess, onError);
+                    }
+                    else if (scope.formType === 'edit') {
+                        TodoService.update(scope.todoEntry, onSuccess, onError);
+                    }
+                    else {
+                        console.log('Unknown form type: ', scope.formType);
+                    }
+                };
+            },
+            templateUrl: 'todo/todo-form-directive.html',
+            scope: {
+                errorMessageKey: '@',
+                formType: '@',
+                todoEntry: '=',
+                successMessageKey: '@'
+            }
+        };
+    }])
     .directive('todoEntryList', [function() {
         return {
             templateUrl: 'todo/todo-list-directive.html',

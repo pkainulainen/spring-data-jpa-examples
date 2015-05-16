@@ -46,45 +46,13 @@ angular.module('app.todo.controllers', [])
                 });
         }
     ])
-    .controller('AddTodoController', ['$scope', '$state', 'NotificationService', 'TodoService',
-        function($scope, $state, NotificationService, TodoService) {
+    .controller('AddTodoController', ['$scope', function($scope) {
             console.log('Rendering add todo entry page.');
             $scope.todoEntry = {};
-
-            $scope.saveTodoEntry = function() {
-                console.log('Adding a new todo entry: ', $scope.todoEntry);
-
-                var onSuccess = function(added) {
-                    NotificationService.flashMessage('todo.notifications.add.success', 'success');
-                    $state.go('todo.view', {id: added.id});
-                };
-
-                var onError = function() {
-                    NotificationService.flashMessage('todo.notifications.add.error', 'errors');
-                };
-
-                TodoService.add($scope.todoEntry, onSuccess, onError);
-            };
     }])
-    .controller('EditTodoController', ['$scope', '$state', 'todoEntry', 'NotificationService', 'TodoService',
-        function($scope, $state, todoEntry, NotificationService, TodoService) {
+    .controller('EditTodoController', ['$scope', 'todoEntry', function($scope, todoEntry) {
             console.log('Rendering edit todo entry page for todo entry: ', todoEntry);
             $scope.todoEntry = todoEntry;
-
-            $scope.saveTodoEntry = function() {
-                console.log('Updating the information of the todo entry: ', $scope.todoEntry);
-
-                var onSuccess = function(updated) {
-                    NotificationService.flashMessage('todo.notifications.edit.success', 'success');
-                    $state.go('todo.view', {id: updated.id});
-                };
-
-                var onError = function() {
-                    NotificationService.flashMessage('todo.notifications.edit.error', 'errors');
-                };
-
-                TodoService.update($scope.todoEntry, onSuccess, onError);
-        };
     }])
     .controller('TodoListController', ['$scope', 'todoEntries', function ($scope, todoEntries) {
         console.log('Rendering todo entry list page for todo entries: ', todoEntries);
@@ -92,7 +60,7 @@ angular.module('app.todo.controllers', [])
     }])
     .controller('ViewTodoController', ['$scope', '$state', 'NotificationService', 'todoEntry',
         function($scope, $state, NotificationService, todoEntry) {
-            console.log('Rending view todo entry page for todo entry: ', todoEntry);
+            console.log('Rendering view todo entry page for todo entry: ', todoEntry);
             $scope.todoEntry = todoEntry;
 
             $scope.onDeleteSuccess = function() {
