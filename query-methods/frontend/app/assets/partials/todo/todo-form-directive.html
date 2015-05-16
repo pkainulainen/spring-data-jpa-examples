@@ -33,7 +33,13 @@
         </div>
     </div>
     <div class="form-group">
-        <a ui-sref="todo.view({id: todoEntry.id})"
+        <a ng-if="formType === 'add'"
+           ui-sref="todo.list"
+           type="button"
+           class="btn btn-default"
+           translate="directives.todo.form.cancel.button"></a>
+        <a ng-if="formType === 'edit'"
+                ui-sref="todo.view({id: todoEntry.id})"
                 type="button"
                 class="btn btn-default"
                 translate="directives.todo.form.cancel.button"></a>
