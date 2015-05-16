@@ -49,6 +49,7 @@ module.exports = {
         //Configures the location of the LESS files.
         styleBase: "./app/styles/",
         style: [
+            "./bower_components/angular-growl-v2/build/angular-growl.min.css",
             "./app/styles/app.less"
         ],
         //Configures the location of the view templates.

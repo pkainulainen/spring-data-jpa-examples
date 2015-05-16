@@ -3,11 +3,33 @@
     "footer.message": "Spring Data JPA example application by Petri Kainulainen",
     "header.brand.label": "Spring Data JPA Tutorial",
     "pages": {
+        "add.page": {
+            "title": "Add new todo entry",
+            "link.label": "Add new todo entry",
+            "save.todo.button": "Save"
+        },
         "list.page": {
             "title": "Things to do",
             "texts": {
                 "no.todo.entries.found": "Nothing to do (yet)."
             }
         }
+    },
+    "todo": {
+        "description": "Description",
+        "description.placeholder": "Enter description",
+        "messages": {
+            "description.maxLength": "Description cannot be longer than 500 characters",
+            "title.maxLength": "Title cannot be longer than 100 characters",
+            "title.required": "Title is required"
+        },
+        "notifications": {
+            "add": {
+                "error": "Adding a new todo entry failed.",
+                "success": "A new todo entry was added."
+            }
+        },
+        "title": "Title",
+        "title.placeholder": "Enter title"
     }
 }
