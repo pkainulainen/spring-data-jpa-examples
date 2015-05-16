@@ -8,13 +8,18 @@
             "title": "Delete todo entry?"
         }
     },
+    "directives": {
+        "todo.form": {
+            "cancel.button": "Cancel",
+            "save.button": "Save"
+        }
+    },
     "footer.message": "Spring Data JPA example application by Petri Kainulainen",
     "header.brand.label": "Spring Data JPA Tutorial",
     "pages": {
         "add.page": {
             "title": "Add new todo entry",
-            "link.label": "Add new todo entry",
-            "save.todo.button": "Save"
+            "link.label": "Add new todo entry"
         },
         "delete.link": "Delete",
         "edit.page": {
