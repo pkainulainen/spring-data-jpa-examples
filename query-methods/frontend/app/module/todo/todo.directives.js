@@ -17,9 +17,18 @@ angular.module('app.todo.directives', [])
                 TodoService.delete(todoEntry, successCallback, errorCallback);
             };
         }])
-    .directive('deleteTodoEntryLink', ['$modal', function($modal) {
+    .directive('deleteTodoEntryLink', ['$modal', '$state', 'NotificationService', function($modal, $state, NotificationService) {
         return {
             link: function (scope, element, attr) {
+                scope.onSuccess = function() {
+                    NotificationService.flashMessage('todo.notifications.delete.success', 'success');
+                    $state.go('todo.list');
+                };
+
+                scope.onError = function() {
+                    NotificationService.flashMessage('todo.notifications.delete.error', 'error');
+                };
+
                 scope.showDeleteConfirmationDialog = function() {
                     $modal.open({
                         templateUrl: 'todo/delete-todo-modal.html',
@@ -40,8 +49,6 @@ angular.module('app.todo.directives', [])
             },
             template: '<a ng-click="showDeleteConfirmationDialog()" translate="pages.delete.link"></a>',
             scope: {
-                onError: '&',
-                onSuccess: '&',
                 todoEntry: '='
             }
         };

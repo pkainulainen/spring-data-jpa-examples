@@ -62,13 +62,4 @@ angular.module('app.todo.controllers', [])
         function($scope, $state, NotificationService, todoEntry) {
             console.log('Rendering view todo entry page for todo entry: ', todoEntry);
             $scope.todoEntry = todoEntry;
-
-            $scope.onDeleteSuccess = function() {
-                NotificationService.flashMessage('todo.notifications.delete.success', 'success');
-                $state.go('todo.list');
-            };
-
-            $scope.onDeleteError = function() {
-                NotificationService.flashMessage('todo.notifications.delete.error', 'error');
-            };
     }]);
