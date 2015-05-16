@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=768">
     <meta name="description" content="">
     <title translate="app.title.label"></title>
-    <link rel="stylesheet" href="${contextPath}/frontend/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/css/app.css">
 
     <!--[if lte IE 7]>
     <script src="${contextPath}/js/lib/json3.min.js"></script>
@@ -28,9 +28,9 @@
 
         // load all of the dependencies asynchronously.
         $script([
-            '${contextPath}/frontend/js/vendor.min.js',
-            '${contextPath}/frontend/js/app.min.js',
-            '${contextPath}/frontend/js/partials.js'
+            '${contextPath}/js/vendor.min.js',
+            '${contextPath}/js/app.min.js',
+            '${contextPath}/js/partials.js'
         ], function () {
             // when all is done, execute bootstrap angular application
             console.log("Starting AngularJS application");

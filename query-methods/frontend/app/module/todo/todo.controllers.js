@@ -12,7 +12,7 @@ angular.module('app.todo.controllers', [])
                 .state('todo.list', {
                     url: '',
                     controller: 'TodoListController',
-                    templateUrl: 'frontend/partials/todo/todo-list.html'
+                    templateUrl: 'todo/todo-list.html'
                 });
         }
     ])

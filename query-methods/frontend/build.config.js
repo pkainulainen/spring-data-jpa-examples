@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var targetBase = './_public/frontend/';
+var targetBase = './build/';
 
 module.exports = {
     //Configures the directories in which the files created by Gulp are copied.

@@ -12,7 +12,7 @@ angular.module('app.common.config', [])
     .config(['$translateProvider', function ($translateProvider) {
         // Initialize angular-translate
         $translateProvider.useStaticFilesLoader({
-            prefix: '/frontend/i18n/',
+            prefix: '/i18n/',
             suffix: '.json'
         });
 

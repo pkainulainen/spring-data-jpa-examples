@@ -304,11 +304,13 @@
                         </systemProperty>
                     </systemProperties>
                     <webAppConfig>
-                        <war>${basedir}/target/jooq.war</war>
+                        <war>${basedir}/target/jpa-query-methods</war>
                         <contextPath>/</contextPath>
-                        <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-                            <resourcesAsCSV>src/main/webapp,frontend/_public</resourcesAsCSV>
-                        </baseResource>
+                        <resourceBases>
+                            <resourceBase>${project.basedir}/target/classes</resourceBase>
+                            <resourceBase>${project.basedir}/src/main/webapp</resourceBase>
+                            <resourceBase>frontend/build</resourceBase>
+                        </resourceBases>
                     </webAppConfig>
                 </configuration>
             </plugin>
