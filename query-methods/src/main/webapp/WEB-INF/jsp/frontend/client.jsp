@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#" translate="header.brand.label"></a>
+                <a class="navbar-brand" ui-sref="todo.list" translate="header.brand.label"></a>
             </div>
         </div>
     </nav>
