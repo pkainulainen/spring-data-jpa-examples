@@ -14,6 +14,16 @@ angular.module('app.todo.controllers', [])
                     controller: 'AddTodoController',
                     templateUrl: 'todo/add-todo-view.html'
                 })
+                .state('todo.edit', {
+                    url: 'todo/:id/edit',
+                    controller: 'EditTodoController',
+                    templateUrl: 'todo/edit-todo-view.html',
+                    resolve: {
+                        todoEntry: ['$stateParams', 'TodoService', function($stateParams, TodoService) {
+                            return TodoService.findById($stateParams.id);
+                        }]
+                    }
+                })
                 .state('todo.list', {
                     url: '',
                     controller: 'TodoListController',
@@ -55,6 +65,26 @@ angular.module('app.todo.controllers', [])
 
                 TodoService.add($scope.todoEntry, onSuccess, onError);
             };
+    }])
+    .controller('EditTodoController', ['$scope', '$state', 'todoEntry', 'NotificationService', 'TodoService',
+        function($scope, $state, todoEntry, NotificationService, TodoService) {
+            console.log('Rendering edit todo entry page for todo entry: ', todoEntry);
+            $scope.todoEntry = todoEntry;
+
+            $scope.saveTodoEntry = function() {
+                console.log('Updating the information of the todo entry: ', $scope.todoEntry);
+
+                var onSuccess = function(updated) {
+                    NotificationService.flashMessage('todo.notifications.edit.success', 'success');
+                    $state.go('todo.view', {id: updated.id});
+                };
+
+                var onError = function() {
+                    NotificationService.flashMessage('todo.notifications.edit.error', 'errors');
+                };
+
+                TodoService.update($scope.todoEntry, onSuccess, onError);
+        };
     }])
     .controller('TodoListController', ['$scope', 'todoEntries', function ($scope, todoEntries) {
         console.log('Rendering todo entry list page for todo entries: ', todoEntries);

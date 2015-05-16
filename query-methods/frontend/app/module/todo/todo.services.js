@@ -5,6 +5,7 @@ angular.module('app.todo.services', ['ngResource'])
         var api = $resource('/api/todo/:id', {"id": "@id"}, {
             get: {method: 'GET'},
             save: {method: 'POST'},
+            update: {method: 'PUT'},
             query:  {method: 'GET', params: {}, isArray: true}
         });
 
@@ -26,6 +27,17 @@ angular.module('app.todo.services', ['ngResource'])
             findById: function(id) {
                 console.log('Finding todo entry by id: ', id);
                 return api.get({id: id}).$promise;
+            },
+            update: function(todo, successCallback, errorCallback) {
+                return api.update(todo,
+                    function(updated) {
+                        console.log('Updated the information of the todo entry: ', updated);
+                        successCallback(updated);
+                    },
+                    function(error) {
+                        console.log('Updating the information of the todo entry failed because of an error: ', error);
+                        errorCallback(error);
+                    });
             }
         };
     }]);

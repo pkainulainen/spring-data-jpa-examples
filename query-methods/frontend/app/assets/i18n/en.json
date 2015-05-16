@@ -8,6 +8,10 @@
             "link.label": "Add new todo entry",
             "save.todo.button": "Save"
         },
+        "edit.page": {
+            "link.label": "Edit",
+            "title": "Edit todo entry"
+        },
         "list.page": {
             "title": "Things to do",
             "texts": {
@@ -32,6 +36,10 @@
             "add": {
                 "error": "Adding a new todo entry failed.",
                 "success": "A new todo entry was added."
+            },
+            "edit": {
+                "error": "Updating the information of a todo entry failed.",
+                "success": "Updated the information of the todo entry."
             }
         },
         "title": "Title",
