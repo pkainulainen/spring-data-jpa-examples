@@ -11,6 +11,7 @@ angular.module('app.todo.services', ['ngResource'])
 
         return {
             add: function(todo, successCallback, errorCallback) {
+                console.log('Adding new todo entry: ', todo);
                 return api.save(todo,
                     function(added) {
                         console.log('Added a new todo entry: ', added);
@@ -22,6 +23,7 @@ angular.module('app.todo.services', ['ngResource'])
                     });
             },
             delete: function(todo, successCallback, errorCallback) {
+                console.log('Deleting todo entry: ', todo);
                 return api.delete(todo,
                     function(deleted) {
                         console.log('Deleted todo entry: ', deleted);
@@ -34,6 +36,7 @@ angular.module('app.todo.services', ['ngResource'])
                 );
             },
             findAll: function() {
+                console.log('Finding all todo entries.');
                 return api.query();
             },
             findById: function(id) {
@@ -41,6 +44,7 @@ angular.module('app.todo.services', ['ngResource'])
                 return api.get({id: id}).$promise;
             },
             update: function(todo, successCallback, errorCallback) {
+                console.log('Updating todo entry: ', todo);
                 return api.update(todo,
                     function(updated) {
                         console.log('Updated the information of the todo entry: ', updated);
