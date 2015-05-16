@@ -13,9 +13,13 @@
             "texts": {
                 "no.todo.entries.found": "Nothing to do (yet)."
             }
+        },
+        "view.page": {
+            "title": "View Todo Entry"
         }
     },
     "todo": {
+        "creation.time": "Created at",
         "description": "Description",
         "description.placeholder": "Enter description",
         "messages": {
@@ -23,6 +27,7 @@
             "title.maxLength": "Title cannot be longer than 100 characters",
             "title.required": "Title is required"
         },
+        "modification.time": "Modified at",
         "notifications": {
             "add": {
                 "error": "Adding a new todo entry failed.",

@@ -1,4 +1,4 @@
 <p ng-if="todoEntries.length === 0" translate="pages.list.page.texts.no.todo.entries.found"></p>
 <div ng-repeat="todoEntry in todoEntries">
-    {{todoEntry.title}}
+    <a ui-sref="todo.view({id: todoEntry.id})">{{todoEntry.title}}</a>
 </div>

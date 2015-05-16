@@ -3,6 +3,7 @@
 angular.module('app.todo.services', ['ngResource'])
     .factory('TodoService', ['$resource', function($resource) {
         var api = $resource('/api/todo/:id', {"id": "@id"}, {
+            get: {method: 'GET'},
             save: {method: 'POST'},
             query:  {method: 'GET', params: {}, isArray: true}
         });
@@ -21,6 +22,10 @@ angular.module('app.todo.services', ['ngResource'])
             },
             findAll: function() {
                 return api.query();
+            },
+            findById: function(id) {
+                console.log('Finding todo entry by id: ', id);
+                return api.get({id: id}).$promise;
             }
         };
     }]);

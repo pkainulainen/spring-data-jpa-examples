@@ -23,6 +23,16 @@ angular.module('app.todo.controllers', [])
                             return TodoService.findAll();
                         }]
                     }
+                })
+                .state('todo.view', {
+                    url: 'todo/:id',
+                    controller: 'ViewTodoController',
+                    templateUrl: 'todo/view-todo-view.html',
+                    resolve: {
+                        todoEntry: ['$stateParams', 'TodoService', function($stateParams, TodoService) {
+                            return TodoService.findById($stateParams.id);
+                        }]
+                    }
                 });
         }
     ])
@@ -34,9 +44,9 @@ angular.module('app.todo.controllers', [])
             $scope.saveTodoEntry = function() {
                 console.log('Adding a new todo entry: ', $scope.todoEntry);
 
-                var onSuccess = function() {
+                var onSuccess = function(added) {
                     NotificationService.flashMessage('todo.notifications.add.success', 'success');
-                    $state.go('todo.list');
+                    $state.go('todo.view', {id: added.id});
                 };
 
                 var onError = function() {
@@ -49,4 +59,8 @@ angular.module('app.todo.controllers', [])
     .controller('TodoListController', ['$scope', 'todoEntries', function ($scope, todoEntries) {
         console.log('Rendering todo entry list page for todo entries: ', todoEntries);
         $scope.todoEntries = todoEntries;
+    }])
+    .controller('ViewTodoController', ['$scope', 'todoEntry', function($scope, todoEntry) {
+        console.log('Rending view todo entry page for todo entry: ', todoEntry);
+        $scope.todoEntry = todoEntry;
     }]);
