@@ -17,7 +17,7 @@ angular.module('app.todo.directives', [])
                 TodoService.delete(todoEntry, successCallback, errorCallback);
             };
         }])
-    .directive('deleteTodoEntryLink', ['$modal', '$state', 'NotificationService', function($modal, $state, NotificationService) {
+    .directive('deleteTodoEntryButton', ['$modal', '$state', 'NotificationService', function($modal, $state, NotificationService) {
         return {
             link: function (scope, element, attr) {
                 scope.onSuccess = function() {
