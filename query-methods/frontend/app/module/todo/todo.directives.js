@@ -47,7 +47,7 @@ angular.module('app.todo.directives', [])
                     });
                 };
             },
-            template: '<a ng-click="showDeleteConfirmationDialog()" translate="pages.delete.link"></a>',
+            template: '<a class="btn btn-danger" ng-click="showDeleteConfirmationDialog()" translate="pages.delete.link"></a>',
             scope: {
                 todoEntry: '='
             }
