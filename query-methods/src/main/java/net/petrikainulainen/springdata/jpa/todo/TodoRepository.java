@@ -20,7 +20,7 @@ interface TodoRepository extends Repository<Todo, Long> {
     List<Todo> findAll();
 
     /**
-     * Finds todo entries whose description or title contains the given search terms. This search is case insensitive.
+     * This query method creates the invoked query method by parsing it from the method name of the query method.
      * @param descriptionPart   The part that must be found from the description of the todo entry.
      * @param titlePart         The part that must be found from the title of the todo entry.
      * @return  A list of todo entries whose title or description matches with the given search criteria.
@@ -28,7 +28,8 @@ interface TodoRepository extends Repository<Todo, Long> {
     List<Todo> findByDescriptionContainsOrTitleContainsAllIgnoreCase(String descriptionPart,
                                                                      String titlePart);
     /**
-     * Finds todo entries whose description of title contains the given search term. This search is case insensitive.
+     * This query method invokes the named JPQL query that is configured in the {@code Todo} class by using the
+     * {@code @NamedQuery} annotation. The name of the named query is: {@code Todo.findByDescriptionOrTitle}.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
      */
@@ -36,20 +37,22 @@ interface TodoRepository extends Repository<Todo, Long> {
 
     /**
      * This query method reads the named JPQL query from the {@code META-INF/jpa-named-queries.properties} file.
+     * The name of the invoked query is: {@code Todo.findByDescriptionOrTitleFile}.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
      */
     List<Todo> findByDescriptionOrTitleFile(@Param("searchTerm") String searchTerm);
 
     /**
-     * Finds todo entries whose description of title contains the given search term. This search is case insensitive.
+     * This query method invokes the named SQL query that is configured in the {@code Todo} class by using
+     * the {@code @NamedNativeQuery} annotation. The name of the named native query is: {@code Todo.findByDescriptionOrTitleNative}.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
      */
     List<Todo> findByDescriptionOrTitleNative(@Param("searchTerm") String searchTerm);
 
     /**
-     * Finds todo entries whose description of title contains the given search term. This search is case insensitive.
+     * This query method invokes the JPQL query that is configured by using the {@code @Query} annotation.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
      */
@@ -59,7 +62,7 @@ interface TodoRepository extends Repository<Todo, Long> {
     List<Todo> findBySearchTerm(@Param("searchTerm") String searchTerm);
 
     /**
-     * Finds todo entries whose description of title contains the given search term. This search is case insensitive.
+     * This query method invokes the SQL query that is configured by using the {@code @Query} annotation.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
      */
