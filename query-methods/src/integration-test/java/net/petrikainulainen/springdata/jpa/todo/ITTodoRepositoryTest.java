@@ -118,4 +118,28 @@ public class ITTodoRepositoryTest {
         Todo todoEntry = todoEntries.get(0);
         assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
     }
+
+    @Test
+    public void findBySearchTermNative_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNative(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+        assertThat(todoEntries).hasSize(1);
+
+        Todo todoEntry = todoEntries.get(0);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+    }
+
+    @Test
+    public void findBySearchTermNative_NoMatch_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNative(TodoConstants.SEARCH_TERM_NO_MATCH);
+        assertThat(todoEntries).isEmpty();
+    }
+
+    @Test
+    public void findBySearchTermNative_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNative(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+        assertThat(todoEntries).hasSize(1);
+
+        Todo todoEntry = todoEntries.get(0);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+    }
 }

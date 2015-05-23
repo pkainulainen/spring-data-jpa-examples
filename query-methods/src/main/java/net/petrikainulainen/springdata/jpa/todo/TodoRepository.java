@@ -44,6 +44,13 @@ interface TodoRepository extends Repository<Todo, Long> {
             "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))")
     List<Todo> findBySearchTerm(@Param("searchTerm") String searchTerm);
 
+    @Query(value = "SELECT * FROM todos t WHERE " +
+            "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
+            "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))",
+            nativeQuery = true
+    )
+    List<Todo> findBySearchTermNative(@Param("searchTerm") String searchTerm);
+
     Optional<Todo> findOne(Long id);
 
     Todo save(Todo persisted);
