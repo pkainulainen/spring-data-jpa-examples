@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -25,6 +26,11 @@ import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;
  * @author Petri Kainulainen
  */
 @Entity
+@NamedQuery(name = "Todo.findByDescriptionOrTitle",
+        query = "SELECT t FROM Todo t WHERE " +
+                "LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+                "LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))"
+)
 @Table(name = "todos")
 final class Todo {
 
