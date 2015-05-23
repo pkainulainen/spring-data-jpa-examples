@@ -19,6 +19,9 @@ interface TodoRepository extends Repository<Todo, Long> {
 
     List<Todo> findAll();
 
+    List<Todo> findByDescriptionContainsOrTitleContainsAllIgnoreCase(String descriptionPart,
+                                                                     String titlePart);
+
     @Query("SELECT t FROM Todo t WHERE " +
             "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))")
