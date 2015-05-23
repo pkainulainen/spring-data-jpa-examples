@@ -35,6 +35,13 @@ interface TodoRepository extends Repository<Todo, Long> {
     List<Todo> findByDescriptionOrTitle(@Param("searchTerm") String searchTerm);
 
     /**
+     * This query method reads the named JPQL query from the {@code META-INF/jpa-named-queries.properties} file.
+     * @param searchTerm    The given search term.
+     * @return  A list of todo entries whose title or description matches with the given search term.
+     */
+    List<Todo> findByDescriptionOrTitleFile(@Param("searchTerm") String searchTerm);
+
+    /**
      * Finds todo entries whose description of title contains the given search term. This search is case insensitive.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
