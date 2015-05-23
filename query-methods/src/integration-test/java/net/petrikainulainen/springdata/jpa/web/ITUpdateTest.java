@@ -5,6 +5,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+import net.petrikainulainen.springdata.jpa.TodoConstants;
 import net.petrikainulainen.springdata.jpa.config.ExampleApplicationContext;
 import net.petrikainulainen.springdata.jpa.config.Profiles;
 import net.petrikainulainen.springdata.jpa.todo.TestUtil;

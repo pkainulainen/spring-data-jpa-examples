@@ -4,6 +4,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import net.petrikainulainen.springdata.jpa.TodoConstants;
 import net.petrikainulainen.springdata.jpa.config.ExampleApplicationContext;
 import net.petrikainulainen.springdata.jpa.config.Profiles;
 import org.junit.Before;
