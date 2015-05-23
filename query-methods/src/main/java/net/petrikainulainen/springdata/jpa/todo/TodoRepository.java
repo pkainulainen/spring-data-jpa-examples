@@ -52,6 +52,15 @@ interface TodoRepository extends Repository<Todo, Long> {
     List<Todo> findByDescriptionOrTitleNative(@Param("searchTerm") String searchTerm);
 
     /**
+     * This query method reads the named native query from the {@code META-INF/jpa-named-queries.properties} file.
+     * The name of the invoked query is: {@code Todo.findByDescriptionOrTitleNativeFile}.
+     * @param searchTerm    The given search term.
+     * @return  A list of todo entries whose title or description matches with the given search term.
+     */
+    @Query(nativeQuery = true)
+    List<Todo> findByDescriptionOrTitleNativeFile(@Param("searchTerm") String searchTerm);
+
+    /**
      * This query method invokes the JPQL query that is configured by using the {@code @Query} annotation.
      * @param searchTerm    The given search term.
      * @return  A list of todo entries whose title or description matches with the given search term.
