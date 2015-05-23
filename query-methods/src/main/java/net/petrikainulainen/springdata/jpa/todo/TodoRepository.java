@@ -19,9 +19,20 @@ interface TodoRepository extends Repository<Todo, Long> {
 
     List<Todo> findAll();
 
+    /**
+     * Finds todo entries whose description or title contains the given search terms. This search is case insensitive.
+     * @param descriptionPart   The part that must be found from the description of the todo entry.
+     * @param titlePart         The part that must be found from the title of the todo entry.
+     * @return  A list of todo entries whose title or description matches with the given search criteria.
+     */
     List<Todo> findByDescriptionContainsOrTitleContainsAllIgnoreCase(String descriptionPart,
                                                                      String titlePart);
 
+    /**
+     * Finds todo entries whose description of title contains the given search term. This search is case insensitive.
+     * @param searchTerm    The given search term.
+     * @return  A list of todo entries whose title or description matches with the given search term.
+     */
     @Query("SELECT t FROM Todo t WHERE " +
             "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))")
