@@ -3,6 +3,7 @@ This blog post is the example application of the following blog posts:
 * [Spring Data JPA Tutorial: Getting the Required Dependencies](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-getting-the-required-dependencies/)
 * [Spring Data JPA Tutorial: Configuration](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-one-configuration/)
 * [Spring Data JPA Tutorial: CRUD](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-two-crud/)
+* [Spring Data JPA Tutorial: Introduction to Query Methods](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-introduction-to-query-methods/)
 * Spring Data JPA Tutorial: Query Methods (TBD)
 
 **Note:** This application is still work in progress.
