@@ -27,13 +27,13 @@ import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;
  * @author Petri Kainulainen
  */
 @Entity
-@NamedNativeQuery(name = "Todo.findByDescriptionOrTitleNative",
+@NamedNativeQuery(name = "Todo.findBySearchTermNamedNative",
         query="SELECT * FROM todos t WHERE " +
                 "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
                 "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))",
         resultClass = Todo.class
 )
-@NamedQuery(name = "Todo.findByDescriptionOrTitle",
+@NamedQuery(name = "Todo.findBySearchTermNamed",
         query = "SELECT t FROM Todo t WHERE " +
                 "LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
                 "LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))"

@@ -72,8 +72,8 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitle_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitle(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+    public void findBySearchTermNamed_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamed(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -81,14 +81,14 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitle_NoMatches_ShouldReturnEmptyList() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitle(TodoConstants.SEARCH_TERM_NO_MATCH);
+    public void findBySearchTermNamed_NoMatches_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNamed(TodoConstants.SEARCH_TERM_NO_MATCH);
         assertThat(todoEntries).isEmpty();
     }
 
     @Test
-    public void findByDescriptionOrTitle_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitle(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+    public void findBySearchTermNamed_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamed(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -96,8 +96,8 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitleFile_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleFile(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+    public void findBySearchTermNamedNative_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNative(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -105,14 +105,14 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitleFile_NoMatches_ShouldReturnEmptyList() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleFile(TodoConstants.SEARCH_TERM_NO_MATCH);
+    public void findBySearchTermNamedNative_NoMatches_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNative(TodoConstants.SEARCH_TERM_NO_MATCH);
         assertThat(todoEntries).isEmpty();
     }
 
     @Test
-    public void findByDescriptionOrTitleFile_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleFile(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+    public void findBySearchTermNamedNative_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNative(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -120,8 +120,8 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitleNative_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleNative(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+    public void findBySearchTermNamedFile_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedFile(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -129,14 +129,14 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitleNative_NoMatches_ShouldReturnEmptyList() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleNative(TodoConstants.SEARCH_TERM_NO_MATCH);
+    public void findBySearchTermNamedFile_NoMatches_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedFile(TodoConstants.SEARCH_TERM_NO_MATCH);
         assertThat(todoEntries).isEmpty();
     }
 
     @Test
-    public void findByDescriptionOrTitleNative_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleNative(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+    public void findBySearchTermNamedFile_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedFile(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -144,8 +144,8 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitleNativeFile_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleNativeFile(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+    public void findBySearchTermNamedNativeFile_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNativeFile(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
@@ -153,20 +153,67 @@ public class ITTodoRepositoryTest {
     }
 
     @Test
-    public void findByDescriptionOrTitleNativeFile_NoMatches_ShouldReturnEmptyList() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleNativeFile(TodoConstants.SEARCH_TERM_NO_MATCH);
+    public void findBySearchTermNamedNativeFile_NoMatches_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNativeFile(TodoConstants.SEARCH_TERM_NO_MATCH);
         assertThat(todoEntries).isEmpty();
     }
 
     @Test
-    public void findByDescriptionOrTitleNativeFile_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
-        List<Todo> todoEntries = repository.findByDescriptionOrTitleNativeFile(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+    public void findBySearchTermNamedNativeFile_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNativeFile(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
         assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
     }
 
+    @Test
+    public void findBySearchTermNamedOrmXml_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedOrmXml(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+        assertThat(todoEntries).hasSize(1);
+
+        Todo todoEntry = todoEntries.get(0);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+    }
+
+    @Test
+    public void findBySearchTermNamedOrmXml_NoMatches_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedOrmXml(TodoConstants.SEARCH_TERM_NO_MATCH);
+        assertThat(todoEntries).isEmpty();
+    }
+
+    @Test
+    public void findBySearchTermNamedOrmXml_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedOrmXml(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+        assertThat(todoEntries).hasSize(1);
+
+        Todo todoEntry = todoEntries.get(0);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+    }
+
+    @Test
+    public void findBySearchTermNamedNativeOrmXml_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNativeOrmXml(TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES);
+        assertThat(todoEntries).hasSize(1);
+
+        Todo todoEntry = todoEntries.get(0);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+    }
+
+    @Test
+    public void findBySearchTermNamedNativeOrmXml_NoMatches_ShouldReturnEmptyList() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNativeOrmXml(TodoConstants.SEARCH_TERM_NO_MATCH);
+        assertThat(todoEntries).isEmpty();
+    }
+
+    @Test
+    public void findBySearchTermNamedNativeOrmXml_TitleOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
+        List<Todo> todoEntries = repository.findBySearchTermNamedNativeOrmXml(TodoConstants.SEARCH_TERM_TITLE_MATCHES);
+        assertThat(todoEntries).hasSize(1);
+
+        Todo todoEntry = todoEntries.get(0);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+    }
 
     @Test
     public void findBySearchTerm_DescriptionOfOneTodoEntryMatches_ShouldReturnListThatHasOneTodoEntry() {
