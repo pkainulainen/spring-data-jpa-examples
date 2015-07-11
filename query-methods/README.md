@@ -6,6 +6,7 @@ This blog post is the example application of the following blog posts:
 * [Spring Data JPA Tutorial: Introduction to Query Methods](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-introduction-to-query-methods/)
 * [Spring Data JPA Tutorial: Creating Database Queries From Method Names](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-from-method-names/)
 * [Spring Data JPA Tutorial: Creating Database Queries With the @Query Annotation](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-with-the-query-annotation/)
+* [Spring Data JPA Tutorial: Creating Database Queries With Named Queries](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-with-named-queries/)
 
 **Note:** This application is still work in progress.
 
