@@ -45,19 +45,19 @@ public class TodoSearchControllerTest {
 
     public class FindBySearchTerm {
 
+        @Test
+        public void shouldReturnHttpResponseStatusOk() throws Exception {
+            mockMvc.perform(get("/api/todo/search")
+                            .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+            )
+                    .andExpect(status().isOk());
+        }
+
         public class WhenNoTodoEntriesAreFound {
 
             @Before
             public void returnZeroTodoEntries() {
                 given(searchService.findBySearchTerm(SEARCH_TERM)).willReturn(new ArrayList<>());
-            }
-
-            @Test
-            public void returnHttpResponseStatusOk() throws Exception {
-                mockMvc.perform(get("/api/todo/search")
-                                .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
-                )
-                        .andExpect(status().isOk());
             }
 
             @Test
@@ -89,14 +89,6 @@ public class TodoSearchControllerTest {
                         .build();
 
                 given(searchService.findBySearchTerm(SEARCH_TERM)).willReturn(Arrays.asList(found));
-            }
-
-            @Test
-            public void returnHttpResponseStatusOk() throws Exception {
-                mockMvc.perform(get("/api/todo/search")
-                                .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
-                )
-                        .andExpect(status().isOk());
             }
 
             @Test
