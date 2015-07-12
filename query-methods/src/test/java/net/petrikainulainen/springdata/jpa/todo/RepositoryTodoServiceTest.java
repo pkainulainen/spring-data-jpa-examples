@@ -50,12 +50,21 @@ public class RepositoryTodoServiceTest {
 
     public class Create {
 
+        @Before
+        public void returnNewTodoEntry() {
+            given(repository.save(isA(Todo.class))).willAnswer(
+                    invocationOnMock -> new TodoBuilder()
+                            .creationTime(CREATION_TIME)
+                            .description(DESCRIPTION)
+                            .id(ID)
+                            .modificationTime(MODIFICATION_TIME)
+                            .title(TITLE)
+                            .build()
+            );
+        }
+
         @Test
         public void shouldPersistNewTodoEntryWithCorrectInformation() {
-            given(repository.save(isA(Todo.class))).willAnswer(
-                    invocationOnMock -> invocationOnMock.getArguments()[0]
-            );
-
             TodoDTO newTodoEntry = new TodoDTOBuilder()
                     .description(DESCRIPTION)
                     .title(TITLE)
@@ -78,16 +87,6 @@ public class RepositoryTodoServiceTest {
 
         @Test
         public void shouldReturnTheInformationOfPersistedTodoEntry() {
-            given(repository.save(isA(Todo.class))).willAnswer(
-                    invocationOnMock -> new TodoBuilder()
-                            .creationTime(CREATION_TIME)
-                            .description(DESCRIPTION)
-                            .id(ID)
-                            .modificationTime(MODIFICATION_TIME)
-                            .title(TITLE)
-                            .build()
-            );
-
             TodoDTO newTodoEntry = new TodoDTOBuilder()
                     .description(DESCRIPTION)
                     .title(TITLE)
@@ -107,10 +106,14 @@ public class RepositoryTodoServiceTest {
 
         public class WhenTodoEntryIsNotFound {
 
-            @Test
-            public void shouldThrowExceptionWithCorrectId() {
+            @Before
+            public void returnNoTodoEntry() {
                 given(repository.findOne(ID)).willReturn(Optional.empty());
 
+            }
+
+            @Test
+            public void shouldThrowExceptionWithCorrectId() {
                 Throwable thrown = catchThrowable(() -> service.delete(ID));
 
                 assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
@@ -121,8 +124,6 @@ public class RepositoryTodoServiceTest {
 
             @Test
             public void shouldNotDeleteTodoEntry() {
-                given(repository.findOne(ID)).willReturn(Optional.empty());
-
                 catchThrowable(() -> service.delete(ID));
 
                 verify(repository, never()).delete(isA(Todo.class));
@@ -131,19 +132,11 @@ public class RepositoryTodoServiceTest {
 
         public class WhenTodoEntryIsFound {
 
-            @Test
-            public void shouldDeleteFoundTodoEntry() {
-                Todo found = new TodoBuilder().build();
-                given(repository.findOne(ID)).willReturn(Optional.of(found));
+            private Todo deleted;
 
-                service.delete(ID);
-
-                verify(repository, times(1)).delete(found);
-            }
-
-            @Test
-            public void shouldReturnTheInformationOfDeletedTodoEntry() {
-                Todo found = new TodoBuilder()
+            @Before
+            public void returnDeletedTodoEntry() {
+                deleted = new TodoBuilder()
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
@@ -151,8 +144,18 @@ public class RepositoryTodoServiceTest {
                         .title(TITLE)
                         .build();
 
-                given(repository.findOne(ID)).willReturn(Optional.of(found));
+                given(repository.findOne(ID)).willReturn(Optional.of(deleted));
+            }
 
+            @Test
+            public void shouldDeleteFoundTodoEntry() {
+                service.delete(ID);
+
+                verify(repository, times(1)).delete(deleted);
+            }
+
+            @Test
+            public void shouldReturnTheInformationOfDeletedTodoEntry() {
                 TodoDTO deleted = service.delete(ID);
 
                 assertThatTodoDTO(deleted)
@@ -169,10 +172,13 @@ public class RepositoryTodoServiceTest {
 
         public class WhenNoTodoEntryAreFound {
 
+            @Before
+            public void returnNoTodoEntries() {
+                given(repository.findAll()).willReturn(new ArrayList<>());
+            }
+
             @Test
             public void shouldReturnEmptyList() {
-                given(repository.findAll()).willReturn(new ArrayList<>());
-
                 List<TodoDTO> todoEntries = service.findAll();
 
                 assertThat(todoEntries).isEmpty();
@@ -181,8 +187,8 @@ public class RepositoryTodoServiceTest {
 
         public class WhenOneTodoEntryIsFound {
 
-            @Test
-            public void shouldReturnInformationOfFoundTodoEntry() {
+            @Before
+            public void returnOneTodoEntry() {
                 Todo found = new TodoBuilder()
                         .id(ID)
                         .creationTime(CREATION_TIME)
@@ -192,11 +198,18 @@ public class RepositoryTodoServiceTest {
                         .build();
 
                 given(repository.findAll()).willReturn(Arrays.asList(found));
+            }
 
+            @Test
+            public void shouldReturnOneTodoEntry() {
                 List<TodoDTO> todoEntries = service.findAll();
 
                 assertThat(todoEntries).hasSize(1);
-                TodoDTO todoEntry = todoEntries.iterator().next();
+            }
+
+            @Test
+            public void shouldReturnInformationOfFoundTodoEntry() {
+                TodoDTO todoEntry = service.findAll().get(0);
 
                 assertThatTodoDTO(todoEntry)
                         .hasId(ID)
@@ -212,10 +225,13 @@ public class RepositoryTodoServiceTest {
 
         public class WhenTodoEntryIsNotFound {
 
+            @Before
+            public void returnNoTodoEntry() {
+                given(repository.findOne(ID)).willReturn(Optional.empty());
+            }
+
             @Test
             public void shouldThrowExceptionWithCorrectId() {
-                given(repository.findOne(ID)).willReturn(Optional.empty());
-
                 Throwable thrown = catchThrowable(() -> service.findById(ID));
 
                 assertThat(thrown).isExactlyInstanceOf(TodoNotFoundException.class);
@@ -227,8 +243,8 @@ public class RepositoryTodoServiceTest {
 
         public class WhenTodoEntryIsFound {
 
-            @Test
-            public void shouldReturnInformationOfFoundTodoEntry() {
+            @Before
+            public void returnFoundTodoEntry() {
                 Todo found = new TodoBuilder()
                         .id(ID)
                         .creationTime(CREATION_TIME)
@@ -238,7 +254,10 @@ public class RepositoryTodoServiceTest {
                         .build();
 
                 given(repository.findOne(ID)).willReturn(Optional.of(found));
+            }
 
+            @Test
+            public void shouldReturnInformationOfFoundTodoEntry() {
                 TodoDTO returned = service.findById(ID);
 
                 assertThatTodoDTO(returned)
@@ -255,13 +274,16 @@ public class RepositoryTodoServiceTest {
 
         public class WhenTodoEntryIsNotFound {
 
+            @Before
+            public void returnNoTodoEntry() {
+                given(repository.findOne(ID)).willReturn(Optional.empty());
+            }
+
             @Test
             public void shouldThrowExceptionWithCorrectId() {
                 TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                         .id(ID)
                         .build();
-
-                given(repository.findOne(ID)).willReturn(Optional.empty());
 
                 Throwable thrown = catchThrowable(() -> service.update(updatedTodoEntry));
 
@@ -274,15 +296,11 @@ public class RepositoryTodoServiceTest {
 
         public class WhenTodoEntryIsFound {
 
-            @Test
-            public void shouldUpdateTitleAndDescription() {
-                TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                        .id(ID)
-                        .description(UPDATED_DESCRIPTION)
-                        .title(UPDATED_TITLE)
-                        .build();
+            private Todo updated;
 
-                Todo updated = new TodoBuilder()
+            @Before
+            public void returnUpdatedTodoEntry() {
+                updated = new TodoBuilder()
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
@@ -291,12 +309,21 @@ public class RepositoryTodoServiceTest {
                         .build();
 
                 given(repository.findOne(ID)).willReturn(Optional.of(updated));
+            }
+
+            @Test
+            public void shouldUpdateTitleAndDescription() {
+                TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                        .id(ID)
+                        .description(UPDATED_DESCRIPTION)
+                        .title(UPDATED_TITLE)
+                        .build();
 
                 service.update(updatedTodoEntry);
 
                 assertThatTodoEntry(updated)
-                        .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .hasDescription(UPDATED_DESCRIPTION)
+                        .hasTitle(UPDATED_TITLE);
             }
 
             @Test
@@ -306,16 +333,6 @@ public class RepositoryTodoServiceTest {
                         .description(UPDATED_DESCRIPTION)
                         .title(UPDATED_TITLE)
                         .build();
-
-                Todo updated = new TodoBuilder()
-                        .creationTime(CREATION_TIME)
-                        .description(DESCRIPTION)
-                        .id(ID)
-                        .modificationTime(MODIFICATION_TIME)
-                        .title(TITLE)
-                        .build();
-
-                given(repository.findOne(ID)).willReturn(Optional.of(updated));
 
                 service.update(updatedTodoEntry);
 
@@ -332,16 +349,6 @@ public class RepositoryTodoServiceTest {
                         .description(UPDATED_DESCRIPTION)
                         .title(UPDATED_TITLE)
                         .build();
-
-                Todo updated = new TodoBuilder()
-                        .creationTime(CREATION_TIME)
-                        .description(DESCRIPTION)
-                        .id(ID)
-                        .modificationTime(MODIFICATION_TIME)
-                        .title(TITLE)
-                        .build();
-
-                given(repository.findOne(ID)).willReturn(Optional.of(updated));
 
                 TodoDTO returnedTodoEntry = service.update(updatedTodoEntry);
 
