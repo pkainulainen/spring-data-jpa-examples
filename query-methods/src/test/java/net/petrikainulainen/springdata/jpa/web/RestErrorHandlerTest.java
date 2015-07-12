@@ -6,7 +6,6 @@ import net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.MethodParameter;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.util.List;
 import java.util.Locale;
 
+import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.eq;
@@ -72,24 +72,24 @@ public class RestErrorHandlerTest {
         public void shouldFindErrorMessageByUsingCorrectId() {
             errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
-            ArgumentCaptor<MessageSourceResolvable> messageRequestArgument = ArgumentCaptor.forClass(MessageSourceResolvable.class);
-            verify(messageSource, times(1)).getMessage(messageRequestArgument.capture(), eq(CURRENT_LOCALE));
-
-            MessageSourceResolvable messageRequest = messageRequestArgument.getValue();
-            assertThat(messageRequest.getArguments())
-                    .containsOnly(TODO_ID);
+            verify(messageSource, times(1)).getMessage(
+                    assertArg(messageRequest -> assertThat(messageRequest.getArguments())
+                                    .containsOnly(TODO_ID)
+                    ),
+                    eq(CURRENT_LOCALE)
+            );
         }
 
         @Test
         public void shouldFindErrorMessageByUsingCorrectMessageCode() {
             errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
-            ArgumentCaptor<MessageSourceResolvable> messageRequestArgument = ArgumentCaptor.forClass(MessageSourceResolvable.class);
-            verify(messageSource, times(1)).getMessage(messageRequestArgument.capture(), eq(CURRENT_LOCALE));
-
-            MessageSourceResolvable messageRequest = messageRequestArgument.getValue();
-            assertThat(messageRequest.getCodes())
-                    .containsOnly(ERROR_MESSAGE_CODE_TODO_ENTRY_NOT_FOUND);
+            verify(messageSource, times(1)).getMessage(
+                    assertArg(messageRequest -> assertThat(messageRequest.getCodes())
+                                    .containsOnly(ERROR_MESSAGE_CODE_TODO_ENTRY_NOT_FOUND)
+                    ),
+                    eq(CURRENT_LOCALE)
+            );
         }
 
         @Test

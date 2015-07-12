@@ -9,7 +9,6 @@ import net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -246,17 +246,15 @@ public class TodoControllerTest {
                                     .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
                     );
 
-                    ArgumentCaptor<TodoDTO> createdTodoEntryArgument = ArgumentCaptor.forClass(TodoDTO.class);
-                    verify(crudService, times(1)).create(createdTodoEntryArgument.capture());
-
-                    TodoDTO created = createdTodoEntryArgument.getValue();
-
-                    assertThatTodoDTO(created)
-                            .hasDescription(maxLengthDescription)
-                            .hasTitle(maxLengthTitle)
-                            .hasNoCreationTime()
-                            .hasNoId()
-                            .hasNoModificationTime();
+                    verify(crudService, times(1)).create(
+                            assertArg(created -> assertThatTodoDTO(created)
+                                    .hasDescription(maxLengthDescription)
+                                    .hasTitle(maxLengthTitle)
+                                    .hasNoCreationTime()
+                                    .hasNoId()
+                                    .hasNoModificationTime()
+                            )
+                    );
                 }
             }
         }
@@ -654,16 +652,15 @@ public class TodoControllerTest {
                                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         );
 
-                        ArgumentCaptor<TodoDTO> updatedArgument = ArgumentCaptor.forClass(TodoDTO.class);
-                        verify(crudService, times(1)).update(updatedArgument.capture());
-
-                        TodoDTO updated = updatedArgument.getValue();
-                        assertThatTodoDTO(updated)
-                                .hasDescription(maxLengthDescription)
-                                .hasId(ID)
-                                .hasTitle(maxLengthTitle)
-                                .hasNoCreationTime()
-                                .hasNoModificationTime();
+                        verify(crudService, times(1)).update(
+                                assertArg(updated -> assertThatTodoDTO(updated)
+                                        .hasDescription(maxLengthDescription)
+                                        .hasId(ID)
+                                        .hasTitle(maxLengthTitle)
+                                        .hasNoCreationTime()
+                                        .hasNoModificationTime()
+                                )
+                        );
                     }
                 }
             }

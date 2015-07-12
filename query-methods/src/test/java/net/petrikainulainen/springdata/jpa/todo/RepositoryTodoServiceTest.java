@@ -4,13 +4,13 @@ import com.nitorcreations.junit.runners.NestedRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
 import static net.petrikainulainen.springdata.jpa.todo.TodoAssert.assertThatTodoEntry;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,17 +72,16 @@ public class RepositoryTodoServiceTest {
 
             service.create(newTodoEntry);
 
-            ArgumentCaptor<Todo> persistedArgument = ArgumentCaptor.forClass(Todo.class);
-            verify(repository, times(1)).save(persistedArgument.capture());
+            verify(repository, times(1)).save(
+                    assertArg(persisted ->  assertThatTodoEntry(persisted)
+                            .hasNoCreationTime()
+                            .hasDescription(DESCRIPTION)
+                            .hasNoId()
+                            .hasNoModificationTime()
+                            .hasTitle(TITLE)
+                    )
+            );
             verifyNoMoreInteractions(repository);
-
-            Todo persisted = persistedArgument.getValue();
-            assertThatTodoEntry(persisted)
-                    .hasNoCreationTime()
-                    .hasDescription(DESCRIPTION)
-                    .hasNoId()
-                    .hasNoModificationTime()
-                    .hasTitle(TITLE);
         }
 
         @Test
