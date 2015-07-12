@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
-
 /**
  * @author Petri Kainulainen
  */
@@ -39,7 +37,7 @@ final class RepositoryTodoService implements TodoCrudService {
         created = repository.save(created);
         LOGGER.info("Created a new todo entry: {}", created);
 
-        return transformIntoDTO(created);
+        return TodoMapper.mapEntityIntoDTO(created);
     }
 
     @Transactional
@@ -53,7 +51,7 @@ final class RepositoryTodoService implements TodoCrudService {
         repository.delete(deleted);
         LOGGER.info("Deleted todo entry: {}", deleted);
 
-        return transformIntoDTO(deleted);
+        return TodoMapper.mapEntityIntoDTO(deleted);
     }
 
     @Transactional(readOnly = true)
@@ -65,13 +63,7 @@ final class RepositoryTodoService implements TodoCrudService {
 
         LOGGER.info("Found {} todo entries", todoEntries.size());
 
-        return transformIntoDTOs(todoEntries);
-    }
-
-    private List<TodoDTO> transformIntoDTOs(List<Todo> entities) {
-        return entities.stream()
-                .map(this::transformIntoDTO)
-                .collect(toList());
+        return TodoMapper.mapEntitiesIntoDTOs(todoEntries);
     }
 
     @Transactional(readOnly = true)
@@ -82,7 +74,7 @@ final class RepositoryTodoService implements TodoCrudService {
         Todo todoEntry = findTodoEntryById(id);
         LOGGER.info("Found todo entry: {}", todoEntry);
 
-        return transformIntoDTO(todoEntry);
+        return TodoMapper.mapEntityIntoDTO(todoEntry);
     }
 
     @Transactional
@@ -94,24 +86,11 @@ final class RepositoryTodoService implements TodoCrudService {
         updated.update(updatedTodoEntry.getTitle(), updatedTodoEntry.getDescription());
         LOGGER.info("Updated the information of the todo entry: {}", updated);
 
-        return transformIntoDTO(updated);
+        return TodoMapper.mapEntityIntoDTO(updated);
     }
 
     private Todo findTodoEntryById(Long id) {
         Optional<Todo> todoResult = repository.findOne(id);
         return todoResult.orElseThrow(() -> new TodoNotFoundException(id));
     }
-
-    private TodoDTO transformIntoDTO(Todo entity) {
-        TodoDTO dto = new TodoDTO();
-
-        dto.setCreationTime(entity.getCreationTime());
-        dto.setDescription(entity.getDescription());
-        dto.setId(entity.getId());
-        dto.setModificationTime(entity.getModificationTime());
-        dto.setTitle(entity.getTitle());
-
-        return dto;
-    }
-
 }
