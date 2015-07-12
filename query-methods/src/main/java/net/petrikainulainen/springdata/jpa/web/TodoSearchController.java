@@ -41,7 +41,7 @@ public class TodoSearchController {
         LOGGER.info("Finding todo entries by search term: {}", searchTerm);
 
         List<TodoDTO> searchResults = searchService.findBySearchTerm(searchTerm);
-        LOGGER.info("Found {} todo entries");
+        LOGGER.info("Found {} todo entries", searchResults.size());
 
         return searchResults;
     }
