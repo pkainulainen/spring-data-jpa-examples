@@ -53,13 +53,16 @@ public class RestErrorHandlerTest {
         private static final String ERROR_MESSAGE_CODE_TODO_ENTRY_NOT_FOUND = "error.todo.entry.not.found";
         private static final String ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND = "No todo entry was found by using id: 99";
 
-        @Test
-        public void shouldFindErrorMessageByUsingCurrentLocale() {
+        @Before
+        public void returnErrorMessageNotFound() {
             given(messageSource.getMessage(
                             isA(MessageSourceResolvable.class),
                             isA(Locale.class))
             ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
+        }
 
+        @Test
+        public void shouldFindErrorMessageByUsingCurrentLocale() {
             errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
             verify(messageSource, times(1)).getMessage(isA(MessageSourceResolvable.class), eq(CURRENT_LOCALE));
@@ -67,11 +70,6 @@ public class RestErrorHandlerTest {
 
         @Test
         public void shouldFindErrorMessageByUsingCorrectId() {
-            given(messageSource.getMessage(
-                            isA(MessageSourceResolvable.class),
-                            isA(Locale.class))
-            ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
-
             errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
             ArgumentCaptor<MessageSourceResolvable> messageRequestArgument = ArgumentCaptor.forClass(MessageSourceResolvable.class);
@@ -84,11 +82,6 @@ public class RestErrorHandlerTest {
 
         @Test
         public void shouldFindErrorMessageByUsingCorrectMessageCode() {
-            given(messageSource.getMessage(
-                            isA(MessageSourceResolvable.class),
-                            isA(Locale.class))
-            ).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
-
             errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
             ArgumentCaptor<MessageSourceResolvable> messageRequestArgument = ArgumentCaptor.forClass(MessageSourceResolvable.class);
@@ -101,11 +94,6 @@ public class RestErrorHandlerTest {
 
         @Test
         public void shouldReturnErrorThatHasCorrectErrorCode() {
-            given(messageSource.getMessage(
-                    isA(MessageSourceResolvable.class),
-                    isA(Locale.class)
-            )).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
-
             ErrorDTO error = errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
             assertThat(error.getCode()).isEqualTo(ERROR_CODE_TODO_ENTRY_NOT_FOUND);
@@ -113,11 +101,6 @@ public class RestErrorHandlerTest {
 
         @Test
         public void shouldReturnErrorThatHasCorrectMessage() {
-            given(messageSource.getMessage(
-                    isA(MessageSourceResolvable.class),
-                    isA(Locale.class)
-            )).willReturn(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
-
             ErrorDTO error = errorHandler.handleTodoEntryNotFound(new TodoNotFoundException(TODO_ID), CURRENT_LOCALE);
 
             assertThat(error.getMessage()).isEqualTo(ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND);
@@ -140,17 +123,21 @@ public class RestErrorHandlerTest {
 
             public class WhenMessageIsFound {
 
-                @Test
-                public void shouldReturnErrorThatHasCorrectCode() {
+                private MethodArgumentNotValidException ex;
+
+                @Before
+                public void createValidationErrorAndReturnErrorMessage() {
                     FieldError fieldError = new FieldErrorBuilder()
                             .defaultMessage(FIELD_DEFAULT_MESSAGE)
                             .fieldName(FIELD_WITH_VALIDATION_ERROR)
                             .build();
-
-                    MethodArgumentNotValidException ex = createExceptionWithFieldErrors(fieldError);
-
                     given(messageSource.getMessage(fieldError, CURRENT_LOCALE)).willReturn(ERROR_MESSAGE_VALIDATION_ERROR);
 
+                    ex = createExceptionWithFieldErrors(fieldError);
+                }
+
+                @Test
+                public void shouldReturnErrorThatHasCorrectCode() {
                     ValidationErrorDTO validationErrors = errorHandler.handleValidationErrors(ex, CURRENT_LOCALE);
 
                     assertThat(validationErrors.getCode()).isEqualTo(ERROR_CODE_VALIDATION_ERROR);
@@ -158,15 +145,6 @@ public class RestErrorHandlerTest {
 
                 @Test
                 public void shouldReturnErrorThatHasCorrectFieldErrorWithMessage() {
-                    FieldError fieldError = new FieldErrorBuilder()
-                            .defaultMessage(FIELD_DEFAULT_MESSAGE)
-                            .fieldName(FIELD_WITH_VALIDATION_ERROR)
-                            .build();
-
-                    MethodArgumentNotValidException ex = createExceptionWithFieldErrors(fieldError);
-
-                    given(messageSource.getMessage(fieldError, CURRENT_LOCALE)).willReturn(ERROR_MESSAGE_VALIDATION_ERROR);
-
                     ValidationErrorDTO validationErrors = errorHandler.handleValidationErrors(ex, CURRENT_LOCALE);
 
                     List<FieldErrorDTO> fieldErrors = validationErrors.getFieldErrors();
@@ -180,18 +158,22 @@ public class RestErrorHandlerTest {
 
             public class WhenMessageIsNotFound {
 
-                @Test
-                public void shouldReturnErrorThatHasCorrectCode() {
+                private MethodArgumentNotValidException ex;
+
+                @Before
+                public void createValidationErrorAndReturnDefaultErrorMessage() {
                     FieldError fieldError = new FieldErrorBuilder()
                             .defaultMessage(FIELD_DEFAULT_MESSAGE)
                             .errorCodes(VALIDATION_ERROR_CODE_ACCURATE, VALIDATION_ERROR_CODE_LESS_ACCURATE)
                             .fieldName(FIELD_WITH_VALIDATION_ERROR)
                             .build();
-
-                    MethodArgumentNotValidException ex = createExceptionWithFieldErrors(fieldError);
-
                     given(messageSource.getMessage(fieldError, CURRENT_LOCALE)).willReturn(FIELD_DEFAULT_MESSAGE);
 
+                    ex = createExceptionWithFieldErrors(fieldError);
+                }
+
+                @Test
+                public void shouldReturnErrorThatHasCorrectCode() {
                     ValidationErrorDTO validationErrors = errorHandler.handleValidationErrors(ex, CURRENT_LOCALE);
 
                     assertThat(validationErrors.getCode()).isEqualTo(ERROR_CODE_VALIDATION_ERROR);
@@ -199,16 +181,6 @@ public class RestErrorHandlerTest {
 
                 @Test
                 public void shouldReturnErrorThatHasFieldErrorWithMostAccurateFieldErrorCode() {
-                    FieldError fieldError = new FieldErrorBuilder()
-                            .defaultMessage(FIELD_DEFAULT_MESSAGE)
-                            .errorCodes(VALIDATION_ERROR_CODE_ACCURATE, VALIDATION_ERROR_CODE_LESS_ACCURATE)
-                            .fieldName(FIELD_WITH_VALIDATION_ERROR)
-                            .build();
-
-                    MethodArgumentNotValidException ex = createExceptionWithFieldErrors(fieldError);
-
-                    given(messageSource.getMessage(fieldError, CURRENT_LOCALE)).willReturn(FIELD_DEFAULT_MESSAGE);
-
                     ValidationErrorDTO validationErrors = errorHandler.handleValidationErrors(ex, CURRENT_LOCALE);
 
                     List<FieldErrorDTO> fieldErrors = validationErrors.getFieldErrors();
