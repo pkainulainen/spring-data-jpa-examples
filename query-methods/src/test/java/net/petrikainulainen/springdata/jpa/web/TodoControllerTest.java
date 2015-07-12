@@ -191,29 +191,17 @@ public class TodoControllerTest {
 
             public class WhenMaxLengthTitleAndDescriptionAreGiven {
 
-                @Test
-                public void shouldReturnResponseStatusCreated() throws Exception {
-                    String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
-                    String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
+                private String maxLengthDescription;
+                private String maxLengthTitle;
 
-                    TodoDTO newTodoEntry = new TodoDTOBuilder()
-                            .description(maxLengthDescription)
-                            .title(maxLengthTitle)
-                            .build();
+                private TodoDTO newTodoEntry;
 
-                    mockMvc.perform(post("/api/todo")
-                                    .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
-                                    .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
-                    )
-                            .andExpect(status().isCreated());
-                }
+                @Before
+                public void createInputAndReturnNewTodoEntry() {
+                    maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
+                    maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
 
-                @Test
-                public void shouldReturnCreatedTodoEntryAsJson() throws Exception {
-                    String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
-                    String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
-
-                    TodoDTO newTodoEntry = new TodoDTOBuilder()
+                    newTodoEntry = new TodoDTOBuilder()
                             .description(maxLengthDescription)
                             .title(maxLengthTitle)
                             .build();
@@ -226,7 +214,19 @@ public class TodoControllerTest {
                             .title(maxLengthTitle)
                             .build();
                     given(crudService.create(isA(TodoDTO.class))).willReturn(created);
+                }
 
+                @Test
+                public void shouldReturnResponseStatusCreated() throws Exception {
+                    mockMvc.perform(post("/api/todo")
+                                    .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                                    .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                    )
+                            .andExpect(status().isCreated());
+                }
+
+                @Test
+                public void shouldReturnCreatedTodoEntryAsJson() throws Exception {
                     mockMvc.perform(post("/api/todo")
                                     .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                                     .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
@@ -241,14 +241,6 @@ public class TodoControllerTest {
 
                 @Test
                 public void shouldCreateNewTodoEntryWithCorrectInformation() throws Exception {
-                    String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
-                    String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
-
-                    TodoDTO newTodoEntry = new TodoDTOBuilder()
-                            .description(maxLengthDescription)
-                            .title(maxLengthTitle)
-                            .build();
-
                     mockMvc.perform(post("/api/todo")
                                     .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                                     .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
@@ -274,18 +266,19 @@ public class TodoControllerTest {
 
         public class WhenTodoEntryIsNotFound {
 
+            @Before
+            public void throwNotFoundException() {
+                given(crudService.delete(ID)).willThrow(new TodoNotFoundException(ID));
+            }
+
             @Test
             public void shouldReturnResponseStatusNotFound() throws Exception {
-                given(crudService.delete(ID)).willThrow(new TodoNotFoundException(ID));
-
                 mockMvc.perform(delete("/api/todo/{id}", ID))
                         .andExpect(status().isNotFound());
             }
 
             @Test
             public void shouldReturnErrorMessageAsJson() throws Exception {
-                given(crudService.delete(ID)).willThrow(new TodoNotFoundException(ID));
-
                 mockMvc.perform(delete("/api/todo/{id}", ID))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
@@ -295,18 +288,8 @@ public class TodoControllerTest {
 
         public class WhenTodoEntryIsFound {
 
-            @Test
-            public void shouldReturnResponseStatusOk() throws Exception {
-                TodoDTO deleted = new TodoDTO();
-
-                given(crudService.delete(ID)).willReturn(deleted);
-
-                mockMvc.perform(delete("/api/todo/{id}", ID))
-                        .andExpect(status().isOk());
-            }
-
-            @Test
-            public void shouldReturnInformationOfDeletedTodoEntryAsJson() throws Exception {
+            @Before
+            public void returnDeletedTodoEntry() {
                 TodoDTO deleted = new TodoDTOBuilder()
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
@@ -316,7 +299,16 @@ public class TodoControllerTest {
                         .build();
 
                 given(crudService.delete(ID)).willReturn(deleted);
+            }
 
+            @Test
+            public void shouldReturnResponseStatusOk() throws Exception {
+                mockMvc.perform(delete("/api/todo/{id}", ID))
+                        .andExpect(status().isOk());
+            }
+
+            @Test
+            public void shouldReturnInformationOfDeletedTodoEntryAsJson() throws Exception {
                 mockMvc.perform(delete("/api/todo/{id}", ID))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
@@ -338,10 +330,13 @@ public class TodoControllerTest {
 
         public class WhenNoTodoEntriesAreFound {
 
+            @Before
+            public void returnNoTodoEntries() {
+                given(crudService.findAll()).willReturn(new ArrayList<>());
+            }
+
             @Test
             public void shouldReturnEmptyListAsJson() throws Exception {
-                given(crudService.findAll()).willReturn(new ArrayList<>());
-
                 mockMvc.perform(get("/api/todo"))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$", hasSize(0)));
@@ -350,8 +345,8 @@ public class TodoControllerTest {
 
         public class WhenOneTodoEntryIsFound {
 
-            @Test
-            public void shouldReturnOneTodoEntryAsJson() throws Exception {
+            @Before
+            public void returnFoundTodoEntry() {
                 TodoDTO found = new TodoDTOBuilder()
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
@@ -361,7 +356,10 @@ public class TodoControllerTest {
                         .build();
 
                 given(crudService.findAll()).willReturn(Arrays.asList(found));
+            }
 
+            @Test
+            public void shouldReturnOneTodoEntryAsJson() throws Exception {
                 mockMvc.perform(get("/api/todo"))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$", hasSize(1)))
@@ -378,18 +376,19 @@ public class TodoControllerTest {
 
         public class WhenTodoEntryIsNotFound {
 
+            @Before
+            public void throwTodoNotFoundException() {
+                given(crudService.findById(ID)).willThrow(new TodoNotFoundException(ID));
+            }
+
             @Test
             public void shouldReturnResponseStatusNotFound() throws Exception {
-                given(crudService.findById(ID)).willThrow(new TodoNotFoundException(ID));
-
                 mockMvc.perform(get("/api/todo/{id}", ID))
                         .andExpect(status().isNotFound());
             }
 
             @Test
             public void shouldReturnErrorMessageAsJson() throws Exception {
-                given(crudService.findById(ID)).willThrow(new TodoNotFoundException(ID));
-
                 mockMvc.perform(get("/api/todo/{id}", ID))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
@@ -399,18 +398,8 @@ public class TodoControllerTest {
 
         public class WhenTodoEntryIsFound {
 
-            @Test
-            public void shouldReturnResponseStatusOk() throws Exception {
-                TodoDTO found = new TodoDTO();
-
-                given(crudService.findById(ID)).willReturn(found);
-
-                mockMvc.perform(get("/api/todo/{id}", ID))
-                        .andExpect(status().isOk());
-            }
-
-            @Test
-            public void shouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
+            @Before
+            public void returnFoundTodoEntry() {
                 TodoDTO found = new TodoDTOBuilder()
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
@@ -420,7 +409,16 @@ public class TodoControllerTest {
                         .build();
 
                 given(crudService.findById(ID)).willReturn(found);
+            }
 
+            @Test
+            public void shouldReturnResponseStatusOk() throws Exception {
+                mockMvc.perform(get("/api/todo/{id}", ID))
+                        .andExpect(status().isOk());
+            }
+
+            @Test
+            public void shouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
                 mockMvc.perform(get("/api/todo/{id}", ID))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
@@ -436,13 +434,16 @@ public class TodoControllerTest {
 
         public class WhenTodoEntryIsNotFound {
 
+            @Before
+            public void throwTodoNotFoundException() {
+                given(crudService.update(isA(TodoDTO.class))).willThrow(new TodoNotFoundException(ID));
+            }
+
             @Test
             public void shouldReturnResponseStatusNotFound() throws Exception {
                 TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                         .id(ID)
                         .build();
-
-                given(crudService.update(isA(TodoDTO.class))).willThrow(new TodoNotFoundException(ID));
 
                 mockMvc.perform(put("/api/todo/{id}", ID)
                                 .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
@@ -456,8 +457,6 @@ public class TodoControllerTest {
                 TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                         .id(ID)
                         .build();
-
-                given(crudService.update(isA(TodoDTO.class))).willThrow(new TodoNotFoundException(ID));
 
                 mockMvc.perform(put("/api/todo/{id}", ID)
                                 .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
@@ -599,30 +598,17 @@ public class TodoControllerTest {
 
                 public class WhenMaxLengthTitleAndDescriptionAreGiven {
 
-                    @Test
-                    public void shouldReturnResponseStatusOk() throws Exception {
-                        String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
-                        String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
+                    private String maxLengthDescription;
+                    private String maxLengthTitle;
 
-                        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                                .description(maxLengthDescription)
-                                .id(ID)
-                                .title(maxLengthTitle)
-                                .build();
+                    TodoDTO updatedTodoEntry;
 
-                        mockMvc.perform(put("/api/todo/{id}", ID)
-                                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
-                                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
-                        )
-                                .andExpect(status().isOk());
-                    }
+                    @Before
+                    public void createInputAndReturnUpdatedTodoEntry() {
+                        maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
+                        maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
 
-                    @Test
-                    public void shouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
-                        String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
-                        String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
-
-                        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                        updatedTodoEntry = new TodoDTOBuilder()
                                 .description(maxLengthDescription)
                                 .id(ID)
                                 .title(maxLengthTitle)
@@ -636,7 +622,19 @@ public class TodoControllerTest {
                                 .title(maxLengthTitle)
                                 .build();
                         given(crudService.update(isA(TodoDTO.class))).willReturn(updated);
+                    }
 
+                    @Test
+                    public void shouldReturnResponseStatusOk() throws Exception {
+                        mockMvc.perform(put("/api/todo/{id}", ID)
+                                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        )
+                                .andExpect(status().isOk());
+                    }
+
+                    @Test
+                    public void shouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
                         mockMvc.perform(put("/api/todo/{id}", ID)
                                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
@@ -651,15 +649,6 @@ public class TodoControllerTest {
 
                     @Test
                     public void shouldUpdateTodoEntryWithCorrectInformation() throws Exception {
-                        String maxLengthDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION);
-                        String maxLengthTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE);
-
-                        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                                .description(maxLengthDescription)
-                                .id(ID)
-                                .title(maxLengthTitle)
-                                .build();
-
                         mockMvc.perform(put("/api/todo/{id}", ID)
                                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
