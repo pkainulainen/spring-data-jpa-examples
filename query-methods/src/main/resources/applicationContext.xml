@@ -8,7 +8,9 @@
     <import resource="applicationContext-web.xml"/>
     <import resource="applicationContext-persistence.xml"/>
 
+    <context:component-scan base-package="net.petrikainulainen.springdata.jpa.common"/>
     <context:component-scan base-package="net.petrikainulainen.springdata.jpa.todo"/>
+    <context:component-scan base-package="net.petrikainulainen.springdata.jpa.web"/>
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basename" value="i18n/messages"/>
@@ -18,12 +20,18 @@
     <beans profile="application">
         <context:property-placeholder location="classpath:application.properties"/>
 
+        <bean id="dateTimeService"
+              class="net.petrikainulainen.springdata.jpa.common.CurrentTimeDateTimeService"/>
+
         <bean id="propertyPlaceHolderConfigurer"
               class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
     </beans>
 
     <beans profile="integrationtest">
         <context:property-placeholder location="classpath:integration-test.properties"/>
+
+        <bean id="dateTimeService"
+              class="net.petrikainulainen.springdata.jpa.common.ConstantDateTimeService"/>
 
         <bean id="propertyPlaceHolderConfigurer"
               class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
