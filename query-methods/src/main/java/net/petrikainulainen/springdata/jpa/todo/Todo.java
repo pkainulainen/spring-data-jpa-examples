@@ -2,15 +2,18 @@ package net.petrikainulainen.springdata.jpa.todo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import java.time.ZonedDateTime;
@@ -27,6 +30,7 @@ import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;
  * @author Petri Kainulainen
  */
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @NamedNativeQuery(name = "Todo.findBySearchTermNamedNative",
         query="SELECT * FROM todos t WHERE " +
                 "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
@@ -50,6 +54,7 @@ final class Todo {
 
     @Column(name = "creation_time", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentZonedDateTime")
+    @CreatedDate
     private ZonedDateTime creationTime;
 
     @Column(name = "description", length = MAX_LENGTH_DESCRIPTION)
@@ -57,6 +62,7 @@ final class Todo {
 
     @Column(name = "modification_time")
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentZonedDateTime")
+    @LastModifiedDate
     private ZonedDateTime modificationTime;
 
     @Column(name = "title", nullable = false, length = MAX_LENGTH_TITLE)
@@ -101,13 +107,6 @@ final class Todo {
 
     long getVersion() {
         return version;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        ZonedDateTime now = ZonedDateTime.now();
-        this.creationTime = now;
-        this.modificationTime = now;
     }
 
     void update(String newTitle, String newDescription) {

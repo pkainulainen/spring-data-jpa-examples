@@ -5,10 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.time.ZonedDateTime;
-
 import static net.petrikainulainen.springdata.jpa.todo.TodoAssert.assertThatTodoEntry;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Petri Kainulainen
@@ -201,25 +198,6 @@ public class TodoTest {
                             .hasNoDescription();
                 }
             }
-        }
-    }
-
-    public class PrePersist {
-
-        @Test
-        public void shouldUseSameTimeAsCreationTimeAndModificationTime() {
-            Todo newTodoEntry = Todo.getBuilder()
-                    .title(TITLE)
-                    .build();
-
-            newTodoEntry.prePersist();
-
-            ZonedDateTime creationTime = newTodoEntry.getCreationTime();
-            ZonedDateTime modificationTime = newTodoEntry.getModificationTime();
-
-            assertThat(creationTime).isNotNull();
-            assertThat(modificationTime).isNotNull();
-            assertThat(creationTime).isEqualTo(modificationTime);
         }
     }
 

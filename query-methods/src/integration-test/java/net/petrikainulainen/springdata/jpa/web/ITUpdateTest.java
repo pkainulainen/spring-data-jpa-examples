@@ -6,6 +6,7 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import net.petrikainulainen.springdata.jpa.TodoConstants;
+import net.petrikainulainen.springdata.jpa.common.ConstantDateTimeService;
 import net.petrikainulainen.springdata.jpa.config.ExampleApplicationContext;
 import net.petrikainulainen.springdata.jpa.config.Profiles;
 import net.petrikainulainen.springdata.jpa.todo.TestUtil;
@@ -32,7 +33,6 @@ import java.sql.SQLException;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -259,7 +259,7 @@ public class ITUpdateTest {
                 .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
                 .andExpect(jsonPath("$.description", is(TodoConstants.UPDATED_DESCRIPTION)))
                 .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$.modificationTime", isA(String.class)))
+                .andExpect(jsonPath("$.modificationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
                 .andExpect(jsonPath("$.title", is(TodoConstants.UPDATED_TITLE)));
     }
 

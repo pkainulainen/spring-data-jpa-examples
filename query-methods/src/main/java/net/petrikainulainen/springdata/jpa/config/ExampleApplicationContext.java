@@ -1,5 +1,8 @@
 package net.petrikainulainen.springdata.jpa.config;
 
+import net.petrikainulainen.springdata.jpa.common.ConstantDateTimeService;
+import net.petrikainulainen.springdata.jpa.common.CurrentTimeDateTimeService;
+import net.petrikainulainen.springdata.jpa.common.DateTimeService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,10 +34,22 @@ public class ExampleApplicationContext {
     @PropertySource("classpath:application.properties")
     static class ApplicationProperties {}
 
+    @Profile(Profiles.APPLICATION)
+    @Bean
+    DateTimeService currentDateTimeService() {
+        return new CurrentTimeDateTimeService();
+    }
+
     @Profile(Profiles.INTEGRATION_TEST)
     @Configuration
     @PropertySource("classpath:integration-test.properties")
     static class IntegrationTestProperties {}
+
+    @Profile(Profiles.INTEGRATION_TEST)
+    @Bean
+    DateTimeService constantDateTimeService() {
+        return new ConstantDateTimeService();
+    }
 
     @Bean
     MessageSource messageSource() {

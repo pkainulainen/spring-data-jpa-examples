@@ -102,5 +102,7 @@ interface TodoRepository extends Repository<Todo, Long> {
 
     Optional<Todo> findOne(Long id);
 
+    void flush();
+
     Todo save(Todo persisted);
 }

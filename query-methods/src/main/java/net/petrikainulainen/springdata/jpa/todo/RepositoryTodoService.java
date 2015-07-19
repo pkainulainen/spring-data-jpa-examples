@@ -84,6 +84,11 @@ final class RepositoryTodoService implements TodoCrudService {
 
         Todo updated = findTodoEntryById(updatedTodoEntry.getId());
         updated.update(updatedTodoEntry.getTitle(), updatedTodoEntry.getDescription());
+
+        //We need to flush the changes or otherwise the returned object
+        //doesn't contain the updated audit information.
+        repository.flush();
+
         LOGGER.info("Updated the information of the todo entry: {}", updated);
 
         return TodoMapper.mapEntityIntoDTO(updated);
