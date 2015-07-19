@@ -32,9 +32,14 @@
                 "no.todo.entries.found": "Nothing to do (yet)."
             }
         },
+        "search.results.page.title": "Search Results",
         "view.page": {
             "title": "View Todo Entry"
         }
+    },
+    "search": {
+        "term.field.placeholder": "Search",
+        "missing.characters.text": "characters missing"
     },
     "todo": {
         "creation.time": "Created at",

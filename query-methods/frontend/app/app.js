@@ -21,7 +21,10 @@ var App = angular.module('app', [
     'app.common.config', 'app.common.directives', 'app.common.services',
 
     //Todo
-    'app.todo.controllers', 'app.todo.directives', 'app.todo.services'
+    'app.todo.controllers', 'app.todo.directives', 'app.todo.services',
+
+    //Search
+    'app.search.controllers', 'app.search.directives', 'app.search.services'
 
 ]);
 

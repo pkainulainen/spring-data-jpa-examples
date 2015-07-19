@@ -1,0 +1,14 @@
+<form class="navbar-form navbar-right" name="searchForm" role="search">
+    <div class="form-group">
+        <small class="ng-error" ng-show="showMissingCharacterText()">
+            {{missingChars}} {{'search.missing.characters.text' | translate}}
+        </small>
+        <input type="text"
+               class="form-control"
+               placeholder="{{'search.term.field.placeholder' | translate}}"
+               ng-model="searchTerm"
+               ng-blur="searchFieldBlur()"
+               ng-change="search()"
+               ng-focus="searchFieldFocus()">
+    </div>
+</form>

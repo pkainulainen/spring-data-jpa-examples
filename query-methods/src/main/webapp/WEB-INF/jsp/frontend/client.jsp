@@ -53,6 +53,7 @@
                 </button>
                 <a class="navbar-brand" ui-sref="todo.list" translate="header.brand.label"></a>
             </div>
+            <div class="pull-right" search-form></div>
         </div>
     </nav>
 
