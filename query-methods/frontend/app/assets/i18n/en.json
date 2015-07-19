@@ -39,7 +39,7 @@
     },
     "search": {
         "term.field.placeholder": "Search",
-        "missing.characters.text": "characters missing"
+        "missing.characters.text": "{{missingCharCount}} characters missing"
     },
     "todo": {
         "creation.time": "Created at",

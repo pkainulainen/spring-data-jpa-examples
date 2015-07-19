@@ -1,7 +1,7 @@
 <form class="navbar-form navbar-right" name="searchForm" role="search">
     <div class="form-group">
         <small class="ng-error" ng-show="showMissingCharacterText()">
-            {{missingChars}} {{'search.missing.characters.text' | translate}}
+            {{'search.missing.characters.text' | translate:translate:translationData }}
         </small>
         <input type="text"
                class="form-control"
