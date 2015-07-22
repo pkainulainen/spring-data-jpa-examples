@@ -52,7 +52,7 @@ class PersistenceContext {
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 
     @Bean
-    public DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {
+    DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {
         return new AuditingDateTimeProvider(dateTimeService);
     }
 
