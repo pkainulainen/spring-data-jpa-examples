@@ -36,7 +36,7 @@ public class ExampleApplicationContext {
 
     @Profile(Profiles.APPLICATION)
     @Bean
-    DateTimeService currentDateTimeService() {
+    DateTimeService currentTimeDateTimeService() {
         return new CurrentTimeDateTimeService();
     }
 
