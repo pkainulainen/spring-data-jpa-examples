@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.web;
+package net.petrikainulainen.springdata.jpa.web.error;
 
 import net.petrikainulainen.springdata.jpa.todo.TodoNotFoundException;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author Petri Kainulainen
  */
 @ControllerAdvice
-final class RestErrorHandler {
+public final class RestErrorHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestErrorHandler.class);
 
@@ -34,7 +34,7 @@ final class RestErrorHandler {
     private final MessageSource messageSource;
 
     @Autowired
-    RestErrorHandler(MessageSource messageSource) {
+    public RestErrorHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 

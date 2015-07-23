@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -33,6 +35,8 @@ import java.sql.SQLException;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,7 +52,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class})
+        DbUnitTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class})
 @WebAppConfiguration
 public class ITUpdateTest {
 
@@ -60,12 +65,13 @@ public class ITUpdateTest {
     @Before
     public void setUp() throws SQLException {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void update_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+    public void update_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .id(TodoConstants.ID)
                 .build();
@@ -73,13 +79,31 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
+        )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DatabaseSetup("no-todo-entries.xml")
+    @WithUserDetails("user")
+    public void update_AsUser_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+        TodoDTO updatedTodoEntry = new TodoDTOBuilder()
+                .id(TodoConstants.ID)
+                .build();
+
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void update_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .id(TodoConstants.ID)
                 .build();
@@ -87,6 +111,7 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
@@ -96,7 +121,8 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @ExpectedDatabase("no-todo-entries.xml")
-    public void update_TodoEntryNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TodoEntryNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .id(TodoConstants.ID)
                 .build();
@@ -104,12 +130,14 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         );
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void update_TitleAndDescriptionAreMissing_ShouldReturnResponseStatusBadRequest() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TitleAndDescriptionAreMissing_ShouldReturnResponseStatusBadRequest() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
                 .id(TodoConstants.ID)
@@ -119,13 +147,15 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void update_TitleAndDescriptionAreMissing_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TitleAndDescriptionAreMissing_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
                 .id(TodoConstants.ID)
@@ -135,6 +165,7 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_VALIDATION_FAILED)))
@@ -146,7 +177,8 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase("todo-entries.xml")
-    public void update_TitleAndDescriptionAreMissing_ShouldNotUpdateTodoEntry() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TitleAndDescriptionAreMissing_ShouldNotUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
                 .id(TodoConstants.ID)
@@ -156,12 +188,14 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         );
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void update_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -174,13 +208,15 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void update_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -193,6 +229,7 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_VALIDATION_FAILED)))
@@ -210,7 +247,8 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase("todo-entries.xml")
-    public void update_TooLongTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_TooLongTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -223,12 +261,14 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         );
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void update_ValidTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
+    @WithUserDetails("user")
+    public void update_AsUser_ValidTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
                 .id(TodoConstants.ID)
@@ -238,12 +278,14 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isOk());
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
+    @WithUserDetails("user")
     public void update_ValidTitleAndDescription_ShouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
@@ -254,6 +296,7 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
@@ -266,6 +309,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase(value = "update-todo-entry-expected.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+    @WithUserDetails("user")
     public void update_ValidTitleAndDescription_ShouldUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
@@ -276,6 +320,7 @@ public class ITUpdateTest {
         mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
+                        .with(csrf())
         );
     }
 }

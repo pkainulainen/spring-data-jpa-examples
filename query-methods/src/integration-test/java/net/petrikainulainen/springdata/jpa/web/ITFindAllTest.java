@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -24,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,10 +39,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = {ExampleApplicationContext.class})
 @DbUnitConfiguration(dataSetLoader = ColumnSensingReplacementDataSetLoader.class)
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class })
+        DbUnitTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class})
 @WebAppConfiguration
 public class ITFindAllTest {
 
@@ -51,18 +55,27 @@ public class ITFindAllTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
-    public void findAll_ShouldReturnResponseStatusOk() throws Exception {
+    public void findAll_asAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/todo"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findAll_AsUser_ShouldReturnResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(status().isOk());
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void findAll_NoTodoEntriesFound_ShouldReturnEmptyListAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findAll_AsUser_NoTodoEntriesFound_ShouldReturnEmptyListAsJson() throws Exception {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(0)));
@@ -70,7 +83,8 @@ public class ITFindAllTest {
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void findAll_OneTodoEntryFound_ShouldReturnInformationOfOneTodoEntryAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findAll_AsUser_OneTodoEntryFound_ShouldReturnInformationOfOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(1)))

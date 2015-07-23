@@ -1,6 +1,7 @@
-package net.petrikainulainen.springdata.jpa.web;
+package net.petrikainulainen.springdata.jpa.web.error;
 
 import com.nitorcreations.junit.runners.NestedRunner;
+import net.petrikainulainen.springdata.jpa.web.error.ErrorDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

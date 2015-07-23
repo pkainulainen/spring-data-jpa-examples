@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.web;
+package net.petrikainulainen.springdata.jpa.web.error;
 
 import com.nitorcreations.junit.runners.NestedRunner;
 import net.petrikainulainen.springdata.jpa.todo.TodoDTO;

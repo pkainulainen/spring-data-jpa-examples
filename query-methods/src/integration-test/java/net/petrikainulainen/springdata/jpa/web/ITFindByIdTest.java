@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -23,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,7 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class })
+        DbUnitTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class})
 @WebAppConfiguration
 public class ITFindByIdTest {
 
@@ -50,19 +54,29 @@ public class ITFindByIdTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void findById_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+    public void findById_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DatabaseSetup("no-todo-entries.xml")
+    @WithUserDetails("user")
+    public void findById_AsUser_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void findById_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findById_AsUser_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
@@ -72,14 +86,16 @@ public class ITFindByIdTest {
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void findById_TodoEntryFound_ShouldReturnResponseStatusOk() throws Exception {
+    @WithUserDetails("user")
+    public void findById_AsUser_TodoEntryFound_ShouldReturnResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(status().isOk());
     }
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void findById_TodoEntryFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findById_AsUser_TodoEntryFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))

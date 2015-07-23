@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -33,6 +35,8 @@ import java.sql.SQLException;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,7 +52,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class})
+        DbUnitTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class
+})
 @WebAppConfiguration
 @DatabaseSetup("no-todo-entries.xml")
 public class ITCreateTest {
@@ -63,27 +69,44 @@ public class ITCreateTest {
         DbTestUtil.resetAutoIncrementColumns(webAppContext, "todos");
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
-    public void create_EmptyTodoEntry_ShouldReturnResponseStatusBadRequest() throws Exception {
+    public void create_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
         TodoDTO emptyTodoEntry = new TodoDTO();
 
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(emptyTodoEntry))
+                        .with(csrf())
+        )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void create_AsUser_EmptyTodoEntry_ShouldReturnResponseStatusBadRequest() throws Exception {
+        TodoDTO emptyTodoEntry = new TodoDTO();
+
+        mockMvc.perform(post("/api/todo")
+                        .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
+                        .content(WebTestUtil.convertObjectToJsonBytes(emptyTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void create_EmptyTodoEntry_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void create_AsUser_EmptyTodoEntry_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
         TodoDTO emptyTodoEntry = new TodoDTO();
 
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(emptyTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_VALIDATION_FAILED)))
@@ -94,17 +117,20 @@ public class ITCreateTest {
 
     @Test
     @ExpectedDatabase("no-todo-entries.xml")
-    public void create_EmptyTodoEntry_ShouldNotSaveTodoEntry() throws Exception {
+    @WithUserDetails("user")
+    public void create_AsUser_EmptyTodoEntry_ShouldNotSaveTodoEntry() throws Exception {
         TodoDTO emptyTodoEntry = new TodoDTO();
 
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(emptyTodoEntry))
+                        .with(csrf())
         );
     }
 
     @Test
-    public void create_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
+    @WithUserDetails("user")
+    public void create_AsUser_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -116,12 +142,14 @@ public class ITCreateTest {
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void create_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void create_AsUser_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -133,6 +161,7 @@ public class ITCreateTest {
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_VALIDATION_FAILED)))
@@ -149,7 +178,8 @@ public class ITCreateTest {
 
     @Test
     @ExpectedDatabase("no-todo-entries.xml")
-    public void create_TooLongTitleAndDescription_ShouldNotSaveTodoEntry() throws Exception {
+    @WithUserDetails("user")
+    public void create_AsUser_TooLongTitleAndDescription_ShouldNotSaveTodoEntry() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -161,10 +191,12 @@ public class ITCreateTest {
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                        .with(csrf())
         );
     }
 
     @Test
+    @WithUserDetails("user")
     public void create_ValidTitleAndDescription_ShouldReturnResponseStatusCreated() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
@@ -174,11 +206,13 @@ public class ITCreateTest {
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(status().isCreated());
     }
 
     @Test
+    @WithUserDetails("user")
     public void create_ValidTitleAndDescription_ShouldReturnInformationOfCreatedTodoEntryAsJson() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
@@ -188,6 +222,7 @@ public class ITCreateTest {
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                        .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.creationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
@@ -199,6 +234,7 @@ public class ITCreateTest {
 
     @Test
     @ExpectedDatabase(value = "create-todo-entry-expected.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+    @WithUserDetails("user")
     public void create_ValidTitleAndDescription_ShouldSaveTodoEntry() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
@@ -208,6 +244,7 @@ public class ITCreateTest {
         mockMvc.perform(post("/api/todo")
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
+                        .with(csrf())
         );
     }
 }

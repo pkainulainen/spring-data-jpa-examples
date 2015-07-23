@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -24,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,10 +39,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = {ExampleApplicationContext.class})
 @DbUnitConfiguration(dataSetLoader = ColumnSensingReplacementDataSetLoader.class)
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class })
+        DbUnitTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class})
 @WebAppConfiguration
 @DatabaseSetup("todo-entries.xml")
 public class ITFindBySearchTermTest {
@@ -52,11 +56,21 @@ public class ITFindBySearchTermTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
-    public void findBySearchTerm_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+    public void findBySearchTerm_AsAnonymous_ShouldReturnHttpResponseStatusUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
+        )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_NO_MATCH)
         )
@@ -64,7 +78,8 @@ public class ITFindBySearchTermTest {
     }
 
     @Test
-    public void findBySearchTerm_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnZeroTodoEntriesAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnZeroTodoEntriesAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_NO_MATCH)
         )
@@ -73,7 +88,8 @@ public class ITFindBySearchTermTest {
     }
 
     @Test
-    public void findBySearchTerm_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES)
         )
@@ -81,7 +97,8 @@ public class ITFindBySearchTermTest {
     }
 
     @Test
-    public void findBySearchTerm_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldOneTodoEntryAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES)
         )
@@ -95,7 +112,8 @@ public class ITFindBySearchTermTest {
     }
 
     @Test
-    public void findBySearchTerm_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
         )
@@ -103,7 +121,8 @@ public class ITFindBySearchTermTest {
     }
 
     @Test
-    public void findBySearchTerm_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldOneTodoEntryAsJson() throws Exception {
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
         )

@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.web;
+package net.petrikainulainen.springdata.jpa.web.error;
 
 import static net.petrikainulainen.springdata.jpa.common.PreCondition.notEmpty;
 import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;

@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -26,6 +28,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.sql.SQLException;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,10 +42,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = {ExampleApplicationContext.class})
 @DbUnitConfiguration(dataSetLoader = ColumnSensingReplacementDataSetLoader.class)
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class })
+        DbUnitTestExecutionListener.class,
+        WithSecurityContextTestExecutionListener.class})
 @WebAppConfiguration
 public class ITDeleteTest {
 
@@ -53,20 +58,36 @@ public class ITDeleteTest {
     @Before
     public void setUp() throws SQLException {
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void delete_TodoEntryNotFound_ShouldReturnResponseStatusBadRequest() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID))
+    public void delete_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+                        .with(csrf())
+        )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DatabaseSetup("no-todo-entries.xml")
+    @WithUserDetails("user")
+    public void delete_AsUser_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+                        .with(csrf())
+        )
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DatabaseSetup("no-todo-entries.xml")
-    public void delete_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID))
+    @WithUserDetails("user")
+    public void delete_AsUser_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+                        .with(csrf())
+        )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
                 .andExpect(jsonPath("$.message", is(TodoConstants.ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
@@ -75,8 +96,11 @@ public class ITDeleteTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @ExpectedDatabase("no-todo-entries.xml")
-    public void delete_TodoEntryNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID))
+    @WithUserDetails("user")
+    public void delete_AsUser_TodoEntryNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+                        .with(csrf())
+        )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
                 .andExpect(jsonPath("$.message", is(TodoConstants.ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
@@ -84,8 +108,11 @@ public class ITDeleteTest {
 
     @Test
     @DatabaseSetup("todo-entries.xml")
-    public void delete_TodoEntryFound_ShouldReturnInformationOfDeletedTodoEntry() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID))
+    @WithUserDetails("user")
+    public void delete_AsUser_TodoEntryFound_ShouldReturnInformationOfDeletedTodoEntry() throws Exception {
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+                        .with(csrf())
+        )
                 .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
                 .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
                 .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
@@ -96,7 +123,10 @@ public class ITDeleteTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase("delete-todo-entry-expected.xml")
+    @WithUserDetails("user")
     public void delete_TodoEntryFound_ShouldDeleteTodoEntryFromDatabase() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID));
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+                        .with(csrf())
+        );
     }
 }

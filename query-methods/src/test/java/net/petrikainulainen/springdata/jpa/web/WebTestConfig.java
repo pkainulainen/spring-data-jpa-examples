@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import net.petrikainulainen.springdata.jpa.web.error.RestErrorHandler;
 import org.springframework.context.MessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -65,11 +66,11 @@ final class WebTestConfig {
     }
 
     /**
-     * This method ensures that the {@link net.petrikainulainen.springdata.jpa.web.RestErrorHandler} class
+     * This method ensures that the {@link RestErrorHandler} class
      * is used to handle the exceptions thrown by the tested controller. I borrowed this idea from
      * <a href="http://stackoverflow.com/a/27195332/313554" target="_blank">this StackOverflow answer</a>.
      *
-     * @return an error handler component that delegates relevant exceptions forward to the {@link net.petrikainulainen.springdata.jpa.web.RestErrorHandler} class.
+     * @return an error handler component that delegates relevant exceptions forward to the {@link RestErrorHandler} class.
      */
     static ExceptionHandlerExceptionResolver restErrorHandler(MessageSource messageSource) {
         final ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {

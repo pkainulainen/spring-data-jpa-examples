@@ -5,6 +5,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.DispatcherType;
@@ -35,7 +36,9 @@ public class WebAppConfig implements WebApplicationInitializer {
 
         configureDispatcherServlet(servletContext, rootContext);
         EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+
         configureCharacterEncodingFilter(servletContext, dispatcherTypes);
+        configureSpringSecurityFilter(servletContext, dispatcherTypes);
         servletContext.addListener(new ContextLoaderListener(rootContext));
     }
 
@@ -54,5 +57,10 @@ public class WebAppConfig implements WebApplicationInitializer {
         characterEncodingFilter.setForceEncoding(true);
         FilterRegistration.Dynamic characterEncoding = servletContext.addFilter(CHARACTER_ENCODING_FILTER_NAME, characterEncodingFilter);
         characterEncoding.addMappingForUrlPatterns(dispatcherTypes, true, CHARACTER_ENCODING_FILTER_URL_PATTERN);
+    }
+
+    private void configureSpringSecurityFilter(ServletContext servletContext, EnumSet<DispatcherType> dispatcherTypes) {
+        FilterRegistration.Dynamic security = servletContext.addFilter("springSecurityFilterChain", new DelegatingFilterProxy());
+        security.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
     }
 }

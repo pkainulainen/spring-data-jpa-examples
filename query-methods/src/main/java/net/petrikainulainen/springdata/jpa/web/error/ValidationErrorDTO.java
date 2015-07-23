@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.web;
+package net.petrikainulainen.springdata.jpa.web.error;
 
 import org.springframework.http.HttpStatus;
 

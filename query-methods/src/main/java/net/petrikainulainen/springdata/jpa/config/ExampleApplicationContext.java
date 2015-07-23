@@ -18,7 +18,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
  */
 @Configuration
 @ComponentScan("net.petrikainulainen.springdata.jpa")
-@Import({WebMvcContext.class, PersistenceContext.class})
+@Import({WebMvcContext.class, PersistenceContext.class, SecurityContext.class})
 public class ExampleApplicationContext {
 
     private static final String MESSAGE_SOURCE_BASE_NAME = "i18n/messages";
