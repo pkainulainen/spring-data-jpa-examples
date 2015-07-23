@@ -72,7 +72,6 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                     .and()
                 //Configure url based authorization
                 .authorizeRequests()
-                    .antMatchers("/api/authenticated-user").permitAll()
                     .anyRequest().hasRole("USER");
     }
 }
