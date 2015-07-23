@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.petrikainulainen.springdata.jpa.common.AuditingDateTimeProvider;
 import net.petrikainulainen.springdata.jpa.common.DateTimeService;
-import net.petrikainulainen.springdata.jpa.common.UsernameAditorAware;
+import net.petrikainulainen.springdata.jpa.common.UsernameAuditorAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -55,7 +55,7 @@ class PersistenceContext {
 
     @Bean
     AuditorAware<String> auditorProvider() {
-        return new UsernameAditorAware();
+        return new UsernameAuditorAware();
     }
 
     @Bean

@@ -12,9 +12,9 @@ import org.springframework.security.core.userdetails.User;
  *
  * @author Petri Kainulainen
  */
-public class UsernameAditorAware implements AuditorAware<String> {
+public class UsernameAuditorAware implements AuditorAware<String> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UsernameAditorAware.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UsernameAuditorAware.class);
 
     @Override
     public String getCurrentAuditor() {
