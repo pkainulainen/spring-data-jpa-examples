@@ -66,3 +66,8 @@ Credits
 =========
 
 * Kyösti Herrala. The Gulp build script and its Maven integration are based on Kyösti's ideas.
+
+Known Issues
+============
+
+* The AngularJS application doesn't work because you cannot log in (yet).
