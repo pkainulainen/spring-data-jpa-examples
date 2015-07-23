@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityContext extends WebSecurityConfigurerAdapter {
+class SecurityContext extends WebSecurityConfigurerAdapter {
 
     @Bean
     AuthenticationEntryPoint authenticationEntryPoint() {
