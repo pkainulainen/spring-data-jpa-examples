@@ -88,9 +88,11 @@ public class ITFindAllTest {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].createdByUser", is(TodoConstants.CREATED_BY_USER)))
                 .andExpect(jsonPath("$[0].creationTime", is(TodoConstants.CREATION_TIME)))
                 .andExpect(jsonPath("$[0].description", is(TodoConstants.DESCRIPTION)))
                 .andExpect(jsonPath("$[0].id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$[0].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
                 .andExpect(jsonPath("$[0].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
                 .andExpect(jsonPath("$[0].title", is(TodoConstants.TITLE)));
     }

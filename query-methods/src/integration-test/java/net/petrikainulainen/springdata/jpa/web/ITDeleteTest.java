@@ -113,9 +113,11 @@ public class ITDeleteTest {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
                         .with(csrf())
         )
+                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.CREATED_BY_USER)))
                 .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
                 .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
                 .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$.modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
                 .andExpect(jsonPath("$.modificationTime", is(TodoConstants.MODIFICATION_TIME)))
                 .andExpect(jsonPath("$.title", is(TodoConstants.TITLE)));
     }

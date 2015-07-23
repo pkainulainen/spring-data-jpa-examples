@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TodoControllerTest {
 
     private static final Locale CURRENT_LOCALE = Locale.US;
+    private static final String CREATED_BY_USER = "createdByUser";
     private static final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
     private static final String DESCRIPTION = "description";
 
@@ -52,6 +53,7 @@ public class TodoControllerTest {
     private static final String ERROR_MESSAGE_KEY_TOO_LONG_TITLE = "Size.todoDTO.title";
 
     private static final Long ID = 1L;
+    private static final String MODIFIED_BY_USER = "modifiedByUser";
     private static final String MODIFICATION_TIME = "2014-12-24T14:28:39+02:00";
     private static final String TITLE = "title";
 
@@ -207,9 +209,11 @@ public class TodoControllerTest {
                             .build();
 
                     TodoDTO created = new TodoDTOBuilder()
+                            .createdByUser(CREATED_BY_USER)
                             .creationTime(CREATION_TIME)
                             .description(maxLengthDescription)
                             .id(ID)
+                            .modifiedByUser(MODIFIED_BY_USER)
                             .modificationTime(MODIFICATION_TIME)
                             .title(maxLengthTitle)
                             .build();
@@ -232,9 +236,11 @@ public class TodoControllerTest {
                                     .content(WebTestUtil.convertObjectToJsonBytes(newTodoEntry))
                     )
                             .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                            .andExpect(jsonPath("$.createdByUser", is(CREATED_BY_USER)))
                             .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
                             .andExpect(jsonPath("$.description", is(maxLengthDescription)))
                             .andExpect(jsonPath("$.id", is(ID.intValue())))
+                            .andExpect(jsonPath("$.modifiedByUser", is(MODIFIED_BY_USER)))
                             .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
                             .andExpect(jsonPath("$.title", is(maxLengthTitle)));
                 }
@@ -250,9 +256,9 @@ public class TodoControllerTest {
                             assertArg(created -> assertThatTodoDTO(created)
                                     .hasDescription(maxLengthDescription)
                                     .hasTitle(maxLengthTitle)
-                                    .hasNoCreationTime()
+                                    .hasNoCreationAuditFieldValues()
                                     .hasNoId()
-                                    .hasNoModificationTime()
+                                    .hasNoModificationAuditFieldValues()
                             )
                     );
                 }
@@ -289,9 +295,11 @@ public class TodoControllerTest {
             @Before
             public void returnDeletedTodoEntry() {
                 TodoDTO deleted = new TodoDTOBuilder()
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -309,9 +317,11 @@ public class TodoControllerTest {
             public void shouldReturnInformationOfDeletedTodoEntryAsJson() throws Exception {
                 mockMvc.perform(delete("/api/todo/{id}", ID))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                        .andExpect(jsonPath("$.createdByUser", is(CREATED_BY_USER)))
                         .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
                         .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                         .andExpect(jsonPath("$.id", is(ID.intValue())))
+                        .andExpect(jsonPath("$.modifiedByUser", is(MODIFIED_BY_USER)))
                         .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
                         .andExpect(jsonPath("$.title", is(TITLE)));
             }
@@ -346,9 +356,11 @@ public class TodoControllerTest {
             @Before
             public void returnFoundTodoEntry() {
                 TodoDTO found = new TodoDTOBuilder()
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -361,9 +373,11 @@ public class TodoControllerTest {
                 mockMvc.perform(get("/api/todo"))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$", hasSize(1)))
+                        .andExpect(jsonPath("$[0].createdByUser", is(CREATED_BY_USER)))
                         .andExpect(jsonPath("$[0].creationTime", is(CREATION_TIME)))
                         .andExpect(jsonPath("$[0].description", is(DESCRIPTION)))
                         .andExpect(jsonPath("$[0].id", is(ID.intValue())))
+                        .andExpect(jsonPath("$[0].modifiedByUser", is(MODIFIED_BY_USER)))
                         .andExpect(jsonPath("$[0].modificationTime", is(MODIFICATION_TIME)))
                         .andExpect(jsonPath("$[0].title", is(TITLE)));
             }
@@ -399,9 +413,11 @@ public class TodoControllerTest {
             @Before
             public void returnFoundTodoEntry() {
                 TodoDTO found = new TodoDTOBuilder()
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -419,9 +435,11 @@ public class TodoControllerTest {
             public void shouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
                 mockMvc.perform(get("/api/todo/{id}", ID))
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                        .andExpect(jsonPath("$.createdByUser", is(CREATED_BY_USER)))
                         .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
                         .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                         .andExpect(jsonPath("$.id", is(ID.intValue())))
+                        .andExpect(jsonPath("$.modifiedByUser", is(MODIFIED_BY_USER)))
                         .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
                         .andExpect(jsonPath("$.title", is(TITLE)));
             }
@@ -613,9 +631,11 @@ public class TodoControllerTest {
                                 .build();
 
                         TodoDTO updated = new TodoDTOBuilder()
+                                .createdByUser(CREATED_BY_USER)
                                 .creationTime(CREATION_TIME)
                                 .description(maxLengthDescription)
                                 .id(ID)
+                                .modifiedByUser(MODIFIED_BY_USER)
                                 .modificationTime(MODIFICATION_TIME)
                                 .title(maxLengthTitle)
                                 .build();
@@ -638,9 +658,11 @@ public class TodoControllerTest {
                                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         )
                                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                                .andExpect(jsonPath("$.createdByUser", is(CREATED_BY_USER)))
                                 .andExpect(jsonPath("$.creationTime", is(CREATION_TIME)))
                                 .andExpect(jsonPath("$.description", is(maxLengthDescription)))
                                 .andExpect(jsonPath("$.id", is(ID.intValue())))
+                                .andExpect(jsonPath("$.modifiedByUser", is(MODIFIED_BY_USER)))
                                 .andExpect(jsonPath("$.modificationTime", is(MODIFICATION_TIME)))
                                 .andExpect(jsonPath("$.title", is(maxLengthTitle)));
                     }
@@ -657,8 +679,8 @@ public class TodoControllerTest {
                                         .hasDescription(maxLengthDescription)
                                         .hasId(ID)
                                         .hasTitle(maxLengthTitle)
-                                        .hasNoCreationTime()
-                                        .hasNoModificationTime()
+                                        .hasNoCreationAuditFieldValues()
+                                        .hasNoModificationAuditFieldValues()
                                 )
                         );
                     }

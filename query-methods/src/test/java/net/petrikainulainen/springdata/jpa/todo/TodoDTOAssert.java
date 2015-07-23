@@ -49,12 +49,20 @@ public final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> 
         return this;
     }
 
-    public TodoDTOAssert hasNoCreationTime() {
+    public TodoDTOAssert hasNoCreationAuditFieldValues() {
         isNotNull();
+
+        String actualCreatedByUser = actual.getCreatedByUser();
+        assertThat(actualCreatedByUser)
+                .overridingErrorMessage(
+                        "Expected createdByUser to be <null> but was <%s>",
+                        actualCreatedByUser
+                )
+                .isNull();
 
         ZonedDateTime actualCreationTime = actual.getCreationTime();
         assertThat(actualCreationTime)
-                .overridingErrorMessage("Expected creation time to be <null> but was <%s>", actualCreationTime)
+                .overridingErrorMessage("Expected creationTime to be <null> but was <%s>", actualCreationTime)
                 .isNull();
 
         return this;
@@ -71,8 +79,16 @@ public final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> 
         return this;
     }
 
-    public TodoDTOAssert hasNoModificationTime() {
+    public TodoDTOAssert hasNoModificationAuditFieldValues() {
         isNotNull();
+
+        String actualModifiedByUser = actual.getModifiedByUser();
+        assertThat(actualModifiedByUser)
+                .overridingErrorMessage(
+                        "Expected modifiedByUser to be <null> but was <%s>",
+                        actualModifiedByUser
+                )
+                .isNull();
 
         ZonedDateTime actualModificationTime = actual.getModificationTime();
         assertThat(actualModificationTime)
@@ -114,6 +130,21 @@ public final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> 
         return this;
     }
 
+    public TodoDTOAssert wasCreatedByUser(String expectedCreatedByUser) {
+        isNotNull();
+
+        String actualCreatedByUser = actual.getCreatedByUser();
+        assertThat(actualCreatedByUser)
+                .overridingErrorMessage(
+                        "Expected createdByUser to be <%s> but was <%s>",
+                        expectedCreatedByUser,
+                        actualCreatedByUser
+                )
+                .isEqualTo(expectedCreatedByUser);
+
+        return this;
+    }
+
     public TodoDTOAssert wasModifiedAt(String modificationTime) {
         isNotNull();
 
@@ -127,6 +158,21 @@ public final class TodoDTOAssert extends AbstractAssert<TodoDTOAssert, TodoDTO> 
                         actualModificationTime
                 )
                 .isEqualTo(actualModificationTime);
+
+        return this;
+    }
+
+    public TodoDTOAssert wasModifiedByUser(String expectedModifiedByUser) {
+        isNotNull();
+
+        String actualModifiedByUser = actual.getModifiedByUser();
+        assertThat(actualModifiedByUser)
+                .overridingErrorMessage(
+                        "Expected modifiedByUser to be <%s> but was <%s>",
+                        expectedModifiedByUser,
+                        actualModifiedByUser
+                )
+                .isEqualTo(expectedModifiedByUser);
 
         return this;
     }

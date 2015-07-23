@@ -2,7 +2,9 @@ package net.petrikainulainen.springdata.jpa.todo;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -52,6 +54,10 @@ final class Todo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "created_by_user", nullable = false)
+    @CreatedBy
+    private String createdByUser;
+
     @Column(name = "creation_time", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentZonedDateTime")
     @CreatedDate
@@ -59,6 +65,10 @@ final class Todo {
 
     @Column(name = "description", length = MAX_LENGTH_DESCRIPTION)
     private String description;
+
+    @Column(name = "modified_by_user", nullable = false)
+    @LastModifiedBy
+    private String modifiedByUser;
 
     @Column(name = "modification_time")
     @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentZonedDateTime")
@@ -89,12 +99,20 @@ final class Todo {
         return id;
     }
 
+    String getCreatedByUser() {
+        return createdByUser;
+    }
+
     ZonedDateTime getCreationTime() {
         return creationTime;
     }
 
     String getDescription() {
         return description;
+    }
+
+    String getModifiedByUser() {
+        return modifiedByUser;
     }
 
     ZonedDateTime getModificationTime() {
@@ -133,9 +151,11 @@ final class Todo {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("createdByUser", this.createdByUser)
                 .append("creationTime", this.creationTime)
                 .append("description", this.description)
                 .append("id", this.id)
+                .append("modifiedByUser", this.modifiedByUser)
                 .append("modificationTime", this.modificationTime)
                 .append("title", this.title)
                 .append("version", this.version)

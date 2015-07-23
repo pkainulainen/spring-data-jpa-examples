@@ -10,8 +10,10 @@ import java.time.ZonedDateTime;
 class TodoBuilder {
 
     private Long id;
+    private String createdByUser;
     private ZonedDateTime creationTime;
     private String description;
+    private String modifiedByUser;
     private ZonedDateTime modificationTime;
     private String title = "NOT_IMPORTANT";
 
@@ -22,6 +24,11 @@ class TodoBuilder {
         return this;
     }
 
+    TodoBuilder createdByUser(String createdByUser) {
+        this.createdByUser = createdByUser;
+        return this;
+    }
+
     TodoBuilder creationTime(String creationTime) {
         this.creationTime = TestUtil.parseDateTime(creationTime);
         return this;
@@ -29,6 +36,11 @@ class TodoBuilder {
 
     TodoBuilder description(String description) {
         this.description = description;
+        return this;
+    }
+
+    TodoBuilder modifiedByUser(String modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
         return this;
     }
 
@@ -48,8 +60,10 @@ class TodoBuilder {
                 .description(description)
                 .build();
 
+        ReflectionTestUtils.setField(build, "createdByUser", createdByUser);
         ReflectionTestUtils.setField(build, "creationTime", creationTime);
         ReflectionTestUtils.setField(build, "id", id);
+        ReflectionTestUtils.setField(build, "modifiedByUser", modifiedByUser);
         ReflectionTestUtils.setField(build, "modificationTime", modificationTime);
 
         return build;

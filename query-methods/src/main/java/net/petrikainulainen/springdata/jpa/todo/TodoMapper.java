@@ -18,9 +18,11 @@ final class TodoMapper {
     static TodoDTO mapEntityIntoDTO(Todo entity) {
         TodoDTO dto = new TodoDTO();
 
+        dto.setCreatedByUser(entity.getCreatedByUser());
         dto.setCreationTime(entity.getCreationTime());
         dto.setDescription(entity.getDescription());
         dto.setId(entity.getId());
+        dto.setModifiedByUser(entity.getModifiedByUser());
         dto.setModificationTime(entity.getModificationTime());
         dto.setTitle(entity.getTitle());
 

@@ -49,18 +49,22 @@ public class RepositoryTodoSearchServiceTest {
 
         public class WhenOneTodoEntryIsFound {
 
+            private final String CREATED_BY_USER = "createdByUser";
             private final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
             private final String DESCRIPTION = "description";
             private final Long ID = 20L;
+            private final String MODIFIED_BY_USER = "modifiedByUser";
             private final String MODIFICATION_TIME = "2014-12-24T22:29:05+02:00";
             private final String TITLE = "title";
 
             @Before
             public void returnOneTodoEntry() {
                 Todo found = new TodoBuilder()
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -83,7 +87,9 @@ public class RepositoryTodoSearchServiceTest {
                         .hasTitle(TITLE)
                         .hasDescription(DESCRIPTION)
                         .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .wasCreatedByUser(CREATED_BY_USER)
+                        .wasModifiedAt(MODIFICATION_TIME)
+                        .wasModifiedByUser(MODIFIED_BY_USER);
             }
         }
     }

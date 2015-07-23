@@ -29,9 +29,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @RunWith(NestedRunner.class)
 public class RepositoryTodoServiceTest {
 
+    private static final String CREATED_BY_USER = "createdByUser";
     private static final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
     private static final String DESCRIPTION = "description";
     private static final Long ID = 20L;
+    private static final String MODIFIED_BY_USER = "modifiedByUser";
     private static final String MODIFICATION_TIME = "2014-12-24T22:29:05+02:00";
     private static final String TITLE = "title";
 
@@ -54,9 +56,11 @@ public class RepositoryTodoServiceTest {
         public void returnNewTodoEntry() {
             given(repository.save(isA(Todo.class))).willAnswer(
                     invocationOnMock -> new TodoBuilder()
+                            .createdByUser(CREATED_BY_USER)
                             .creationTime(CREATION_TIME)
                             .description(DESCRIPTION)
                             .id(ID)
+                            .modifiedByUser(MODIFIED_BY_USER)
                             .modificationTime(MODIFICATION_TIME)
                             .title(TITLE)
                             .build()
@@ -74,10 +78,10 @@ public class RepositoryTodoServiceTest {
 
             verify(repository, times(1)).save(
                     assertArg(persisted ->  assertThatTodoEntry(persisted)
-                            .hasNoCreationTime()
+                            .hasNoCreationAuditFieldValues()
                             .hasDescription(DESCRIPTION)
                             .hasNoId()
-                            .hasNoModificationTime()
+                            .hasNoModificationAuditFieldValues()
                             .hasTitle(TITLE)
                     )
             );
@@ -97,7 +101,9 @@ public class RepositoryTodoServiceTest {
                     .hasId(ID)
                     .hasTitle(TITLE)
                     .wasCreatedAt(CREATION_TIME)
-                    .wasModifiedAt(MODIFICATION_TIME);
+                    .wasCreatedByUser(CREATED_BY_USER)
+                    .wasModifiedAt(MODIFICATION_TIME)
+                    .wasModifiedByUser(MODIFIED_BY_USER);
         }
     }
 
@@ -136,9 +142,11 @@ public class RepositoryTodoServiceTest {
             @Before
             public void returnDeletedTodoEntry() {
                 deleted = new TodoBuilder()
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -162,7 +170,9 @@ public class RepositoryTodoServiceTest {
                         .hasId(ID)
                         .hasTitle(TITLE)
                         .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .wasCreatedByUser(CREATED_BY_USER)
+                        .wasModifiedAt(MODIFICATION_TIME)
+                        .wasModifiedByUser(MODIFIED_BY_USER);
             }
         }
     }
@@ -190,8 +200,10 @@ public class RepositoryTodoServiceTest {
             public void returnOneTodoEntry() {
                 Todo found = new TodoBuilder()
                         .id(ID)
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -215,7 +227,9 @@ public class RepositoryTodoServiceTest {
                         .hasTitle(TITLE)
                         .hasDescription(DESCRIPTION)
                         .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .wasCreatedByUser(CREATED_BY_USER)
+                        .wasModifiedAt(MODIFICATION_TIME)
+                        .wasModifiedByUser(MODIFIED_BY_USER);
             }
         }
     }
@@ -246,8 +260,10 @@ public class RepositoryTodoServiceTest {
             public void returnFoundTodoEntry() {
                 Todo found = new TodoBuilder()
                         .id(ID)
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -264,7 +280,9 @@ public class RepositoryTodoServiceTest {
                         .hasId(ID)
                         .hasTitle(TITLE)
                         .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .wasCreatedByUser(CREATED_BY_USER)
+                        .wasModifiedAt(MODIFICATION_TIME)
+                        .wasModifiedByUser(MODIFIED_BY_USER);
             }
         }
     }
@@ -300,9 +318,11 @@ public class RepositoryTodoServiceTest {
             @Before
             public void returnUpdatedTodoEntry() {
                 updated = new TodoBuilder()
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
                         .id(ID)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -326,7 +346,7 @@ public class RepositoryTodoServiceTest {
             }
 
             @Test
-            public void shouldNotUpdateIdOrTimestamps() {
+            public void shouldNotUpdateIdOrAuditInformation() {
                 TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                         .id(ID)
                         .description(UPDATED_DESCRIPTION)
@@ -338,7 +358,9 @@ public class RepositoryTodoServiceTest {
                 assertThatTodoEntry(updated)
                         .hasId(ID)
                         .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .wasCreatedByUser(CREATED_BY_USER)
+                        .wasModifiedAt(MODIFICATION_TIME)
+                        .wasModifiedByUser(MODIFIED_BY_USER);
             }
 
             @Test
@@ -356,7 +378,9 @@ public class RepositoryTodoServiceTest {
                         .hasId(ID)
                         .hasTitle(UPDATED_TITLE)
                         .wasCreatedAt(CREATION_TIME)
-                        .wasModifiedAt(MODIFICATION_TIME);
+                        .wasCreatedByUser(CREATED_BY_USER)
+                        .wasModifiedAt(MODIFICATION_TIME)
+                        .wasModifiedByUser(MODIFIED_BY_USER);
             }
         }
     }

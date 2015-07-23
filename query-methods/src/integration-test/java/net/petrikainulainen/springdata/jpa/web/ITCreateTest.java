@@ -6,6 +6,7 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import net.petrikainulainen.springdata.jpa.TodoConstants;
+import net.petrikainulainen.springdata.jpa.Users;
 import net.petrikainulainen.springdata.jpa.common.ConstantDateTimeService;
 import net.petrikainulainen.springdata.jpa.config.ExampleApplicationContext;
 import net.petrikainulainen.springdata.jpa.config.Profiles;
@@ -225,9 +226,11 @@ public class ITCreateTest {
                         .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.createdByUser", is(Users.USER.getUsername())))
                 .andExpect(jsonPath("$.creationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
                 .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
                 .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$.modifiedByUser", is(Users.USER.getUsername())))
                 .andExpect(jsonPath("$.modificationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
                 .andExpect(jsonPath("$.title", is(TodoConstants.TITLE)));
     }

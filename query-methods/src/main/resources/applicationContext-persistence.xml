@@ -76,10 +76,12 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
         </property>
     </bean>
 
+    <bean id="auditingProvider" class="net.petrikainulainen.springdata.jpa.common.UsernameAditorAware"/>
+
     <bean id="dateTimeProvider" class="net.petrikainulainen.springdata.jpa.common.AuditingDateTimeProvider">
         <constructor-arg index="0" ref="dateTimeService"/>
     </bean>
 
-    <jpa:auditing set-dates="true"/>
+    <jpa:auditing auditor-aware-ref="auditingProvider" set-dates="true"/>
     <jpa:repositories base-package="net.petrikainulainen.springdata.jpa.todo"/>
 </beans>

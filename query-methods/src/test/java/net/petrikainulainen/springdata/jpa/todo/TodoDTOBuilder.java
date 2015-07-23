@@ -7,13 +7,20 @@ import java.time.ZonedDateTime;
  */
 public class TodoDTOBuilder {
 
+    private String createdByUser;
     private ZonedDateTime creationTime;
     private String description;
     private Long id;
+    private String modifiedByUser;
     private ZonedDateTime modificationTime;
     private String title = "NOT_IMPORTANT";
 
     public TodoDTOBuilder() {}
+
+    public TodoDTOBuilder createdByUser(String createdByUser) {
+        this.createdByUser = createdByUser;
+        return this;
+    }
 
     public TodoDTOBuilder creationTime(String creationTime) {
         this.creationTime = TestUtil.parseDateTime(creationTime);
@@ -30,6 +37,11 @@ public class TodoDTOBuilder {
         return this;
     }
 
+    public TodoDTOBuilder modifiedByUser(String modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+        return this;
+    }
+
     public TodoDTOBuilder modificationTime(String modificationTime) {
         this.modificationTime = TestUtil.parseDateTime(modificationTime);
         return this;
@@ -43,9 +55,11 @@ public class TodoDTOBuilder {
     public TodoDTO build() {
         TodoDTO build = new TodoDTO();
 
+        build.setCreatedByUser(createdByUser);
         build.setCreationTime(creationTime);
         build.setDescription(description);
         build.setId(id);
+        build.setModifiedByUser(modifiedByUser);
         build.setModificationTime(modificationTime);
         build.setTitle(title);
 

@@ -4,10 +4,12 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.petrikainulainen.springdata.jpa.common.AuditingDateTimeProvider;
 import net.petrikainulainen.springdata.jpa.common.DateTimeService;
+import net.petrikainulainen.springdata.jpa.common.UsernameAditorAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.auditing.DateTimeProvider;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -50,6 +52,11 @@ class PersistenceContext {
     private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     private static final String PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY = "hibernate.ejb.naming_strategy";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+
+    @Bean
+    AuditorAware<String> auditorProvider() {
+        return new UsernameAditorAware();
+    }
 
     @Bean
     DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {

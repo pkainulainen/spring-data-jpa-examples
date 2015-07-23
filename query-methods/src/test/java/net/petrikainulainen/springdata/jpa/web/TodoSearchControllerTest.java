@@ -72,9 +72,11 @@ public class TodoSearchControllerTest {
 
         public class WhenOneTodoEntryIsFound {
 
-            private final Long ID = 1L;
-            private static final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
-            private static final String DESCRIPTION = "description";
+            private final Long ID= 1L;
+            private final String CREATED_BY_USER = "createdByUser";
+            private final String CREATION_TIME = "2014-12-24T22:28:39+02:00";
+            private final String DESCRIPTION = "description";
+            private final String MODIFIED_BY_USER = "modifiedByUser";
             private final String MODIFICATION_TIME = "2014-12-24T14:28:39+02:00";
             private final String TITLE = "title";
 
@@ -82,8 +84,10 @@ public class TodoSearchControllerTest {
             public void returnOneTodoEntry() {
                 TodoDTO found = new TodoDTOBuilder()
                         .id(ID)
+                        .createdByUser(CREATED_BY_USER)
                         .creationTime(CREATION_TIME)
                         .description(DESCRIPTION)
+                        .modifiedByUser(MODIFIED_BY_USER)
                         .modificationTime(MODIFICATION_TIME)
                         .title(TITLE)
                         .build();
@@ -99,8 +103,10 @@ public class TodoSearchControllerTest {
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$", hasSize(1)))
                         .andExpect(jsonPath("$[0].id", is(ID.intValue())))
+                        .andExpect(jsonPath("$[0].createdByUser", is(CREATED_BY_USER)))
                         .andExpect(jsonPath("$[0].creationTime", is(CREATION_TIME)))
                         .andExpect(jsonPath("$[0].description", is(DESCRIPTION)))
+                        .andExpect(jsonPath("$[0].modifiedByUser", is(MODIFIED_BY_USER)))
                         .andExpect(jsonPath("$[0].modificationTime", is(MODIFICATION_TIME)))
                         .andExpect(jsonPath("$[0].title", is(TITLE)));
             }

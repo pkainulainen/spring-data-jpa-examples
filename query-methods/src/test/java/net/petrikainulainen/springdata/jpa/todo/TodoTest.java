@@ -100,25 +100,25 @@ public class TodoTest {
             }
 
             @Test
-            public void shouldNotSetCreationTime() {
+            public void shouldNotSetCreationAuditFieldValues() {
                 Todo build = Todo.getBuilder()
                         .title(TITLE)
                         .description(DESCRIPTION)
                         .build();
 
                 assertThatTodoEntry(build)
-                        .hasNoCreationTime();
+                        .hasNoCreationAuditFieldValues();
             }
 
             @Test
-            public void shouldNotSetModificationTime() {
+            public void shouldNotSetModificationAuditFieldValues() {
                 Todo build = Todo.getBuilder()
                         .title(TITLE)
                         .description(DESCRIPTION)
                         .build();
 
                 assertThatTodoEntry(build)
-                        .hasNoModificationTime();
+                        .hasNoModificationAuditFieldValues();
             }
 
             @Test

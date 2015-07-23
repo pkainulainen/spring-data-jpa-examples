@@ -8,9 +8,11 @@ package net.petrikainulainen.springdata.jpa;
  */
 public final class TodoConstants {
 
+    public static final String CREATED_BY_USER = "createdByUser";
     public static final String CREATION_TIME = "2014-12-24T14:13:28+03:00";
     public static final String DESCRIPTION = "description";
     public static final Long ID = 1L;
+    public static final String MODIFIED_BY_USER = "modifiedByUser";
     public static final String MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
     public static final String TITLE = "title";
 
