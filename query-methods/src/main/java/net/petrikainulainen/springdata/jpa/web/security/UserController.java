@@ -32,6 +32,8 @@ final class UserController {
         LOGGER.info("Getting authenticated user.");
 
         if (authenticatedUser == null) {
+            //If anonymous users can access this controller method, someone has changed
+            //the security configuration and it must be fixed.
             LOGGER.error("Authenticated user is not found.");
             throw new AccessDeniedException("Anonymous users cannot request the information of the authenticated user.");
         }
