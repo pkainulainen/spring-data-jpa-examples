@@ -19,7 +19,7 @@ import java.util.List;
  * @author Petri Kainulainen
  */
 @RestController
-public class TodoSearchController {
+final class TodoSearchController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoSearchController.class);
 
