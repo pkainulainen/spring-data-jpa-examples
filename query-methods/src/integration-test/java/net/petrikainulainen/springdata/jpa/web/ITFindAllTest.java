@@ -60,7 +60,7 @@ public class ITFindAllTest {
     }
 
     @Test
-    public void findAll_asAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
+    public void findAll_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(status().isUnauthorized());
     }
@@ -75,7 +75,7 @@ public class ITFindAllTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void findAll_AsUser_NoTodoEntriesFound_ShouldReturnEmptyListAsJson() throws Exception {
+    public void findAll_AsUser_WhenTodoEntriesAreNotFound_ShouldReturnEmptyListAsJson() throws Exception {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(0)));
@@ -84,7 +84,7 @@ public class ITFindAllTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void findAll_AsUser_OneTodoEntryFound_ShouldReturnInformationOfOneTodoEntryAsJson() throws Exception {
+    public void findAll_AsUser_WhenOneTodoEntryIsFound_ShouldReturnInformationOfOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo"))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$", hasSize(1)))

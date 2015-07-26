@@ -74,7 +74,7 @@ public class ITDeleteTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void delete_AsUser_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+    public void delete_AsUser_WhenTodoEntryIsNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
                         .with(csrf())
         )
@@ -84,7 +84,7 @@ public class ITDeleteTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void delete_AsUser_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+    public void delete_AsUser_WhenTodoEntryIsNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
                         .with(csrf())
         )
@@ -97,7 +97,7 @@ public class ITDeleteTest {
     @DatabaseSetup("no-todo-entries.xml")
     @ExpectedDatabase("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void delete_AsUser_TodoEntryNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
+    public void delete_AsUser_WhenTodoEntryIsNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
                         .with(csrf())
         )
@@ -109,7 +109,7 @@ public class ITDeleteTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void delete_AsUser_TodoEntryFound_ShouldReturnInformationOfDeletedTodoEntry() throws Exception {
+    public void delete_AsUser_WhenTodoEntryIsFound_ShouldReturnInformationOfDeletedTodoEntry() throws Exception {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
                         .with(csrf())
         )
@@ -126,7 +126,7 @@ public class ITDeleteTest {
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase("delete-todo-entry-expected.xml")
     @WithUserDetails("user")
-    public void delete_TodoEntryFound_ShouldDeleteTodoEntryFromDatabase() throws Exception {
+    public void delete_AsUser_WhenTodoEntryIsFound_ShouldDeleteTodoEntryFromDatabase() throws Exception {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
                         .with(csrf())
         );

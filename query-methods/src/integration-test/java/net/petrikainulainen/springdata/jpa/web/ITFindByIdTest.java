@@ -68,7 +68,7 @@ public class ITFindByIdTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void findById_AsUser_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+    public void findById_AsUser_WhenTodoEntryIsNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(status().isNotFound());
     }
@@ -76,7 +76,7 @@ public class ITFindByIdTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void findById_AsUser_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+    public void findById_AsUser_WhenTodoEntryIsNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
@@ -87,7 +87,7 @@ public class ITFindByIdTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void findById_AsUser_TodoEntryFound_ShouldReturnResponseStatusOk() throws Exception {
+    public void findById_AsUser_WhenTodoEntryIsFound_ShouldReturnResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(status().isOk());
     }
@@ -95,7 +95,7 @@ public class ITFindByIdTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void findById_AsUser_TodoEntryFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
+    public void findById_AsUser_WhenTodoEntryIsFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.createdByUser", is(TodoConstants.CREATED_BY_USER)))

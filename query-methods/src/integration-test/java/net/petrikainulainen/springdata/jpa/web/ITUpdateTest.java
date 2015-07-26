@@ -88,7 +88,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TodoEntryNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
+    public void update_AsUser_WhenTodoEntryIsNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .id(TodoConstants.ID)
                 .build();
@@ -104,7 +104,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TodoEntryNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
+    public void update_AsUser_WhenTodoEntryIsNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .id(TodoConstants.ID)
                 .build();
@@ -123,7 +123,7 @@ public class ITUpdateTest {
     @DatabaseSetup("no-todo-entries.xml")
     @ExpectedDatabase("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TodoEntryNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
+    public void update_AsUser_WhenTodoEntryIsNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .id(TodoConstants.ID)
                 .build();
@@ -138,7 +138,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TitleAndDescriptionAreMissing_ShouldReturnResponseStatusBadRequest() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
                 .id(TodoConstants.ID)
@@ -156,7 +156,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TitleAndDescriptionAreMissing_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
                 .id(TodoConstants.ID)
@@ -179,7 +179,7 @@ public class ITUpdateTest {
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TitleAndDescriptionAreMissing_ShouldNotUpdateTodoEntry() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
                 .id(TodoConstants.ID)
@@ -196,7 +196,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -217,7 +217,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -249,7 +249,7 @@ public class ITUpdateTest {
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_TooLongTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -269,7 +269,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_AsUser_ValidTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
                 .id(TodoConstants.ID)
@@ -287,7 +287,7 @@ public class ITUpdateTest {
     @Test
     @DatabaseSetup("todo-entries.xml")
     @WithUserDetails("user")
-    public void update_ValidTitleAndDescription_ShouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
                 .id(TodoConstants.ID)
@@ -313,7 +313,7 @@ public class ITUpdateTest {
     @DatabaseSetup("todo-entries.xml")
     @ExpectedDatabase(value = "update-todo-entry-expected.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
     @WithUserDetails("user")
-    public void update_ValidTitleAndDescription_ShouldUpdateTodoEntry() throws Exception {
+    public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
                 .id(TodoConstants.ID)

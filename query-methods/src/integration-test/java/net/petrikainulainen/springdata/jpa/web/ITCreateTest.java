@@ -88,7 +88,7 @@ public class ITCreateTest {
 
     @Test
     @WithUserDetails("user")
-    public void create_AsUser_EmptyTodoEntry_ShouldReturnResponseStatusBadRequest() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         TodoDTO emptyTodoEntry = new TodoDTO();
 
         mockMvc.perform(post("/api/todo")
@@ -101,7 +101,7 @@ public class ITCreateTest {
 
     @Test
     @WithUserDetails("user")
-    public void create_AsUser_EmptyTodoEntry_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
         TodoDTO emptyTodoEntry = new TodoDTO();
 
         mockMvc.perform(post("/api/todo")
@@ -119,7 +119,7 @@ public class ITCreateTest {
     @Test
     @ExpectedDatabase("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void create_AsUser_EmptyTodoEntry_ShouldNotSaveTodoEntry() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldNotSaveTodoEntry() throws Exception {
         TodoDTO emptyTodoEntry = new TodoDTO();
 
         mockMvc.perform(post("/api/todo")
@@ -131,7 +131,7 @@ public class ITCreateTest {
 
     @Test
     @WithUserDetails("user")
-    public void create_AsUser_TooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -150,7 +150,7 @@ public class ITCreateTest {
 
     @Test
     @WithUserDetails("user")
-    public void create_AsUser_TooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -180,7 +180,7 @@ public class ITCreateTest {
     @Test
     @ExpectedDatabase("no-todo-entries.xml")
     @WithUserDetails("user")
-    public void create_AsUser_TooLongTitleAndDescription_ShouldNotSaveTodoEntry() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldNotSaveTodoEntry() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
         String tooLongTitle = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_TITLE + 1);
 
@@ -198,7 +198,7 @@ public class ITCreateTest {
 
     @Test
     @WithUserDetails("user")
-    public void create_ValidTitleAndDescription_ShouldReturnResponseStatusCreated() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnResponseStatusCreated() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
                 .title(TodoConstants.TITLE)
@@ -214,7 +214,7 @@ public class ITCreateTest {
 
     @Test
     @WithUserDetails("user")
-    public void create_ValidTitleAndDescription_ShouldReturnInformationOfCreatedTodoEntryAsJson() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnInformationOfCreatedTodoEntryAsJson() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
                 .title(TodoConstants.TITLE)
@@ -238,7 +238,7 @@ public class ITCreateTest {
     @Test
     @ExpectedDatabase(value = "create-todo-entry-expected.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
     @WithUserDetails("user")
-    public void create_ValidTitleAndDescription_ShouldSaveTodoEntry() throws Exception {
+    public void create_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldSaveTodoEntry() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.DESCRIPTION)
                 .title(TodoConstants.TITLE)
