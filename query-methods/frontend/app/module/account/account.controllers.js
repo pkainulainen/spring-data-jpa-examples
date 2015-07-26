@@ -17,7 +17,7 @@ angular.module('app.account.controllers', [])
         }
     ])
     .controller('ForbiddenController', [function() {
-        console.log("Render forbidden view.");
+        console.log("Rendering forbidden view.");
     }])
     .controller('LoginController', [function() {
         console.log('Rendering login form.');
