@@ -5,6 +5,7 @@ angular.module('app.search.controllers', [])
         function ($stateProvider) {
             $stateProvider
                 .state('todo.search', {
+                    authenticate: true,
                     url: 'todo/search/:searchTerm',
                     controller: 'SearchResultController',
                     templateUrl: 'search/search-result-view.html',

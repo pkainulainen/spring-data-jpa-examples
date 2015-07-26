@@ -7,7 +7,7 @@ angular.module('app.search.directives', [])
                 var userWritingSearchTerm = false;
                 var minimumSearchTermLength = 3;
 
-                $scope.translationData = {
+                scope.translationData = {
                     missingCharCount: minimumSearchTermLength
                 };
 
@@ -33,10 +33,10 @@ angular.module('app.search.directives', [])
 
                 scope.search = function() {
                     if (scope.searchTerm.length < minimumSearchTermLength) {
-                        $scope.translationData.missingCharCount = minimumSearchTermLength - scope.searchTerm.length;
+                        scope.translationData.missingCharCount = minimumSearchTermLength - scope.searchTerm.length;
                     }
                     else {
-                        $scope.translationData.missingCharCount = 0;
+                        scope.translationData.missingCharCount = 0;
                         $state.go('todo.search',
                             {searchTerm: scope.searchTerm},
                             {reload: true, inherit: true, notify: true}

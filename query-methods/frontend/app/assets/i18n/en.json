@@ -9,6 +9,11 @@
         }
     },
     "directives": {
+        "login.form": {
+            "login.button": "Login",
+            "login.failed": "Login failed!"
+        },
+        "log.out.link.label": "Log Out",
         "todo.form": {
             "cancel.button": "Cancel",
             "save.button": "Save"
@@ -32,10 +37,19 @@
                 "no.todo.entries.found": "Nothing to do (yet)."
             }
         },
+        "login.page": {
+            "title": "Log In"
+        },
         "search.results.page.title": "Search Results",
         "view.page": {
             "title": "View Todo Entry"
         }
+    },
+    "login": {
+        "username": "Username",
+        "username.placeholder": "Enter username",
+        "password": "Password",
+        "password.placeholder": "Enter password"
     },
     "search": {
         "term.field.placeholder": "Search",

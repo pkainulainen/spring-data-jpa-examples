@@ -10,11 +10,13 @@ angular.module('app.todo.controllers', [])
                     template: '<ui-view/>'
                 })
                 .state('todo.add', {
+                    authenticate: true,
                     url: 'todo/add',
                     controller: 'AddTodoController',
                     templateUrl: 'todo/add-todo-view.html'
                 })
                 .state('todo.edit', {
+                    authenticate: true,
                     url: 'todo/:id/edit',
                     controller: 'EditTodoController',
                     templateUrl: 'todo/edit-todo-view.html',
@@ -25,6 +27,7 @@ angular.module('app.todo.controllers', [])
                     }
                 })
                 .state('todo.list', {
+                    authenticate: true,
                     url: '',
                     controller: 'TodoListController',
                     templateUrl: 'todo/todo-list-view.html',
@@ -35,6 +38,7 @@ angular.module('app.todo.controllers', [])
                     }
                 })
                 .state('todo.view', {
+                    authenticate: true,
                     url: 'todo/:id',
                     controller: 'ViewTodoController',
                     templateUrl: 'todo/view-todo-view.html',

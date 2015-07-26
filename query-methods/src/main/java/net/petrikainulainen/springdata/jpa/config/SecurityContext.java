@@ -1,5 +1,6 @@
 package net.petrikainulainen.springdata.jpa.config;
 
+import net.petrikainulainen.springdata.jpa.web.security.CsrfHeaderFilter;
 import net.petrikainulainen.springdata.jpa.web.security.RestAuthenticationEntryPoint;
 import net.petrikainulainen.springdata.jpa.web.security.RestAuthenticationFailureHandler;
 import net.petrikainulainen.springdata.jpa.web.security.RestAuthenticationSuccessHandler;
@@ -7,12 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 /**
  * @author Petri Kainulainen
@@ -59,7 +62,7 @@ class SecurityContext extends WebSecurityConfigurerAdapter {
                         .and()
                 //Configure form login.
                 .formLogin()
-                    .loginProcessingUrl("api/login")
+                    .loginProcessingUrl("/api/login")
                     .failureHandler(authenticationFailureHandler())
                     .successHandler(authenticationSuccessHandler())
                     .permitAll()
@@ -72,6 +75,25 @@ class SecurityContext extends WebSecurityConfigurerAdapter {
                     .and()
                 //Configure url based authorization
                 .authorizeRequests()
-                    .anyRequest().hasRole("USER");
+                    .antMatchers(
+                            "/",
+                            "/api/csrf"
+                    ).permitAll()
+                    .anyRequest().hasRole("USER")
+                    .and()
+                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                //Spring Security ignores request to static resources such as CSS or JS files.
+                .ignoring()
+                .antMatchers(
+                        "/favicon.ico",
+                        "/css/**",
+                        "/i18n/**",
+                        "/js/**"
+                    );
     }
 }
