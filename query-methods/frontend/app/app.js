@@ -3,6 +3,7 @@
 console.log('Registering AngularJS modules');
 
 var App = angular.module('app', [
+    'http-auth-interceptor',
     'ngLocale',
     'ngCookies',
     'ngResource',
@@ -32,17 +33,17 @@ var App = angular.module('app', [
 
 ]);
 
-App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'AuthenticationService',
-    function ($rootScope, $state, AUTH_EVENTS, AuthenticatedUser, AuthenticationService) {
+App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authService', 'AuthenticationService',
+    function ($rootScope, $state, AUTH_EVENTS, AuthenticatedUser, authService, AuthenticationService) {
 
-        //This function listens to authentication events and renders
-        //the correct view based on the published event.
+        //This function retries all requests that were failed because of
+        //the 401 response.
         function listenAuthenticationEvents() {
-            var viewTodoListPage = function() {
-                $state.go('todo.list');
+            var confirmLogin = function() {
+                authService.loginConfirmed();
             };
 
-            $rootScope.$on(AUTH_EVENTS.loginSuccess, viewTodoListPage);
+            $rootScope.$on(AUTH_EVENTS.loginSuccess, confirmLogin);
 
             var viewLogInPage = function() {
                 console.log('User is not authenticated.');
@@ -51,7 +52,6 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'Authentica
 
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, viewLogInPage);
             $rootScope.$on(AUTH_EVENTS.notAuthenticated, viewLogInPage);
-            $rootScope.$on(AUTH_EVENTS.sessionTimeout, viewLogInPage);
         }
 
         //This function ensures that anonymous users cannot access states

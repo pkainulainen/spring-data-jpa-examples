@@ -2,34 +2,13 @@
 
 angular.module('app.account.config', [])
     .constant('AUTH_EVENTS', {
-        loginSuccess: 'auth-login-success',
-        loginFailed: 'auth-login-failed',
-        logoutSuccess: 'auth-logout-success',
-        sessionTimeout: 'auth-session-timeout',
-        notAuthenticated: 'auth-not-authenticated',
-        notAuthorized: 'auth-not-authorized'
+        loginSuccess: 'event:auth-login-success',
+        loginFailed: 'event:auth-login-failed',
+        logoutSuccess: 'event:auth-logout-success',
+        sessionTimeout: 'event:auth-session-timeout',
+        notAuthenticated: 'event:auth-loginRequired',
+        notAuthorized: 'event:auth-forbidden'
     })
-    .config(['$httpProvider', function ($httpProvider) {
-        $httpProvider.interceptors.push([
-            '$injector',
-            function ($injector) {
-                return $injector.get('AuthInterceptor');
-            }
-        ]);
-    }])
-    .factory('AuthInterceptor', ['$rootScope', '$q', 'AUTH_EVENTS', function ($rootScope, $q, AUTH_EVENTS) {
-        return {
-            responseError: function (response) {
-                $rootScope.$broadcast({
-                    401: AUTH_EVENTS.notAuthenticated,
-                    403: AUTH_EVENTS.notAuthorized,
-                    419: AUTH_EVENTS.sessionTimeout,
-                    440: AUTH_EVENTS.sessionTimeout
-                }[response.status], response);
-                    return $q.reject(response);
-                }
-            };
-        }])
     .config(['csrfProvider', function(csrfProvider) {
         // optional configurations
         csrfProvider.config({

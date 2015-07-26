@@ -22,6 +22,7 @@ module.exports = {
             './bower_components/jquery/dist/jquery.min.js',
             './bower_components/momentjs/min/moment.min.js',
             './bower_components/angular/angular.js',
+            './bower_components/angular-http-auth/src/http-auth-interceptor.js',
             './bower_components/angular-i18n/angular-locale_fi-fi.js',
             './bower_components/angular-cookies/angular-cookies.min.js',
             './bower_components/angular-moment/angular-moment.min.js',
