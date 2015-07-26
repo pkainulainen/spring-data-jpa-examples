@@ -56,6 +56,7 @@
         "missing.characters.text": "{{missingCharCount}} characters missing"
     },
     "todo": {
+        "created.by.prefix": "by",
         "creation.time": "Created at",
         "description": "Description",
         "description.placeholder": "Enter description",
@@ -64,6 +65,7 @@
             "title.maxLength": "Title cannot be longer than 100 characters",
             "title.required": "Title is required"
         },
+        "modified.by.prefix": "by",
         "modification.time": "Modified at",
         "notifications": {
             "add": {

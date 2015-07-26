@@ -8,7 +8,9 @@
             <p>
                 <small>
                     {{"todo.creation.time" | translate}}: {{todoEntry.creationTime | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}
+                    {{"todo.created.by.prefix" | translate}} {{todoEntry.createdByUser}}
                     {{"todo.modification.time" | translate }}: {{todoEntry.modificationTime | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}
+                    {{"todo.modified.by.prefix" | translate}} {{todoEntry.modifiedByUser}}
                 </small>
             </p>
         </div>
