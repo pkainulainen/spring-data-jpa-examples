@@ -46,8 +46,8 @@ angular.module('app.common.config', [])
             responseError: function(response) {
                 if (response.status === 404) {
                     $rootScope.$broadcast(COMMON_EVENTS.notFound);
-                    return $q.reject(response);
                 }
+                return $q.reject(response);
             }
         };
     }]);
