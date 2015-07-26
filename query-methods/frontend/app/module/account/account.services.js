@@ -11,10 +11,8 @@ angular.module('app.account.services', ['ngResource'])
             this.role = null;
         };
     })
-    .factory('AuthenticationService', ['$http', '$resource', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser',
-        function($http, $resource, $rootScope, $state, AUTH_EVENTS, AuthenticatedUser) {
-
-            var accountApi = $resource('/api/authenticated-user', {}, {get: {method: 'GET'}});
+    .factory('AuthenticationService', ['$http', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser',
+        function($http,$rootScope, $state, AUTH_EVENTS, AuthenticatedUser) {
 
             return {
                 authorizeStateChange: function(event, toState, toParams) {
@@ -22,9 +20,11 @@ angular.module('app.account.services', ['ngResource'])
                     if (toState.authenticate && !this.isAuthenticated()) {
                         event.preventDefault();
 
+                        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+
                         console.log('Authentication is not found. Fetching it from the backend.');
                         var self = this;
-                        accountApi.get().$promise.then(function(user) {
+                        $http.get('/api/authenticated-user').success(function(user) {
                             console.log('Found authenticated user: ', user);
                             AuthenticatedUser.create(user.username, user.role);
 
