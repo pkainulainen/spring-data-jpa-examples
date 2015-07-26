@@ -47,7 +47,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
 
             var viewLogInPage = function() {
                 console.log('User is not authenticated.');
-                $state.go('login');
+                $state.go('todo.login');
             };
 
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, viewLogInPage);
