@@ -52,6 +52,7 @@ angular.module('app.account.services', ['ngResource'])
 
                     $http.post('/api/login', {username: username, password: password}, {
                         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                        ignoreAuthModule: true,
                         transformRequest: transform
                     })
                         .success(function(user) {

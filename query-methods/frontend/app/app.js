@@ -52,6 +52,13 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
 
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, viewLogInPage);
             $rootScope.$on(AUTH_EVENTS.notAuthenticated, viewLogInPage);
+
+            var viewForbiddenPage = function() {
+                console.log('Permission was denied for user: ', AuthenticatedUser);
+                $state.go('forbidden');
+            };
+
+            $rootScope.$on(AUTH_EVENTS.notAuthorized, viewForbiddenPage);
         }
 
         //This function ensures that anonymous users cannot access states

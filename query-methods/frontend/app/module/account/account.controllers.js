@@ -7,7 +7,12 @@ angular.module('app.account.controllers', [])
                 .state('login', {
                     url: 'login',
                     controller: 'LoginController',
-                    templateUrl: 'account/login-view.html',
+                    templateUrl: 'account/login-view.html'
+                })
+                .state('forbidden', {
+                    url: 'forbidden',
+                    controller: 'ForbiddenController',
+                    templateUrl: 'account/forbidden-view-html'
                 });
         }
     ])

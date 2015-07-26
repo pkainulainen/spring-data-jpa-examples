@@ -31,6 +31,10 @@
             "link.label": "Edit",
             "title": "Edit todo entry"
         },
+        "forbidden.page": {
+            "text": "Permission denied.",
+            "title": "Forbidden"
+        },
         "list.page": {
             "title": "Things to do",
             "texts": {
