@@ -72,4 +72,4 @@ Credits
 Known Issues
 ============
 
-* The user is not redirected to correct view after login.
+* 404 handling does not work correctly.
