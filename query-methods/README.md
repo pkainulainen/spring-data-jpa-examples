@@ -70,4 +70,4 @@ Credits
 Known Issues
 ============
 
-* The AngularJS application doesn't work because you cannot log in (yet).
+* The user is not redirected to correct view after login.
