@@ -1,4 +1,7 @@
-<form class="navbar-form navbar-right" name="searchForm" role="search">
+<form class="navbar-form navbar-right"
+      name="searchForm"
+      ng-if="currentUser.username"
+      role="search">
     <div class="form-group">
         <small class="ng-error" ng-show="showMissingCharacterText()">
             {{'search.missing.characters.text' | translate:translationData }}

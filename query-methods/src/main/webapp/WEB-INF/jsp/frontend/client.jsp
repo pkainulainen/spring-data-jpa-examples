@@ -54,7 +54,7 @@
                 <a class="navbar-brand" ui-sref="todo.list" translate="header.brand.label"></a>
             </div>
             <div class="pull-right" log-out-link current-user="currentUser"></div>
-            <div class="pull-right" search-form></div>
+            <div class="pull-right" search-form current-user="currentUser"></div>
         </div>
     </nav>
 

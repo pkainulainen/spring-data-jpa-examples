@@ -47,6 +47,7 @@ angular.module('app.search.directives', [])
             },
             templateUrl: 'search/search-form-directive.html',
             scope: {
+                currentUser: '='
             }
         };
     }]);
