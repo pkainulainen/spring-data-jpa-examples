@@ -23,7 +23,7 @@ var App = angular.module('app', [
     'app.account.config', 'app.account.directives', 'app.account.controllers', 'app.account.services',
 
     //Common
-    'app.common.config', 'app.common.directives', 'app.common.services',
+    'app.common.config', 'app.common.controllers', 'app.common.directives', 'app.common.services',
 
     //Todo
     'app.todo.controllers', 'app.todo.directives', 'app.todo.services',
@@ -33,8 +33,8 @@ var App = angular.module('app', [
 
 ]);
 
-App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authService', 'AuthenticationService',
-    function ($rootScope, $state, AUTH_EVENTS, AuthenticatedUser, authService, AuthenticationService) {
+App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authService', 'AuthenticationService', 'COMMON_EVENTS',
+    function ($rootScope, $state, AUTH_EVENTS, AuthenticatedUser, authService, AuthenticationService, COMMON_EVENTS) {
 
         //This function retries all requests that were failed because of
         //the 401 response.
@@ -61,6 +61,16 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
             $rootScope.$on(AUTH_EVENTS.notAuthorized, viewForbiddenPage);
         }
 
+        function listenCommonEvents() {
+
+            var view404Page = function() {
+                console.log('Requested page was not found.');
+                $state.go('todo.404');
+            };
+
+            $rootScope.$on(COMMON_EVENTS.notFound, view404Page);
+        }
+
         //This function ensures that anonymous users cannot access states
         //that marked as protected (i.e. the value of the authenticated
         //property is set to true).
@@ -74,6 +84,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
         $rootScope.currentUser = AuthenticatedUser;
 
         listenAuthenticationEvents();
+        listenCommonEvents();
         secureProtectedStates();
 }]);
 

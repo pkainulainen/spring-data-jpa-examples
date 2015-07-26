@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('app.common.config', [])
+    .constant('COMMON_EVENTS', {
+        notFound: 'event:not-found'
+    })
     .config(['$urlRouterProvider', '$locationProvider',
         function ($urlRouterProvider, $locationProvider) {
             //this prevents infinite $digest loop when we invoke the
@@ -29,4 +32,22 @@ angular.module('app.common.config', [])
     }])
     .config(['growlProvider', function (growlProvider) {
         growlProvider.globalTimeToLive(5000);
+    }])
+    .config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.interceptors.push([
+            '$injector',
+            function ($injector) {
+                return $injector.get('404Interceptor');
+            }
+        ]);
+    }])
+    .factory('404Interceptor', ['$rootScope', '$q', 'COMMON_EVENTS', function ($rootScope, $q, COMMON_EVENTS) {
+        return {
+            responseError: function(response) {
+                if (response.status === 404) {
+                    $rootScope.$broadcast(COMMON_EVENTS.notFound);
+                    return $q.reject(response);
+                }
+            }
+        };
     }]);

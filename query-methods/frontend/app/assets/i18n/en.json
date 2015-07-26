@@ -35,6 +35,10 @@
             "text": "Permission denied.",
             "title": "Forbidden"
         },
+        "not.found.page": {
+            "text": "The page that you were looking for was not found.",
+            "title": "Not Found"
+        },
         "list.page": {
             "title": "Things to do",
             "texts": {
