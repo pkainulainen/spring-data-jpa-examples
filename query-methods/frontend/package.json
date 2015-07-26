@@ -9,6 +9,8 @@
         "url": ""
     },
     "dependencies": {
+        "bower": "~1.4.1",
+        "gulp": "~3.8.11",
         "gulp-angular-templatecache": "~1.6.0",
         "gulp-changed": "~1.2.1",
         "gulp-concat": "~2.5.2",
