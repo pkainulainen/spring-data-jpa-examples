@@ -55,7 +55,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
 
             var viewForbiddenPage = function() {
                 console.log('Permission was denied for user: ', AuthenticatedUser);
-                $state.go('forbidden');
+                $state.go('todo.forbidden');
             };
 
             $rootScope.$on(AUTH_EVENTS.notAuthorized, viewForbiddenPage);
