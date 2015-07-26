@@ -5,7 +5,6 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 import net.petrikainulainen.springdata.jpa.config.ExampleApplicationContext;
 import net.petrikainulainen.springdata.jpa.config.Profiles;
 import net.petrikainulainen.springdata.jpa.web.ColumnSensingReplacementDataSetLoader;
-import net.petrikainulainen.springdata.jpa.web.DbTestUtil;
 import net.petrikainulainen.springdata.jpa.web.WebTestConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,8 +56,6 @@ public class ITGetAuthenticatedUserTest {
 
     @Before
     public void setUp() throws SQLException {
-        DbTestUtil.resetAutoIncrementColumns(webAppContext, "todos");
-
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext)
                 .apply(springSecurity())
                 .build();
