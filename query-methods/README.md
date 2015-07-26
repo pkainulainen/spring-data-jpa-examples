@@ -66,6 +66,7 @@ Credits
 =========
 
 * Kyösti Herrala. The Gulp build script and its Maven integration are based on Kyösti's ideas.
+* [Techniques for authentication in AngularJS applications](https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec)
 
 Known Issues
 ============
