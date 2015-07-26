@@ -72,4 +72,4 @@ Credits
 Known Issues
 ============
 
-* 404 handling does not work correctly.
+* There is no way to disable frontend logging.
