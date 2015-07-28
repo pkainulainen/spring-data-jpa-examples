@@ -1,8 +1,7 @@
 'use strict';
 
-console.log('Registering AngularJS modules');
-
 var App = angular.module('app', [
+    'angular-logger',
     'http-auth-interceptor',
     'ngLocale',
     'ngCookies',
@@ -33,8 +32,10 @@ var App = angular.module('app', [
 
 ]);
 
-App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authService', 'AuthenticationService', 'COMMON_EVENTS',
-    function ($rootScope, $state, AUTH_EVENTS, AuthenticatedUser, authService, AuthenticationService, COMMON_EVENTS) {
+App.run(['$log', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authService', 'AuthenticationService', 'COMMON_EVENTS',
+    function ($log, $rootScope, $state, AUTH_EVENTS, AuthenticatedUser, authService, AuthenticationService, COMMON_EVENTS) {
+
+        var logger = $log.getInstance('app');
 
         //This function retries all requests that were failed because of
         //the 401 response.
@@ -46,7 +47,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
             $rootScope.$on(AUTH_EVENTS.loginSuccess, confirmLogin);
 
             var viewLogInPage = function() {
-                console.log('User is not authenticated.');
+                logger.info('User is not authenticated. Rendering login view.');
                 $state.go('todo.login');
             };
 
@@ -54,7 +55,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
             $rootScope.$on(AUTH_EVENTS.notAuthenticated, viewLogInPage);
 
             var viewForbiddenPage = function() {
-                console.log('Permission was denied for user: ', AuthenticatedUser);
+                logger.info('Permission was denied for user: %j', AuthenticatedUser);
                 $state.go('todo.forbidden');
             };
 
@@ -64,7 +65,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
         function listenCommonEvents() {
 
             var view404Page = function() {
-                console.log('Requested page was not found.');
+                logger.info('Requested page was not found.');
                 $state.go('todo.404');
             };
 
@@ -76,7 +77,7 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
         //property is set to true).
         function secureProtectedStates() {
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-                console.log('Moving to state: ', toState);
+                logger.trace('Moving to state: %s', toState.name);
                 AuthenticationService.authorizeStateChange(event, toState, toParams);
             });
         }
@@ -87,6 +88,4 @@ App.run(['$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'authServic
         listenCommonEvents();
         secureProtectedStates();
 }]);
-
-console.log('Registered AngularJS modules');
 
