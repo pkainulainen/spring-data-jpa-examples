@@ -11,7 +11,8 @@ angular.module('app.common.controllers', [])
                 });
         }
     ])
-    .controller('NotFoundController', [function() {
-        console.log("Rendering 404 view.");
+    .controller('NotFoundController', ['$log', function($log) {
+        var logger = $log.getInstance('app.common.controllers.NotFoundController');
+        logger.info("Rendering 404 view.");
     }]);
 
