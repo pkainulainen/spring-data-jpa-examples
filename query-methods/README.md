@@ -72,5 +72,4 @@ Credits
 Known Issues
 ============
 
-* There is no way to disable frontend logging.
 * If you try to log in right after you have logged out, you are not redirected to the app even if login is successful.
