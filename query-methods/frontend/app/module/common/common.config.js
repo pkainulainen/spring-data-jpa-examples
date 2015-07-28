@@ -4,6 +4,13 @@ angular.module('app.common.config', [])
     .constant('COMMON_EVENTS', {
         notFound: 'event:not-found'
     })
+    .config(['logEnhancerProvider', function (logEnhancerProvider) {
+        logEnhancerProvider.datetimePattern = 'DD.MM.YYYY HH:mm:ss';
+        logEnhancerProvider.prefixPattern = '%s::[%s]> ';
+        logEnhancerProvider.logLevels = {
+            '*': logEnhancerProvider.LEVEL.OFF
+        };
+    }])
     .config(['$urlRouterProvider', '$locationProvider',
         function ($urlRouterProvider, $locationProvider) {
             //this prevents infinite $digest loop when we invoke the
