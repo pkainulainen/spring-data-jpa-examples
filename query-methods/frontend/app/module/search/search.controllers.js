@@ -21,9 +21,10 @@ angular.module('app.search.controllers', [])
                 });
         }
     ])
-    .controller('SearchResultController', ['$scope', 'searchResults',
-        function($scope, searchResults) {
-            console.log('Rendering search results page.');
+    .controller('SearchResultController', ['$log', '$scope', 'searchResults',
+        function($log, $scope, searchResults) {
+            var logger = $log.getInstance('app.search.controllers.SearchResultController');
+            logger.info('Rendering search results page.');
             $scope.todoEntries = searchResults;
         }]);
 
