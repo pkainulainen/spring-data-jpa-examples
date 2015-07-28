@@ -1,11 +1,14 @@
 'use strict';
 
 angular.module('app.account.directives', [])
-    .directive('logOutLink', ['AuthenticationService', function (AuthenticationService) {
+    .directive('logOutLink', ['$log', 'AuthenticationService', function ($log, AuthenticationService) {
+
+        var logger = $log.getInstance('app.account.directives.logOutLink');
+
         return {
             link: function (scope, element, attr) {
                 scope.logOut = function() {
-                    console.log('Logging user out.');
+                    logger.info('Logging user out.');
                     AuthenticationService.logOut();
                 };
             },
@@ -15,19 +18,22 @@ angular.module('app.account.directives', [])
             }
         };
     }])
-    .directive('loginForm', ['AUTH_EVENTS', 'AuthenticationService', function (AUTH_EVENTS, AuthenticationService) {
+    .directive('loginForm', ['$log', 'AUTH_EVENTS', 'AuthenticationService', function ($log, AUTH_EVENTS, AuthenticationService) {
+
+        var logger = $log.getInstance('app.account.directives.loginForm');
+
         return {
             link: function (scope, element, attr) {
                 scope.login = {};
                 scope.loginFailed = false;
 
                 scope.$on(AUTH_EVENTS.loginFailed, function() {
-                    console.log('Received login failed event.');
+                    logger.info('Received login failed event.');
                     scope.loginFailed = true;
                 });
 
                 scope.submitLoginForm = function() {
-                    console.log('Submitting log in form.');
+                    logger.info('Submitting log in form.');
                     AuthenticationService.logIn(scope.login.username, scope.login.password);
                 };
             },

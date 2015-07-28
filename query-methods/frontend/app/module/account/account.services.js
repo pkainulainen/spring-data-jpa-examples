@@ -11,40 +11,40 @@ angular.module('app.account.services', ['ngResource'])
             this.role = null;
         };
     })
-    .factory('AuthenticationService', ['$http', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser',
-        function($http,$rootScope, $state, AUTH_EVENTS, AuthenticatedUser) {
+    .factory('AuthenticationService', ['$http', '$log', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser',
+        function($http, $log, $rootScope, $state, AUTH_EVENTS, AuthenticatedUser) {
+
+            var logger = $log.getInstance('app.account.services.AuthenticationService');
 
             return {
                 authorizeStateChange: function(event, toState, toParams) {
-                    console.log('Authorizing state change to state: ', toState);
+                    logger.debug('Authorizing state change to state: %s', toState.name);
                     if (toState.authenticate && !this.isAuthenticated()) {
                         event.preventDefault();
 
-                        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-
-                        console.log('Authentication is not found. Fetching it from the backend.');
+                        logger.debug('Authentication is not found. Fetching it from the backend.');
                         var self = this;
                         $http.get('/api/authenticated-user').success(function(user) {
-                            console.log('Found authenticated user: ', user);
+                            logger.debug('Found authenticated user: %j', user);
                             AuthenticatedUser.create(user.username, user.role);
 
                             if (!self.isAuthenticated) {
-                                console.log('Unauthenticated users is: ', AuthenticatedUser);
+                                logger.debug('Unauthenticated users is: %j', AuthenticatedUser);
                                 $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
                             }
                             else {
-                                console.log('User is authenticated. Continuing to the target state: ', toState);
+                                logger.debug('User is authenticated. Continuing to the target state: %s', toState.name);
                                 $state.go(toState.name, toParams);
                             }
                         });
                     }
                 },
                 isAuthenticated: function() {
-                    console.log('Checking if user is authenticated: ', AuthenticatedUser);
+                    logger.debug('Checking if user: %j is authenticated.', AuthenticatedUser);
                     return AuthenticatedUser.username;
                 },
                 logIn: function(username, password) {
-                    console.log('Logging in user with username: ', username);
+                    logger.info('Logging in user with username: %s', username);
 
                     var transform = function(data){
                         return $.param(data);
@@ -56,12 +56,12 @@ angular.module('app.account.services', ['ngResource'])
                         transformRequest: transform
                     })
                         .success(function(user) {
-                            console.log('Login successful: ', user);
+                            logger.info('Login successful for user: %j', user);
                             AuthenticatedUser.create(user.username, user.role);
                             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                         })
                         .error(function() {
-                            console.log('Login failed');
+                            logger.info('Login failed');
                             $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
                      });
                 },
@@ -69,7 +69,7 @@ angular.module('app.account.services', ['ngResource'])
                     if (this.isAuthenticated()) {
                         $http.post('/api/logout', {})
                             .success(function() {
-                                console.log('User is logged out.');
+                                logger.info('User is logged out.');
                                 AuthenticatedUser.destroy();
                                 $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
                             });

@@ -16,10 +16,12 @@ angular.module('app.account.controllers', [])
                 });
         }
     ])
-    .controller('ForbiddenController', [function() {
-        console.log("Rendering forbidden view.");
+    .controller('ForbiddenController', ['$log', function($log) {
+        var logger = $log.getInstance('app.account.controllers.ForbiddenController');
+        logger.info("Rendering forbidden view.");
     }])
-    .controller('LoginController', [function() {
-        console.log('Rendering login form.');
+    .controller('LoginController', ['$log', function($log) {
+        var logger = $log.getInstance('app.account.controllers.LoginController');
+        logger.info('Rendering login form.');
     }]);
 
