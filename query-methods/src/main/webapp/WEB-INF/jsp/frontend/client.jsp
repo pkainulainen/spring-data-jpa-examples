@@ -33,7 +33,6 @@
             '${contextPath}/js/partials.js'
         ], function () {
             // when all is done, execute bootstrap angular application
-            console.log("Starting AngularJS application");
             angular.bootstrap(document, ['app']);
         });
     </script>
