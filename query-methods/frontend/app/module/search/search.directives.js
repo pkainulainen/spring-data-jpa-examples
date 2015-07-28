@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module('app.search.directives', [])
-    .directive('searchForm', ['$state', function($state) {
+    .directive('searchForm', ['$log', '$state', function($log, $state) {
+
+        var logger = $log.getInstance('app.search.directives.searchForm');
+
         return {
             link: function (scope, element, attr) {
                 var userWritingSearchTerm = false;
@@ -11,10 +14,13 @@ angular.module('app.search.directives', [])
                     missingCharCount: minimumSearchTermLength
                 };
 
-                scope.searchTerm = "";
+                scope.search = {};
+                scope.search.searchTerm = "";
 
                 scope.searchFieldBlur = function() {
                     userWritingSearchTerm = false;
+                    scope.search.searchTerm = "";
+                    scope.translationData.missingCharCount = minimumSearchTermLength;
                 };
 
                 scope.searchFieldFocus = function() {
@@ -22,8 +28,12 @@ angular.module('app.search.directives', [])
                 };
 
                 scope.showMissingCharacterText = function() {
+                    if (!scope.search.searchTerm) {
+                        scope.search.searchTerm = "";
+                    }
+
                     if (userWritingSearchTerm) {
-                        if (scope.searchTerm.length < minimumSearchTermLength) {
+                        if (scope.search.searchTerm.length < minimumSearchTermLength) {
                             return true;
                         }
                     }
@@ -32,13 +42,16 @@ angular.module('app.search.directives', [])
                 };
 
                 scope.search = function() {
-                    if (scope.searchTerm.length < minimumSearchTermLength) {
-                        scope.translationData.missingCharCount = minimumSearchTermLength - scope.searchTerm.length;
+                    logger.trace('User is using the search term: %s', scope.search.searchTerm);
+
+                    if (scope.search.searchTerm.length < minimumSearchTermLength) {
+                        scope.translationData.missingCharCount = minimumSearchTermLength - scope.search.searchTerm.length;
+                        logger.trace('%s characters are missing. Search is not invoked.', scope.translationData.missingCharCount);
                     }
                     else {
                         scope.translationData.missingCharCount = 0;
                         $state.go('todo.search',
-                            {searchTerm: scope.searchTerm},
+                            {searchTerm: scope.search.searchTerm},
                             {reload: true, inherit: true, notify: true}
                         );
                     }
