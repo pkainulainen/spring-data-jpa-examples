@@ -1,18 +1,20 @@
 'use strict';
 
 angular.module('app.todo.directives', [])
-    .controller('DeleteTodoController', ['$scope', '$modalInstance', '$state', 'TodoService', 'todoEntry', 'successCallback', 'errorCallback',
-        function($scope, $modalInstance, $state, TodoService, todoEntry, successCallback, errorCallback) {
-            console.log('Showing delete confirmation dialog for todo entry: ', todoEntry);
+    .controller('DeleteTodoController', ['$log', '$scope', '$modalInstance', '$state', 'TodoService', 'todoEntry', 'successCallback', 'errorCallback',
+        function($log, $scope, $modalInstance, $state, TodoService, todoEntry, successCallback, errorCallback) {
+            var logger = $log.getInstance('app.todo.directives.DeleteTodoController');
+
+            logger.info('Showing delete confirmation dialog for todo entry: %j', todoEntry);
             $scope.todoEntry = todoEntry;
 
             $scope.cancel = function() {
-                console.log('User clicked cancel button. Todo entry is not deleted.');
+                logger.info('User clicked cancel button. Todo entry is not deleted.');
                 $modalInstance.dismiss('cancel');
             };
 
             $scope.delete = function() {
-                console.log('User clicked delete button. Todo entry is deleted.');
+                logger.info('User clicked delete button. Todo entry is deleted.');
                 $modalInstance.close();
                 TodoService.delete(todoEntry, successCallback, errorCallback);
             };
@@ -53,11 +55,13 @@ angular.module('app.todo.directives', [])
             }
         };
     }])
-    .directive('todoEntryForm', ['$state', 'NotificationService', 'TodoService', function($state, NotificationService, TodoService) {
+    .directive('todoEntryForm', ['$log', '$state', 'NotificationService', 'TodoService', function($log, $state, NotificationService, TodoService) {
+        var logger = $log.getInstance('app.todo.directives.todoEntryForm');
+
         return {
             link: function (scope, element, attr) {
                 scope.saveTodoEntry = function() {
-                    console.log('Saving todo entry: ', scope.todoEntry);
+                    logger.info('Saving todo entry: %j', scope.todoEntry);
 
                     var onSuccess = function(saved) {
                         NotificationService.flashMessage(scope.successMessageKey, 'success');
@@ -75,7 +79,7 @@ angular.module('app.todo.directives', [])
                         TodoService.update(scope.todoEntry, onSuccess, onError);
                     }
                     else {
-                        console.log('Unknown form type: ', scope.formType);
+                        logger.error('Unknown form type: %s', scope.formType);
                     }
                 };
             },

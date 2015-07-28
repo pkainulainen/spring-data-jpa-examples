@@ -50,19 +50,23 @@ angular.module('app.todo.controllers', [])
                 });
         }
     ])
-    .controller('AddTodoController', ['$scope', function($scope) {
-            console.log('Rendering add todo entry page.');
-            $scope.todoEntry = {};
+    .controller('AddTodoController', ['$log', '$scope', function($log, $scope) {
+        var logger = $log.getInstance('app.todo.controllers.AddTodoController');
+        logger.info('Rendering add todo entry page.');
+        $scope.todoEntry = {};
     }])
-    .controller('EditTodoController', ['$scope', 'todoEntry', function($scope, todoEntry) {
-            console.log('Rendering edit todo entry page for todo entry: ', todoEntry);
-            $scope.todoEntry = todoEntry;
+    .controller('EditTodoController', ['$log', '$scope', 'todoEntry', function($log, $scope, todoEntry) {
+        var logger = $log.getInstance('app.todo.controllers.EditTodoController');
+        logger.info('Rendering edit todo entry page for todo entry: %j', todoEntry);
+        $scope.todoEntry = todoEntry;
     }])
-    .controller('TodoListController', ['$scope', 'todoEntries', function ($scope, todoEntries) {
-        console.log('Rendering todo entry list page for todo entries: ', todoEntries);
+    .controller('TodoListController', ['$log', '$scope', 'todoEntries', function($log, $scope, todoEntries) {
+        var logger = $log.getInstance('app.todo.controllers.TodoListController');
+        logger.info('Rendering todo entry list page for %s todo entries.', todoEntries.length);
         $scope.todoEntries = todoEntries;
     }])
-    .controller('ViewTodoController', ['$scope', 'todoEntry', function($scope, todoEntry) {
-            console.log('Rendering view todo entry page for todo entry: ', todoEntry);
-            $scope.todoEntry = todoEntry;
+    .controller('ViewTodoController', ['$log', '$scope', 'todoEntry', function($log, $scope, todoEntry) {
+        var logger = $log.getInstance('app.todo.controllers.ViewTodoController');
+        logger.info('Rendering view todo entry page for todo entry: %j', todoEntry);
+        $scope.todoEntry = todoEntry;
     }]);
