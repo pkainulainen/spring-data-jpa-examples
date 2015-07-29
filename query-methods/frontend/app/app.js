@@ -51,8 +51,14 @@ App.run(['$log', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'au
                 $state.go('todo.login');
             };
 
-            $rootScope.$on(AUTH_EVENTS.logoutSuccess, viewLogInPage);
             $rootScope.$on(AUTH_EVENTS.notAuthenticated, viewLogInPage);
+
+            var viewTodoListPage = function() {
+                logger.info("User logged out. REndering todo list view.");
+                $state.go('todo.list', {}, {reload: true});
+            };
+
+            $rootScope.$on(AUTH_EVENTS.logoutSuccess, viewTodoListPage);
 
             var viewForbiddenPage = function() {
                 logger.info('Permission was denied for user: %j', AuthenticatedUser);
