@@ -72,4 +72,4 @@ Credits
 Known Issues
 ============
 
-* If you try to log in right after you have logged out, you are not redirected to the app even if login is successful.
+* If you refresh the login page, you aren't redirected away from it after successful login.
