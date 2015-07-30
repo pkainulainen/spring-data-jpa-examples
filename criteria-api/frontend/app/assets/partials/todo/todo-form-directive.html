@@ -1,0 +1,52 @@
+<form ng-show="todoEntry" name="todoForm" role="form">
+    <div class="form-group">
+        <label for="title" translate="todo.title"></label>:
+        <input id="title"
+               class="form-control"
+               name="title"
+               type="text"
+               placeholder="{{'todo.title.placeholder' | translate}}"
+               ng-model="todoEntry.title"
+               required
+               ng-maxlength="100"/>
+        <div class="ng-error" ng-show="todoForm.title.$dirty && todoForm.title.$invalid">
+            <small class="ng-error"
+                   translate="todo.messages.title.required"
+                   ng-show="todoForm.title.$error.required"></small>
+            <small class="ng-error"
+                   translate="todo.messages.title.maxLength"
+                   ng-show="todoForm.title.$error.maxlength"></small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description" translate="todo.description"></label>:
+            <textarea id="description"
+                      class="form-control"
+                      name="description"
+                      placeholder="{{'todo.description.placeholder' | translate}}"
+                      ng-model="todoEntry.description"
+                      ng-maxlength="500"></textarea>
+        <div class="ng-error" ng-show="todoForm.description.$dirty && todoForm.description.$invalid">
+            <small class="ng-error"
+                   translate="todo.messages.description.maxLength"
+                   ng-show="todoForm.description.$error.maxlength"></small>
+        </div>
+    </div>
+    <div class="action-buttons form-group">
+        <a ng-if="formType === 'add'"
+           ui-sref="todo.list"
+           type="button"
+           class="btn btn-default"
+           translate="directives.todo.form.cancel.button"></a>
+        <a ng-if="formType === 'edit'"
+                ui-sref="todo.view({id: todoEntry.id})"
+                type="button"
+                class="btn btn-default"
+                translate="directives.todo.form.cancel.button"></a>
+        <button type="button"
+                class="btn btn-primary"
+                translate="directives.todo.form.save.button"
+                ng-disabled="todoForm.$invalid || !todoForm.$dirty"
+                ng-click="saveTodoEntry()"></button>
+    </div>
+</form>

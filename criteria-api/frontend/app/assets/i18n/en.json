@@ -1,0 +1,96 @@
+{
+    "app.title.label": "Spring Data JPA Tutorial - Query Methods",
+    "dialogs": {
+        "delete.dialog": {
+            "cancel.button.label": "Cancel",
+            "delete.button.label": "Delete",
+            "text": "Are you sure that you want to delete the todo entry with title: {{title}}?",
+            "title": "Delete todo entry?"
+        }
+    },
+    "directives": {
+        "login.form": {
+            "login.button": "Login",
+            "login.failed": "Login failed!"
+        },
+        "log.out.link.label": "Log Out",
+        "todo.form": {
+            "cancel.button": "Cancel",
+            "save.button": "Save"
+        }
+    },
+    "footer.message": "Spring Data JPA example application by Petri Kainulainen",
+    "header.brand.label": "Spring Data JPA Tutorial",
+    "pages": {
+        "add.page": {
+            "title": "Add new todo entry",
+            "link.label": "Add new todo entry"
+        },
+        "delete.link": "Delete",
+        "edit.page": {
+            "link.label": "Edit",
+            "title": "Edit todo entry"
+        },
+        "forbidden.page": {
+            "text": "Permission denied.",
+            "title": "Forbidden"
+        },
+        "not.found.page": {
+            "text": "The page that you were looking for was not found.",
+            "title": "Not Found"
+        },
+        "list.page": {
+            "title": "Things to do",
+            "texts": {
+                "no.todo.entries.found": "Nothing to do (yet)."
+            }
+        },
+        "login.page": {
+            "title": "Log In"
+        },
+        "search.results.page.title": "Search Results",
+        "view.page": {
+            "title": "View Todo Entry"
+        }
+    },
+    "login": {
+        "help": "Log in by using username: 'user' and password: 'password'",
+        "username": "Username",
+        "username.placeholder": "Enter username",
+        "password": "Password",
+        "password.placeholder": "Enter password"
+    },
+    "search": {
+        "term.field.placeholder": "Search",
+        "missing.characters.text": "{{missingCharCount}} characters missing"
+    },
+    "todo": {
+        "created.by.prefix": "by",
+        "creation.time": "Created at",
+        "description": "Description",
+        "description.placeholder": "Enter description",
+        "messages": {
+            "description.maxLength": "Description cannot be longer than 500 characters",
+            "title.maxLength": "Title cannot be longer than 100 characters",
+            "title.required": "Title is required"
+        },
+        "modified.by.prefix": "by",
+        "modification.time": "Modified at",
+        "notifications": {
+            "add": {
+                "error": "Adding a new todo entry failed.",
+                "success": "A new todo entry was added."
+            },
+            "delete": {
+                "error": "Deleting the todo entry failed.",
+                "success": "Deleted the todo entry."
+            },
+            "edit": {
+                "error": "Updating the information of a todo entry failed.",
+                "success": "Updated the information of the todo entry."
+            }
+        },
+        "title": "Title",
+        "title.placeholder": "Enter title"
+    }
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    This Ant build script is used for three purposes:
+
+    1) It can fetch and install the dependencies of the frontend application's build process if they aren't yet installed.
+    2) It can fetch and install the dependencies of the frontend application if they aren't yet installed.
+    3) It can create a distribution that is packaged to the war file that is created by Maven.
+-->
+<project name="jooq-only-frontend" basedir=".">
+    <!--
+        The command npm install is not run if the node_modules directory is not found from the frontend directory.
+    -->
+    <condition property="npm.is.not.run">
+        <not>
+            <available file="${project.basedir}/frontend/node_modules"/>
+        </not>
+    </condition>
+    <!-- Runs the command npm install in the frontend directory if it has not been run yet. -->
+    <target name="npmInstall" if="npm.is.not.run">
+        <!-- Windows configuration-->
+        <exec dir="${project.basedir}/frontend"
+              executable="cmd"
+              failonerror="true"
+              osfamily="windows">
+            <arg line="/c npm install"/>
+        </exec>
+        <!-- *nix configuration -->
+        <exec dir="${project.basedir}/frontend"
+              executable="bash"
+              failonerror="true"
+              newenvironment="false"
+              osfamily="unix">
+            <arg value="-c"/>
+            <arg value="npm install"/>
+        </exec>
+    </target>
+
+    <!--
+        The command bower install is not run if the bower_components directory is not found from the frontend directory.
+    -->
+    <condition property="bower.is.not.run">
+        <not>
+            <available file="${project.basedir}/frontend/bower_components"/>
+        </not>
+    </condition>
+    <!-- Run the command bower install in the frontend directory if it has not been run yet. -->
+    <target name="bowerInstall" if="bower.is.not.run" depends="npmInstall">
+        <!-- Windows configuration-->
+        <exec dir="${project.basedir}/frontend"
+              executable="cmd"
+              failonerror="true"
+              osfamily="windows">
+            <arg line="/c bower install"/>
+        </exec>
+        <!-- *nix configuration -->
+        <exec dir="${project.basedir}/frontend"
+              executable="bash"
+              failonerror="true"
+              newenvironment="false"
+              osfamily="unix">
+            <arg value="-c"/>
+            <arg value="node_modules/.bin/bower --allow-root install"/>
+        </exec>
+    </target>
+
+    <!--
+        Creates the distribution that is packaged to the war file created by Maven.
+    -->
+    <target name="dist" depends="bowerInstall">
+        <!-- Windows configuration -->
+        <exec dir="${project.basedir}/frontend"
+              executable="cmd"
+              osfamily="windows"
+              resultproperty="distResult">
+            <arg line="/c gulp build"/>
+        </exec>
+        <!-- *nix configuration -->
+        <exec dir="${project.basedir}/frontend"
+              executable="bash"
+              failonerror="true"
+              newenvironment="false"
+              osfamily="unix"
+              resultproperty="distResult">
+            <arg value="-c"/>
+            <arg value="node_modules/.bin/gulp build"/>
+        </exec>
+
+        <!-- Fail build if Gulp fails  -->
+        <condition property="distSuccess">
+            <equals arg1="${distResult}" arg2="0"/>
+        </condition>
+        <fail unless="distSuccess"/>
+    </target>
+</project>
