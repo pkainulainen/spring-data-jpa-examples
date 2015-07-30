@@ -54,6 +54,7 @@
         }
     },
     "login": {
+        "help": "Log in by using username: 'user' and password: 'password'",
         "username": "Username",
         "username.placeholder": "Enter username",
         "password": "Password",
