@@ -15,5 +15,5 @@ public interface TodoSearchService {
      * @param searchTerm    The search term.
      * @return
      */
-    public List<TodoDTO> findBySearchTerm(String searchTerm);
+    List<TodoDTO> findBySearchTerm(String searchTerm);
 }
