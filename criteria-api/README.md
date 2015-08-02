@@ -1,6 +1,21 @@
 This blog post is the example application of the following blog posts:
 
-* [Spring Data JPA Tutorial: Criteria API]() - Not published yet
+* [Spring Data JPA Tutorial: Creating Database Queries With the JPA Criteria API](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-four-jpa-criteria-queries/)
+
+You might also want to read the other parts of my Spring Data JPA Tutorial:
+
+
+* [Spring Data JPA Tutorial: Getting the Required Dependencies](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-getting-the-required-dependencies/)
+* [Spring Data JPA Tutorial: Configuration](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-one-configuration/)
+* [Spring Data JPA Tutorial: CRUD](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-two-crud/)
+* [Spring Data JPA Tutorial: Introduction to Query Methods](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-introduction-to-query-methods/)
+* [Spring Data JPA Tutorial: Creating Database Queries From Method Names](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-from-method-names/)
+* [Spring Data JPA Tutorial: Creating Database Queries With the @Query Annotation](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-with-the-query-annotation/)
+* [Spring Data JPA Tutorial: Creating Database Queries With Named Queries](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-with-named-queries/)
+* [Spring Data JPA Tutorial: Creating Database Queries With Querydsl](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-five-querydsl/)
+* [Spring Data JPA Tutorial: Auditing, Part One](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-auditing-part-one/)
+* [Spring Data JPA Tutorial: Auditing, Part Two](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-auditing-part-two/)
+
 
 **Note:** This application is still work in progress.
 
