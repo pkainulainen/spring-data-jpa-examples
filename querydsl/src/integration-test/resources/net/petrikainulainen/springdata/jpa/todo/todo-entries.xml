@@ -1,0 +1,18 @@
+<dataset>
+    <todos id="1"
+           created_by_user="createdByUser"
+           creation_time="2014-12-24 11:13:28"
+           description="description"
+           modified_by_user="modifiedByUser"
+           modification_time="2014-12-25 11:13:28"
+           title="title"
+           version="0"/>
+    <todos id="2"
+           created_by_user="createdByUser"
+           creation_time="2014-12-24 11:13:28"
+           description="Lorem ipsum"
+           modified_by_user="modifiedByUser"
+           modification_time="2014-12-25 11:13:28"
+           title="Foo bar"
+           version="0"/>
+</dataset>
