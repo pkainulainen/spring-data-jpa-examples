@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -48,7 +47,7 @@ public class TodoSearchControllerTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(new TodoSearchController(searchService))
                 .setMessageConverters(WebTestConfig.jacksonDateTimeConverter())
-                .setCustomArgumentResolvers(new SortHandlerMethodArgumentResolver())
+                .setCustomArgumentResolvers(WebTestConfig.sortArgumentResolver())
                 .build();
     }
 
