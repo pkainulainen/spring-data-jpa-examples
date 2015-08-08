@@ -1,5 +1,6 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import com.mysema.query.types.OrderSpecifier;
 import com.mysema.query.types.Predicate;
 import com.nitorcreations.junit.runners.NestedRunner;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class RepositoryTodoSearchServiceTest {
 
             @Before
             public void returnZeroTodoEntries() {
-                given(repository.findAll(isA(Predicate.class))).willReturn(new ArrayList<>());
+                given(repository.findAll(isA(Predicate.class), isA(OrderSpecifier.class))).willReturn(new ArrayList<>());
             }
 
             @Test
@@ -71,7 +72,7 @@ public class RepositoryTodoSearchServiceTest {
                         .title(TITLE)
                         .build();
 
-                given(repository.findAll(isA(Predicate.class))).willReturn(Arrays.asList(found));
+                given(repository.findAll(isA(Predicate.class), isA(OrderSpecifier.class))).willReturn(Arrays.asList(found));
             }
 
             @Test
