@@ -4,6 +4,7 @@ import com.nitorcreations.junit.runners.NestedRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 
@@ -35,16 +37,23 @@ public class RepositoryTodoSearchServiceTest {
 
     public class FindBySearchTerm {
 
+        private Sort sort;
+
+        @Before
+        public void createSort() {
+            sort = mock(Sort.class);
+        }
+
         public class WhenNoTodoEntriesAreFound {
 
             @Before
             public void returnZeroTodoEntries() {
-                given(repository.findAll(isA(Specification.class))).willReturn(new ArrayList<>());
+                given(repository.findAll(isA(Specification.class), eq(sort))).willReturn(new ArrayList<>());
             }
 
             @Test
             public void shouldReturnEmptyList() {
-                List<TodoDTO> searchResults = service.findBySearchTerm(SEARCH_TERM);
+                List<TodoDTO> searchResults = service.findBySearchTerm(SEARCH_TERM, sort);
                 assertThat(searchResults).isEmpty();
             }
         }
@@ -71,18 +80,18 @@ public class RepositoryTodoSearchServiceTest {
                         .title(TITLE)
                         .build();
 
-                given(repository.findAll(isA(Specification.class))).willReturn(Arrays.asList(found));
+                given(repository.findAll(isA(Specification.class), eq(sort))).willReturn(Arrays.asList(found));
             }
 
             @Test
             public void shouldReturnOneTodoEntry() {
-                List<TodoDTO> searchResults = service.findBySearchTerm(SEARCH_TERM);
+                List<TodoDTO> searchResults = service.findBySearchTerm(SEARCH_TERM, sort);
                 assertThat(searchResults).hasSize(1);
             }
 
             @Test
             public void shouldReturnTheInformationOfOneTodoEntry() {
-                TodoDTO found = service.findBySearchTerm(SEARCH_TERM).get(0);
+                TodoDTO found = service.findBySearchTerm(SEARCH_TERM, sort).get(0);
 
                 assertThatTodoDTO(found)
                         .hasId(ID)

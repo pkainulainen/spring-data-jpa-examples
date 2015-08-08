@@ -11,7 +11,7 @@ angular.module('app.search.services', ['ngResource'])
         return {
             findBySearchTerm: function(searchTerm) {
                 logger.info('Searching todo entries with search term: %s', searchTerm);
-                return api.query({searchTerm: searchTerm});
+                return api.query({searchTerm: searchTerm, sort: "title"});
             }
         };
     }]);

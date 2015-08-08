@@ -1,6 +1,7 @@
 This blog post is the example application of the following blog posts:
 
 * [Spring Data JPA Tutorial: Creating Database Queries With the JPA Criteria API](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-four-jpa-criteria-queries/)
+* [Spring Data JPA Tutorial: Sorting]() - Not published yet
 
 You might also want to read the other parts of my Spring Data JPA Tutorial:
 

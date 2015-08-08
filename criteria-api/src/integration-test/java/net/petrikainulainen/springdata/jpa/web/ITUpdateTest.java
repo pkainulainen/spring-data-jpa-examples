@@ -136,7 +136,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
@@ -154,7 +154,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
@@ -176,8 +176,8 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
-    @ExpectedDatabase("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
+    @ExpectedDatabase("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
@@ -194,7 +194,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
@@ -215,7 +215,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldReturnValidationErrorsAboutTitleAndDescriptionAsJson() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
@@ -246,8 +246,8 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
-    @ExpectedDatabase("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
+    @ExpectedDatabase("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasTooLongTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
         String tooLongDescription = TestUtil.createStringWithLength(WebTestConstants.MAX_LENGTH_DESCRIPTION + 1);
@@ -267,7 +267,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
@@ -285,7 +285,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
@@ -310,7 +310,7 @@ public class ITUpdateTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @ExpectedDatabase(value = "update-todo-entry-expected.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldUpdateTodoEntry() throws Exception {

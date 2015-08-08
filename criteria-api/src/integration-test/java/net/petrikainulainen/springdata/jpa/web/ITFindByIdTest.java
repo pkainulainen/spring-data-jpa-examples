@@ -85,7 +85,7 @@ public class ITFindByIdTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void findById_AsUser_WhenTodoEntryIsFound_ShouldReturnResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
@@ -93,7 +93,7 @@ public class ITFindByIdTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void findById_AsUser_WhenTodoEntryIsFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))

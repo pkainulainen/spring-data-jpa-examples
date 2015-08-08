@@ -45,8 +45,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         DbUnitTestExecutionListener.class,
         WithSecurityContextTestExecutionListener.class})
 @WebAppConfiguration
-@DatabaseSetup("todo-entries.xml")
+@DatabaseSetup("two-todo-entries.xml")
 public class ITFindBySearchTermTest {
+
+    private static final String SECOND_TODO_CREATED_BY_USER = "createdByUser";
+    private static final String SECOND_TODO_CREATION_TIME = "2014-12-24T14:13:28+03:00";
+    private static final String SECOND_TODO_DESCRIPTION = "tescription";
+    private static final Long SECOND_TODO_ID = 2L;
+    private static final String SECOND_TODO_MODIFIED_BY_USER = "modifiedByUser";
+    private static final String SECOND_TODO_MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
+    private static final String SECOND_TODO_TITLE = "First";
+
+    private static final String SEARCH_TERM = "eSc";
+
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -141,6 +152,41 @@ public class ITFindBySearchTermTest {
 
     @Test
     @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTerm_ShouldTwoTodoEntriesAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].createdByUser", is(SECOND_TODO_CREATED_BY_USER)))
+                .andExpect(jsonPath("$[0].creationTime", is(SECOND_TODO_CREATION_TIME)))
+                .andExpect(jsonPath("$[0].description", is(SECOND_TODO_DESCRIPTION)))
+                .andExpect(jsonPath("$[0].id", is(SECOND_TODO_ID.intValue())))
+                .andExpect(jsonPath("$[0].modifiedByUser", is(SECOND_TODO_MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$[0].modificationTime", is(SECOND_TODO_MODIFICATION_TIME)))
+                .andExpect(jsonPath("$[0].title", is(SECOND_TODO_TITLE)))
+                .andExpect(jsonPath("$[1].createdByUser", is(TodoConstants.CREATED_BY_USER)))
+                .andExpect(jsonPath("$[1].creationTime", is(TodoConstants.CREATION_TIME)))
+                .andExpect(jsonPath("$[1].description", is(TodoConstants.DESCRIPTION)))
+                .andExpect(jsonPath("$[1].id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$[1].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$[1].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$[1].title", is(TodoConstants.TITLE)));
+    }
+
+    @Test
+    @WithUserDetails("user")
     public void findBySearchTerm_AsUser_WhenSearchTermIsEmpty_ShouldReturnHttpResponseStatusOk() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, "")
@@ -150,18 +196,26 @@ public class ITFindBySearchTermTest {
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenSearchTermIsEmpty_ShouldOneTodoEntryAsJson() throws Exception {
+    public void findBySearchTerm_AsUser_WhenSearchTermIsEmpty_ShouldTwoTodoEntriesAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, "")
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$[0].creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$[0].description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$[0].id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$[0].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[0].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[0].title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].createdByUser", is(SECOND_TODO_CREATED_BY_USER)))
+                .andExpect(jsonPath("$[0].creationTime", is(SECOND_TODO_CREATION_TIME)))
+                .andExpect(jsonPath("$[0].description", is(SECOND_TODO_DESCRIPTION)))
+                .andExpect(jsonPath("$[0].id", is(SECOND_TODO_ID.intValue())))
+                .andExpect(jsonPath("$[0].modifiedByUser", is(SECOND_TODO_MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$[0].modificationTime", is(SECOND_TODO_MODIFICATION_TIME)))
+                .andExpect(jsonPath("$[0].title", is(SECOND_TODO_TITLE)))
+                .andExpect(jsonPath("$[1].createdByUser", is(TodoConstants.CREATED_BY_USER)))
+                .andExpect(jsonPath("$[1].creationTime", is(TodoConstants.CREATION_TIME)))
+                .andExpect(jsonPath("$[1].description", is(TodoConstants.DESCRIPTION)))
+                .andExpect(jsonPath("$[1].id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$[1].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$[1].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$[1].title", is(TodoConstants.TITLE)));
     }
 }

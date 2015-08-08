@@ -16,7 +16,7 @@ public final class TodoConstants {
     public static final String MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
     public static final String TITLE = "title";
 
-    public static final String SEARCH_TERM_DESCRIPTION_MATCHES = "esC";
+    public static final String SEARCH_TERM_DESCRIPTION_MATCHES = "DesC";
     public static final String SEARCH_TERM_NO_MATCH = "NO MATCH";
     public static final String SEARCH_TERM_TITLE_MATCHES = "It";
 

@@ -82,7 +82,7 @@ public class ITFindAllTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void findAll_AsUser_WhenOneTodoEntryIsFound_ShouldReturnInformationOfOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo"))

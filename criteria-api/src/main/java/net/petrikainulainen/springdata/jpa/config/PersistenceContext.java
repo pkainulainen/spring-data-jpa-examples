@@ -12,6 +12,7 @@ import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -38,6 +39,7 @@ import java.util.Properties;
         "net.petrikainulainen.springdata.jpa.todo"
 })
 @EnableTransactionManagement
+@EnableSpringDataWebSupport
 class PersistenceContext {
     private static final String[] ENTITY_PACKAGES = {
             "net.petrikainulainen.springdata.jpa.todo"
