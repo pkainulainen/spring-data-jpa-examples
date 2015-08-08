@@ -50,13 +50,13 @@ public class ITFindBySearchTermTest {
 
     private static final String SECOND_TODO_CREATED_BY_USER = "createdByUser";
     private static final String SECOND_TODO_CREATION_TIME = "2014-12-24T14:13:28+03:00";
-    private static final String SECOND_TODO_DESCRIPTION = "tescription";
+    private static final String SECOND_TODO_DESCRIPTION = "tiscription";
     private static final Long SECOND_TODO_ID = 2L;
     private static final String SECOND_TODO_MODIFIED_BY_USER = "modifiedByUser";
     private static final String SECOND_TODO_MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
     private static final String SECOND_TODO_TITLE = "First";
 
-    private static final String SEARCH_TERM = "eSc";
+    private static final String SEARCH_TERM = "tIo";
 
 
     @Autowired
