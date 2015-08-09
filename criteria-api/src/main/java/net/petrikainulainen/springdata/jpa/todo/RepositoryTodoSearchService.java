@@ -29,7 +29,7 @@ final class RepositoryTodoSearchService implements TodoSearchService {
     @Transactional(readOnly = true)
     @Override
     public List<TodoDTO> findBySearchTerm(String searchTerm, Sort sort) {
-        LOGGER.info("Finding todo entries by search term: {}", searchTerm);
+        LOGGER.info("Finding todo entries by search term: {} and sort specification: {}", searchTerm, sort);
 
         List<Todo> searchResults = repository.findAll(titleOrDescriptionContainsIgnoreCase(searchTerm), sort);
         LOGGER.info("Found {} todo entries", searchResults.size());

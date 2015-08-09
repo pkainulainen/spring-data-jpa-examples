@@ -39,7 +39,7 @@ final class TodoSearchController {
      */
     @RequestMapping(value = "/api/todo/search", method = RequestMethod.GET)
     public List<TodoDTO> findBySearchTerm(@RequestParam("searchTerm") String searchTerm, Sort sort) {
-        LOGGER.info("Finding todo entries by search term: {}", searchTerm);
+        LOGGER.info("Finding todo entries by search term: {} and sort specification: {}", searchTerm, sort);
 
         List<TodoDTO> searchResults = searchService.findBySearchTerm(searchTerm, sort);
         LOGGER.info("Found {} todo entries", searchResults.size());
