@@ -9,6 +9,7 @@ This blog post is the example application of the following blog posts:
 * [Spring Data JPA Tutorial: Creating Database Queries With Named Queries](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-creating-database-queries-with-named-queries/)
 * [Spring Data JPA Tutorial: Auditing, Part One](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-auditing-part-one/)
 * [Spring Data JPA Tutorial: Auditing, Part Two](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-auditing-part-two/)
+* [Spring Data JPA Tutorial: Sorting]() - Not published yet
 
 **Note:** This application is still work in progress.
 

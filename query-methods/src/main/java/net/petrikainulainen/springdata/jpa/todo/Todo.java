@@ -36,13 +36,15 @@ import static net.petrikainulainen.springdata.jpa.common.PreCondition.notNull;
 @NamedNativeQuery(name = "Todo.findBySearchTermNamedNative",
         query="SELECT * FROM todos t WHERE " +
                 "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
-                "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))",
+                "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%')) " +
+                "ORDER BY t.title ASC",
         resultClass = Todo.class
 )
 @NamedQuery(name = "Todo.findBySearchTermNamed",
         query = "SELECT t FROM Todo t WHERE " +
                 "LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-                "LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))"
+                "LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+                "ORDER BY t.title ASC"
 )
 @Table(name = "todos")
 final class Todo {

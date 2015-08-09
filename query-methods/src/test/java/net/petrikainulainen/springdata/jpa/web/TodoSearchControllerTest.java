@@ -7,16 +7,23 @@ import net.petrikainulainen.springdata.jpa.todo.TodoSearchService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static info.solidsoft.mockito.java8.AssertionMatcher.assertArg;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,6 +47,7 @@ public class TodoSearchControllerTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(new TodoSearchController(searchService))
                 .setMessageConverters(WebTestConfig.jacksonDateTimeConverter())
+                .setCustomArgumentResolvers(WebTestConfig.sortArgumentResolver())
                 .build();
     }
 
@@ -49,21 +57,45 @@ public class TodoSearchControllerTest {
         public void shouldReturnHttpResponseStatusOk() throws Exception {
             mockMvc.perform(get("/api/todo/search")
                             .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                            .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
             )
                     .andExpect(status().isOk());
+        }
+
+        @Test
+        public void shouldPassSearchTermForwardToSearchService() throws Exception {
+            mockMvc.perform(get("/api/todo/search")
+                            .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                            .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+            );
+
+            verify(searchService, times(1)).findBySearchTerm(eq(SEARCH_TERM), isA(Sort.class));
+        }
+
+        @Test
+        public void shouldPassSortForwardToSearchService() throws Exception {
+            mockMvc.perform(get("/api/todo/search")
+                            .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                            .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+            );
+
+            verify(searchService, times(1)).findBySearchTerm(isA(String.class), assertArg(
+                    sort -> assertThat(sort.getOrderFor(WebTestConstants.FIELD_NAME_TITLE).getDirection()).isEqualTo(Sort.Direction.ASC)
+            ));
         }
 
         public class WhenNoTodoEntriesAreFound {
 
             @Before
             public void returnZeroTodoEntries() {
-                given(searchService.findBySearchTerm(SEARCH_TERM)).willReturn(new ArrayList<>());
+                given(searchService.findBySearchTerm(eq(SEARCH_TERM), isA(Sort.class))).willReturn(new ArrayList<>());
             }
 
             @Test
             public void shouldReturnEmptyListAsJson() throws Exception {
                 mockMvc.perform(get("/api/todo/search")
                                 .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                                .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
                 )
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$", hasSize(0)));
@@ -92,13 +124,14 @@ public class TodoSearchControllerTest {
                         .title(TITLE)
                         .build();
 
-                given(searchService.findBySearchTerm(SEARCH_TERM)).willReturn(Arrays.asList(found));
+                given(searchService.findBySearchTerm(eq(SEARCH_TERM), isA(Sort.class))).willReturn(Arrays.asList(found));
             }
 
             @Test
             public void shouldReturnOneTodoEntryAsJson() throws Exception {
                 mockMvc.perform(get("/api/todo/search")
                                 .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                                .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
                 )
                         .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                         .andExpect(jsonPath("$", hasSize(1)))

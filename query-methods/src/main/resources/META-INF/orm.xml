@@ -6,11 +6,11 @@
         version="2.0">
 
     <named-query name="Todo.findBySearchTermNamedOrmXml">
-        <query>SELECT t FROM Todo t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))</query>
+        <query>SELECT t FROM Todo t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) ORDER BY t.title ASC</query>
     </named-query>
 
     <named-native-query name="Todo.findBySearchTermNamedNativeOrmXml"
                         result-class="net.petrikainulainen.springdata.jpa.todo.Todo">
-        <query>SELECT * FROM todos t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))</query>
+        <query>SELECT * FROM todos t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%')) ORDER BY t.title ASC</query>
     </named-native-query>
 </entity-mappings>

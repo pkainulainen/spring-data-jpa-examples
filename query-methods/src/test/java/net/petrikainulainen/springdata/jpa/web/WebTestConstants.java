@@ -24,6 +24,7 @@ public final class WebTestConstants {
     static final int MAX_LENGTH_TITLE = 100;
 
     static final String REQUEST_PARAM_SEARCH_TERM = "searchTerm";
+    static final String REQUEST_PARAM_SORT = "sort";
 
     /**
      * Prevents instantiation.

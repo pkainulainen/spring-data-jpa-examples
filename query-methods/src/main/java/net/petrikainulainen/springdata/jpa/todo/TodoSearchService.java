@@ -1,5 +1,7 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
 
 /**
@@ -13,7 +15,9 @@ public interface TodoSearchService {
      * Finds todo entries whose title or description contains the given search term.
      * This search is case insensitive.
      * @param searchTerm    The search term.
-     * @return
+     * @param sort          The sort specification.
+     * @return  A list of todo entries whose title or description contains the given search term. The returned
+     *          list is sorted by using the sort specification given as a method parameter.
      */
-    public List<TodoDTO> findBySearchTerm(String searchTerm);
+    public List<TodoDTO> findBySearchTerm(String searchTerm, Sort sort);
 }

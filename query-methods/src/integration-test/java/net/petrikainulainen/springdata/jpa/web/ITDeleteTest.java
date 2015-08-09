@@ -107,7 +107,7 @@ public class ITDeleteTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsFound_ShouldReturnInformationOfDeletedTodoEntry() throws Exception {
         mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
@@ -123,7 +123,7 @@ public class ITDeleteTest {
     }
 
     @Test
-    @DatabaseSetup("todo-entries.xml")
+    @DatabaseSetup("one-todo-entry.xml")
     @ExpectedDatabase("delete-todo-entry-expected.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsFound_ShouldDeleteTodoEntryFromDatabase() throws Exception {

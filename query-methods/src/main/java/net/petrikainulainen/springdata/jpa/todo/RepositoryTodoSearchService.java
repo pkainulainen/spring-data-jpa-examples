@@ -3,6 +3,7 @@ package net.petrikainulainen.springdata.jpa.todo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +26,10 @@ final class RepositoryTodoSearchService implements TodoSearchService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TodoDTO> findBySearchTerm(String searchTerm) {
-        LOGGER.info("Finding todo entries by search term: {}", searchTerm);
+    public List<TodoDTO> findBySearchTerm(String searchTerm, Sort sort) {
+        LOGGER.info("Finding todo entries by search term: {} and sort specification: {}", searchTerm, sort);
 
-        List<Todo> searchResults = repository.findBySearchTerm(searchTerm);
+        List<Todo> searchResults = repository.findBySearchTerm(searchTerm, sort);
         LOGGER.info("Found {} todo entries", searchResults.size());
 
         return TodoMapper.mapEntitiesIntoDTOs(searchResults);
