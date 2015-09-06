@@ -32,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = {ExampleApplicationContext.class})
 @DbUnitConfiguration(dataSetLoader = ColumnSensingReplacementDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class})
 @WebAppConfiguration

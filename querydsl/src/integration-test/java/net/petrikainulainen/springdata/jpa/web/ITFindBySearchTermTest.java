@@ -40,7 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ExampleApplicationContext.class})
 @DbUnitConfiguration(dataSetLoader = ColumnSensingReplacementDataSetLoader.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
-        DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
         WithSecurityContextTestExecutionListener.class})
