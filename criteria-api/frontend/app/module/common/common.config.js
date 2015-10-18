@@ -8,7 +8,7 @@ angular.module('app.common.config', [])
         logEnhancerProvider.datetimePattern = 'DD.MM.YYYY HH:mm:ss';
         logEnhancerProvider.prefixPattern = '%s::[%s]> ';
         logEnhancerProvider.logLevels = {
-            '*': logEnhancerProvider.LEVEL.OFF
+            '*': logEnhancerProvider.LEVEL.DEBUG
         };
     }])
     .config(['$urlRouterProvider', '$locationProvider',

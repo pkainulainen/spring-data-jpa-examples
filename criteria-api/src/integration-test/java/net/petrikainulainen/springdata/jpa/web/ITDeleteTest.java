@@ -63,7 +63,7 @@ public class ITDeleteTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     public void delete_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .with(csrf())
         )
                 .andExpect(status().isUnauthorized());
@@ -73,7 +73,7 @@ public class ITDeleteTest {
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .with(csrf())
         )
                 .andExpect(status().isNotFound());
@@ -83,7 +83,7 @@ public class ITDeleteTest {
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
@@ -96,7 +96,7 @@ public class ITDeleteTest {
     @ExpectedDatabase("no-todo-entries.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
@@ -108,16 +108,16 @@ public class ITDeleteTest {
     @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsFound_ShouldReturnInformationOfDeletedTodoEntry() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .with(csrf())
         )
-                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$.modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$.modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$.title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.TodoEntries.First.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.creationTime", is(TodoConstants.TodoEntries.First.CREATION_TIME)))
+                .andExpect(jsonPath("$.description", is(TodoConstants.TodoEntries.First.DESCRIPTION)))
+                .andExpect(jsonPath("$.id", is(TodoConstants.TodoEntries.First.ID.intValue())))
+                .andExpect(jsonPath("$.modifiedByUser", is(TodoConstants.TodoEntries.First.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$.modificationTime", is(TodoConstants.TodoEntries.First.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.title", is(TodoConstants.TodoEntries.First.TITLE)));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class ITDeleteTest {
     @ExpectedDatabase("delete-todo-entry-expected.xml")
     @WithUserDetails("user")
     public void delete_AsUser_WhenTodoEntryIsFound_ShouldDeleteTodoEntryFromDatabase() throws Exception {
-        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(delete("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .with(csrf())
         );
     }

@@ -198,8 +198,8 @@ public class ITCreateTest {
     @WithUserDetails("user")
     public void create_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnResponseStatusCreated() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
-                .description(TodoConstants.DESCRIPTION)
-                .title(TodoConstants.TITLE)
+                .description(TodoConstants.TodoEntries.First.DESCRIPTION)
+                .title(TodoConstants.TodoEntries.First.TITLE)
                 .build();
 
         mockMvc.perform(post("/api/todo")
@@ -214,8 +214,8 @@ public class ITCreateTest {
     @WithUserDetails("user")
     public void create_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnInformationOfCreatedTodoEntryAsJson() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
-                .description(TodoConstants.DESCRIPTION)
-                .title(TodoConstants.TITLE)
+                .description(TodoConstants.TodoEntries.First.DESCRIPTION)
+                .title(TodoConstants.TodoEntries.First.TITLE)
                 .build();
 
         mockMvc.perform(post("/api/todo")
@@ -226,11 +226,11 @@ public class ITCreateTest {
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.createdByUser", is(Users.USER.getUsername())))
                 .andExpect(jsonPath("$.creationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
-                .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$.description", is(TodoConstants.TodoEntries.First.DESCRIPTION)))
+                .andExpect(jsonPath("$.id", is(TodoConstants.TodoEntries.First.ID.intValue())))
                 .andExpect(jsonPath("$.modifiedByUser", is(Users.USER.getUsername())))
                 .andExpect(jsonPath("$.modificationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
-                .andExpect(jsonPath("$.title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.title", is(TodoConstants.TodoEntries.First.TITLE)));
     }
 
     @Test
@@ -238,8 +238,8 @@ public class ITCreateTest {
     @WithUserDetails("user")
     public void create_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldSaveTodoEntry() throws Exception {
         TodoDTO newTodoEntry = new TodoDTOBuilder()
-                .description(TodoConstants.DESCRIPTION)
-                .title(TodoConstants.TITLE)
+                .description(TodoConstants.TodoEntries.First.DESCRIPTION)
+                .title(TodoConstants.TodoEntries.First.TITLE)
                 .build();
 
         mockMvc.perform(post("/api/todo")

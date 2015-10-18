@@ -5,13 +5,12 @@ import net.petrikainulainen.springdata.jpa.todo.TodoSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * This controller provides the public API that is used to find todo entries by using
@@ -38,12 +37,16 @@ final class TodoSearchController {
      * @return
      */
     @RequestMapping(value = "/api/todo/search", method = RequestMethod.GET)
-    public List<TodoDTO> findBySearchTerm(@RequestParam("searchTerm") String searchTerm, Sort sort) {
-        LOGGER.info("Finding todo entries by search term: {} and sort specification: {}", searchTerm, sort);
+    public Page<TodoDTO> findBySearchTerm(@RequestParam("searchTerm") String searchTerm, Pageable page) {
+        LOGGER.info("Finding todo entries by search term: {} and sort specification: {}", searchTerm, page);
 
-        List<TodoDTO> searchResults = searchService.findBySearchTerm(searchTerm, sort);
-        LOGGER.info("Found {} todo entries", searchResults.size());
+        Page<TodoDTO> searchResultPage = searchService.findBySearchTerm(searchTerm, page);
+        LOGGER.info("Found {} todo entries. Returned page {} contains {} todo entries",
+                searchResultPage.getTotalElements(),
+                searchResultPage.getNumber(),
+                searchResultPage.getNumberOfElements()
+        );
 
-        return searchResults;
+        return searchResultPage;
     }
 }

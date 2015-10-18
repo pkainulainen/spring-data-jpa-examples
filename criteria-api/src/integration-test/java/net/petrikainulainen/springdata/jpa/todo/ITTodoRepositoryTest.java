@@ -37,8 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DatabaseSetup("todo-entries.xml")
 public class ITTodoRepositoryTest {
 
-    private static final Long SECOND_TODO_ID = 2L;
-
     @Autowired
     private TodoRepository repository;
 
@@ -49,10 +47,10 @@ public class ITTodoRepositoryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo firstTodoEntry = todoEntries.get(0);
-        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
 
         Todo secondTodoEntry = todoEntries.get(1);
-        assertThat(secondTodoEntry.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(secondTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
     }
 
     @Test
@@ -62,10 +60,10 @@ public class ITTodoRepositoryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo firstTodoEntry = todoEntries.get(0);
-        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
 
         Todo secondTodoEntry = todoEntries.get(1);
-        assertThat(secondTodoEntry.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(secondTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
     }
 
     @Test
@@ -75,7 +73,7 @@ public class ITTodoRepositoryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -90,6 +88,6 @@ public class ITTodoRepositoryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 }

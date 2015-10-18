@@ -8,13 +8,31 @@ package net.petrikainulainen.springdata.jpa;
  */
 public final class TodoConstants {
 
-    public static final String CREATED_BY_USER = "createdByUser";
-    public static final String CREATION_TIME = "2014-12-24T14:13:28+03:00";
-    public static final String DESCRIPTION = "description";
-    public static final Long ID = 1L;
-    public static final String MODIFIED_BY_USER = "modifiedByUser";
-    public static final String MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
-    public static final String TITLE = "title";
+    public static class TodoEntries {
+
+        public static class First {
+
+            public static final String CREATED_BY_USER = "createdByUser";
+            public static final String CREATION_TIME = "2014-12-24T14:13:28+03:00";
+            public static final String DESCRIPTION = "description";
+            public static final Long ID = 1L;
+            public static final String MODIFIED_BY_USER = "modifiedByUser";
+            public static final String MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
+            public static final String TITLE = "title";
+        }
+
+        public static class Second {
+
+            public static final String CREATED_BY_USER = "createdByUser";
+            public static final String CREATION_TIME = "2014-12-24T14:13:28+03:00";
+            public static final String DESCRIPTION = "tiscription";
+            public static final Long ID = 2L;
+            public static final String MODIFIED_BY_USER = "modifiedByUser";
+            public static final String MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
+            public static final String TITLE = "First";
+
+        }
+    }
 
     public static final String SEARCH_TERM_DESCRIPTION_MATCHES = "esC";
     public static final String SEARCH_TERM_NO_MATCH = "NO MATCH";
