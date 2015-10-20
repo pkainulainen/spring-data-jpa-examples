@@ -59,7 +59,7 @@ public class ITFindByIdTest {
     @Test
     @DatabaseSetup("no-todo-entries.xml")
     public void findById_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.TodoEntries.First.ID))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -67,7 +67,7 @@ public class ITFindByIdTest {
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
     public void findById_AsUser_WhenTodoEntryIsNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
-        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.TodoEntries.First.ID))
                 .andExpect(status().isNotFound());
     }
 
@@ -75,7 +75,7 @@ public class ITFindByIdTest {
     @DatabaseSetup("no-todo-entries.xml")
     @WithUserDetails("user")
     public void findById_AsUser_WhenTodoEntryIsNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
-        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.TodoEntries.First.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.code", is(WebTestConstants.ERROR_CODE_TODO_ENTRY_NOT_FOUND)))
                 .andExpect(jsonPath("$.message", is(TodoConstants.ERROR_MESSAGE_TODO_ENTRY_NOT_FOUND)));
@@ -86,7 +86,7 @@ public class ITFindByIdTest {
     @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void findById_AsUser_WhenTodoEntryIsFound_ShouldReturnResponseStatusOk() throws Exception {
-        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.TodoEntries.First.ID))
                 .andExpect(status().isOk());
     }
 
@@ -94,14 +94,14 @@ public class ITFindByIdTest {
     @DatabaseSetup("one-todo-entry.xml")
     @WithUserDetails("user")
     public void findById_AsUser_WhenTodoEntryIsFound_ShouldReturnInformationOfFoundTodoEntryAsJson() throws Exception {
-        mockMvc.perform(get("/api/todo/{id}", TodoConstants.ID))
+        mockMvc.perform(get("/api/todo/{id}", TodoConstants.TodoEntries.First.ID))
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$.description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$.modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$.modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$.title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.TodoEntries.First.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.creationTime", is(TodoConstants.TodoEntries.First.CREATION_TIME)))
+                .andExpect(jsonPath("$.description", is(TodoConstants.TodoEntries.First.DESCRIPTION)))
+                .andExpect(jsonPath("$.id", is(TodoConstants.TodoEntries.First.ID.intValue())))
+                .andExpect(jsonPath("$.modifiedByUser", is(TodoConstants.TodoEntries.First.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$.modificationTime", is(TodoConstants.TodoEntries.First.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.title", is(TodoConstants.TodoEntries.First.TITLE)));
     }
 }

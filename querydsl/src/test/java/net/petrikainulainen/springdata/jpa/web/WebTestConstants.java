@@ -1,3 +1,4 @@
+
 package net.petrikainulainen.springdata.jpa.web;
 
 import org.springframework.http.MediaType;
@@ -23,7 +24,12 @@ public final class WebTestConstants {
     static final int MAX_LENGTH_DESCRIPTION = 500;
     static final int MAX_LENGTH_TITLE = 100;
 
+    static final String REQUEST_PARAM_PAGE_NUMBER = "page";
+    static final String REQUEST_PARAM_PAGE_SIZE = "size";
     static final String REQUEST_PARAM_SEARCH_TERM = "searchTerm";
+    static final String REQUEST_PARAM_SORT = "sort";
+
+    static final String SORT_DIRECTION_ASC = "ASC";
 
     /**
      * Prevents instantiation.

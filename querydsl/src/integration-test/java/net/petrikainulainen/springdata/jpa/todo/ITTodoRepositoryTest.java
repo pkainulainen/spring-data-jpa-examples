@@ -15,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -38,8 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DatabaseSetup("todo-entries.xml")
 public class ITTodoRepositoryTest {
 
-    private static final Long SECOND_TODO_ID = 2L;
-
     @Autowired
     private TodoRepository repository;
 
@@ -52,10 +49,10 @@ public class ITTodoRepositoryTest {
         Iterator<Todo> searchResults = todoEntries.iterator();
 
         Todo firstTodoEntry = searchResults.next();
-        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
 
         Todo secondTodoEntry = searchResults.next();
-        assertThat(secondTodoEntry.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(secondTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
     }
 
     @Test
@@ -67,10 +64,10 @@ public class ITTodoRepositoryTest {
         Iterator<Todo> searchResults = todoEntries.iterator();
 
         Todo firstTodoEntry = searchResults.next();
-        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(firstTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
 
         Todo secondTodoEntry = searchResults.next();
-        assertThat(secondTodoEntry.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(secondTodoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
     }
 
     @Test
@@ -82,7 +79,7 @@ public class ITTodoRepositoryTest {
         Iterator<Todo> searchResults = todoEntries.iterator();
 
         Todo todoEntry = searchResults.next();
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -100,6 +97,6 @@ public class ITTodoRepositoryTest {
         Iterator<Todo> searchResults = todoEntries.iterator();
 
         Todo todoEntry = searchResults.next();
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 }

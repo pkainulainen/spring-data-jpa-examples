@@ -1,13 +1,12 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
-import com.mysema.query.types.OrderSpecifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static net.petrikainulainen.springdata.jpa.todo.TodoPredicates.titleOrDescriptionContainsIgnoreCase;
 
@@ -29,17 +28,17 @@ final class RepositoryTodoSearchService implements TodoSearchService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TodoDTO> findBySearchTerm(String searchTerm) {
-        LOGGER.info("Finding todo entries by search term: {}", searchTerm);
+    public Page<TodoDTO> findBySearchTerm(String searchTerm, Pageable pageRequest) {
+        LOGGER.info("Finding todo entries by search term: {} and page request: {}", searchTerm, pageRequest);
 
-        Iterable<Todo> searchResults = repository.findAll(titleOrDescriptionContainsIgnoreCase(searchTerm), orderByTitleAsc());
-        List<TodoDTO> dtos = TodoMapper.mapEntitiesIntoDTOs(searchResults);
-        LOGGER.info("Found {} todo entries", dtos.size());
+        Page<Todo> searchResultPage = repository.findAll(titleOrDescriptionContainsIgnoreCase(searchTerm), pageRequest);
 
-        return dtos;
-    }
+        LOGGER.info("Found {} todo entries. Returned page {} contains {} todo entries",
+                searchResultPage.getTotalElements(),
+                searchResultPage.getNumber(),
+                searchResultPage.getNumberOfElements()
+        );
 
-    private OrderSpecifier<String> orderByTitleAsc() {
-        return QTodo.todo.title.asc();
+        return TodoMapper.mapEntityPageIntoDTOPage(pageRequest, searchResultPage);
     }
 }

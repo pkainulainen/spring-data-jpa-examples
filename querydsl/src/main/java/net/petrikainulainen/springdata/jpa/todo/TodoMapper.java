@@ -1,5 +1,9 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +48,16 @@ final class TodoMapper {
         dto.setTitle(entity.getTitle());
 
         return dto;
+    }
+
+    /**
+     * Transforms {@code Page<ENTITY>} objects into {@code Page<DTO>} objects.
+     * @param pageRequest   The information of the requested page.
+     * @param source        The {@code Page<ENTITY>} object.
+     * @return The created {@code Page<DTO>} object.
+     */
+    static Page<TodoDTO> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Todo> source) {
+        List<TodoDTO> dtos = mapEntitiesIntoDTOs(source.getContent());
+        return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
     }
 }

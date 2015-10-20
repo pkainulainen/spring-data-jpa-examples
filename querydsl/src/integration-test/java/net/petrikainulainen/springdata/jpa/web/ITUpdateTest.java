@@ -72,10 +72,10 @@ public class ITUpdateTest {
     @DatabaseSetup("no-todo-entries.xml")
     public void update_AsAnonymous_ShouldReturnResponseStatusUnauthorized() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -88,10 +88,10 @@ public class ITUpdateTest {
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryIsNotFound_ShouldReturnResponseStatusNotFound() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -104,10 +104,10 @@ public class ITUpdateTest {
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryIsNotFound_ShouldReturnErrorMessageAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -123,10 +123,10 @@ public class ITUpdateTest {
     @WithUserDetails("user")
     public void update_AsUser_WhenTodoEntryIsNotFound_ShouldNotMakeAnyChangesToDatabase() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -139,11 +139,11 @@ public class ITUpdateTest {
     public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnResponseStatusBadRequest() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(null)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -157,11 +157,11 @@ public class ITUpdateTest {
     public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldReturnValidationErrorAboutMissingTitleAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(null)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -180,11 +180,11 @@ public class ITUpdateTest {
     public void update_AsUser_WhenTodoEntryHasNoTitleAndDescription_ShouldNotUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(null)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(null)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -200,11 +200,11 @@ public class ITUpdateTest {
 
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(tooLongDescription)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(tooLongTitle)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -221,11 +221,11 @@ public class ITUpdateTest {
 
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(tooLongDescription)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(tooLongTitle)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -253,11 +253,11 @@ public class ITUpdateTest {
 
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(tooLongDescription)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(tooLongTitle)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -270,11 +270,11 @@ public class ITUpdateTest {
     public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnResponseStatusOk() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(TodoConstants.UPDATED_TITLE)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
@@ -288,20 +288,20 @@ public class ITUpdateTest {
     public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldReturnInformationOfUpdatedTodoEntryAsJson() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(TodoConstants.UPDATED_TITLE)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$.creationTime", is(TodoConstants.CREATION_TIME)))
+                .andExpect(jsonPath("$.createdByUser", is(TodoConstants.TodoEntries.First.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.creationTime", is(TodoConstants.TodoEntries.First.CREATION_TIME)))
                 .andExpect(jsonPath("$.description", is(TodoConstants.UPDATED_DESCRIPTION)))
-                .andExpect(jsonPath("$.id", is(TodoConstants.ID.intValue())))
+                .andExpect(jsonPath("$.id", is(TodoConstants.TodoEntries.First.ID.intValue())))
                 .andExpect(jsonPath("$.modifiedByUser", is(Users.USER.getUsername())))
                 .andExpect(jsonPath("$.modificationTime", is(ConstantDateTimeService.CURRENT_DATE_AND_TIME)))
                 .andExpect(jsonPath("$.title", is(TodoConstants.UPDATED_TITLE)));
@@ -314,11 +314,11 @@ public class ITUpdateTest {
     public void update_AsUser_WhenTodoEntryHasValidTitleAndDescription_ShouldUpdateTodoEntry() throws Exception {
         TodoDTO updatedTodoEntry = new TodoDTOBuilder()
                 .description(TodoConstants.UPDATED_DESCRIPTION)
-                .id(TodoConstants.ID)
+                .id(TodoConstants.TodoEntries.First.ID)
                 .title(TodoConstants.UPDATED_TITLE)
                 .build();
 
-        mockMvc.perform(put("/api/todo/{id}", TodoConstants.ID)
+        mockMvc.perform(put("/api/todo/{id}", TodoConstants.TodoEntries.First.ID)
                         .contentType(WebTestConstants.APPLICATION_JSON_UTF8)
                         .content(WebTestUtil.convertObjectToJsonBytes(updatedTodoEntry))
                         .with(csrf())

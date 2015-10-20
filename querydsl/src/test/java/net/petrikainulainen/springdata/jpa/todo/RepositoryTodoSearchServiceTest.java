@@ -1,19 +1,23 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
-import com.mysema.query.types.OrderSpecifier;
 import com.mysema.query.types.Predicate;
 import com.nitorcreations.junit.runners.NestedRunner;
+import net.petrikainulainen.springdata.jpa.PageBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static net.petrikainulainen.springdata.jpa.todo.TodoDTOAssert.assertThatTodoDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 
@@ -36,17 +40,66 @@ public class RepositoryTodoSearchServiceTest {
 
     public class FindBySearchTerm {
 
+        private final int PAGE_NUMBER = 1;
+        private final int PAGE_SIZE = 5;
+        private final String SORT_PROPERTY = "title";
+
+        private Pageable pageRequest;
+
+        @Before
+        public void createPageRequest() {
+            Sort sort = new Sort(Sort.Direction.ASC, SORT_PROPERTY);
+            pageRequest = new PageRequest(PAGE_NUMBER, PAGE_SIZE, sort);
+
+            Page<Todo> emptyPage = new PageBuilder<Todo>()
+                    .elements(new ArrayList<>())
+                    .pageRequest(pageRequest)
+                    .totalElements(0)
+                    .build();
+            given(repository.findAll(isA(Predicate.class), eq(pageRequest))).willReturn(emptyPage);
+        }
+
+        @Test
+        public void shouldReturnPageWithRequestedPageNumber() {
+            Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+            assertThat(searchResultPage.getNumber()).isEqualTo(PAGE_NUMBER);
+        }
+
+        @Test
+        public void shouldReturnPageWithRequestedPageSize() {
+            Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+            assertThat(searchResultPage.getSize()).isEqualTo(PAGE_SIZE);
+        }
+
+        @Test
+        public void shouldReturnPageThatIsSortedInAscendingOrderByUsingSortProperty() {
+            Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+            assertThat(searchResultPage.getSort().getOrderFor(SORT_PROPERTY).getDirection())
+                    .isEqualTo(Sort.Direction.ASC);
+        }
+
         public class WhenNoTodoEntriesAreFound {
 
             @Before
             public void returnZeroTodoEntries() {
-                given(repository.findAll(isA(Predicate.class), isA(OrderSpecifier.class))).willReturn(new ArrayList<>());
+                Page<Todo> emptyPage = new PageBuilder<Todo>()
+                        .elements(new ArrayList<>())
+                        .pageRequest(pageRequest)
+                        .totalElements(0)
+                        .build();
+                given(repository.findAll(isA(Predicate.class), eq(pageRequest))).willReturn(emptyPage);
             }
 
             @Test
-            public void shouldReturnEmptyList() {
-                List<TodoDTO> searchResults = service.findBySearchTerm(SEARCH_TERM);
-                assertThat(searchResults).isEmpty();
+            public void shouldReturnEmptyPage() {
+                Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+                assertThat(searchResultPage).isEmpty();
+            }
+
+            @Test
+            public void shouldReturnPageWithTotalElementCountZero() {
+                Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+                assertThat(searchResultPage.getTotalElements()).isEqualTo(0);
             }
         }
 
@@ -72,18 +125,24 @@ public class RepositoryTodoSearchServiceTest {
                         .title(TITLE)
                         .build();
 
-                given(repository.findAll(isA(Predicate.class), isA(OrderSpecifier.class))).willReturn(Arrays.asList(found));
+                Page<Todo> resultPage = new PageBuilder<Todo>()
+                        .elements(Arrays.asList(found))
+                        .pageRequest(pageRequest)
+                        .totalElements(1)
+                        .build();
+
+                given(repository.findAll(isA(Predicate.class), eq(pageRequest))).willReturn(resultPage);
             }
 
             @Test
-            public void shouldReturnOneTodoEntry() {
-                List<TodoDTO> searchResults = service.findBySearchTerm(SEARCH_TERM);
-                assertThat(searchResults).hasSize(1);
+            public void shouldReturnPageThatHasOneTodoEntry() {
+                Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+                assertThat(searchResultPage.getNumberOfElements()).isEqualTo(1);
             }
 
             @Test
-            public void shouldReturnTheInformationOfOneTodoEntry() {
-                TodoDTO found = service.findBySearchTerm(SEARCH_TERM).get(0);
+            public void shouldReturnPageThatHasCorrectInformation() {
+                TodoDTO found = service.findBySearchTerm(SEARCH_TERM, pageRequest).getContent().get(0);
 
                 assertThatTodoDTO(found)
                         .hasId(ID)
@@ -93,6 +152,12 @@ public class RepositoryTodoSearchServiceTest {
                         .wasCreatedByUser(CREATED_BY_USER)
                         .wasModifiedAt(MODIFICATION_TIME)
                         .wasModifiedByUser(MODIFIED_BY_USER);
+            }
+
+            @Test
+            public void shouldReturnPageWithTotalElementCountOne() {
+                Page<TodoDTO> searchResultPage = service.findBySearchTerm(SEARCH_TERM, pageRequest);
+                assertThat(searchResultPage.getTotalElements()).isEqualTo(1);
             }
         }
     }
