@@ -34,13 +34,14 @@ final class TodoSearchController {
      * Finds todo entries whose title or description contains the given search term. This
      * search is case insensitive.
      * @param searchTerm    The used search term.
+     * @param pageRequest   The information of the requested page
      * @return
      */
     @RequestMapping(value = "/api/todo/search", method = RequestMethod.GET)
-    public Page<TodoDTO> findBySearchTerm(@RequestParam("searchTerm") String searchTerm, Pageable page) {
-        LOGGER.info("Finding todo entries by search term: {} and sort specification: {}", searchTerm, page);
+    public Page<TodoDTO> findBySearchTerm(@RequestParam("searchTerm") String searchTerm, Pageable pageRequest) {
+        LOGGER.info("Finding todo entries by search term: {} and page request: {}", searchTerm, pageRequest);
 
-        Page<TodoDTO> searchResultPage = searchService.findBySearchTerm(searchTerm, page);
+        Page<TodoDTO> searchResultPage = searchService.findBySearchTerm(searchTerm, pageRequest);
         LOGGER.info("Found {} todo entries. Returned page {} contains {} todo entries",
                 searchResultPage.getTotalElements(),
                 searchResultPage.getNumber(),
