@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import net.petrikainulainen.springdata.jpa.web.error.RestErrorHandler;
 import org.springframework.context.MessageSource;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -98,6 +99,16 @@ final class WebTestConfig {
      */
     static SortHandlerMethodArgumentResolver sortArgumentResolver() {
         return new SortHandlerMethodArgumentResolver();
+    }
+
+    /**
+     * This method returns a {@link org.springframework.web.method.support.HandlerMethodArgumentResolver} that can
+     * construct {@link org.springframework.data.domain.Pageable} objects by using the request params of the
+     * incoming request.
+     * @return
+     */
+    static PageableHandlerMethodArgumentResolver pageRequestArgumentResolver() {
+        return new PageableHandlerMethodArgumentResolver(sortArgumentResolver());
     }
 
     /**

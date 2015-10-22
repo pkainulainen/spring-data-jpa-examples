@@ -37,7 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ITNamedQueryTest {
 
     private static final String SEARCH_TERM = "tIo";
-    private static final Long SECOND_TODO_ID = 2L;
 
     @Autowired
     private TodoRepository repository;
@@ -48,7 +47,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -63,7 +62,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -72,10 +71,10 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo first = todoEntries.get(0);
-        assertThat(first.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(first.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
 
         Todo second = todoEntries.get(1);
-        assertThat(second.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(second.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -84,7 +83,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -99,7 +98,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -108,10 +107,10 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo first = todoEntries.get(0);
-        assertThat(first.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(first.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
 
         Todo second = todoEntries.get(1);
-        assertThat(second.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(second.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -120,7 +119,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -135,7 +134,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -144,10 +143,10 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo first = todoEntries.get(0);
-        assertThat(first.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(first.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
 
         Todo second = todoEntries.get(1);
-        assertThat(second.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(second.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -156,7 +155,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -171,7 +170,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -180,10 +179,10 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo first = todoEntries.get(0);
-        assertThat(first.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(first.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
 
         Todo second = todoEntries.get(1);
-        assertThat(second.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(second.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -192,7 +191,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -207,7 +206,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -216,10 +215,10 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo first = todoEntries.get(0);
-        assertThat(first.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(first.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
 
         Todo second = todoEntries.get(1);
-        assertThat(second.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(second.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -228,7 +227,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -243,7 +242,7 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(1);
 
         Todo todoEntry = todoEntries.get(0);
-        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(todoEntry.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 
     @Test
@@ -252,9 +251,9 @@ public class ITNamedQueryTest {
         assertThat(todoEntries).hasSize(2);
 
         Todo first = todoEntries.get(0);
-        assertThat(first.getId()).isEqualTo(SECOND_TODO_ID);
+        assertThat(first.getId()).isEqualTo(TodoConstants.TodoEntries.Second.ID);
 
         Todo second = todoEntries.get(1);
-        assertThat(second.getId()).isEqualTo(TodoConstants.ID);
+        assertThat(second.getId()).isEqualTo(TodoConstants.TodoEntries.First.ID);
     }
 }

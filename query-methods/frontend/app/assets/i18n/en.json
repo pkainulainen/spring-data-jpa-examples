@@ -48,7 +48,12 @@
         "login.page": {
             "title": "Log In"
         },
-        "search.results.page.title": "Search Results",
+        "search.results.page": {
+            "texts": {
+                "no.todo.entries.found": "No todo entries was found with the given search term."
+            },
+            "title": "Search Results"
+        },
         "view.page": {
             "title": "View Todo Entry"
         }

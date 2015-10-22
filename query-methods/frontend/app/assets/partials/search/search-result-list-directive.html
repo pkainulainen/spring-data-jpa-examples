@@ -1,0 +1,19 @@
+<div ng-if="pagination.totalItems > 0">
+    <div class="container-fluid striped-list">
+        <div class="row"
+             dir-paginate="todoEntry in todoEntries | itemsPerPage: pagination.itemsPerPage"
+             current-page="pagination.currentPage"
+             total-items="pagination.totalItems">
+            <a ui-sref="todo.view({id: todoEntry.id})">{{todoEntry.title}}</a>
+        </div>
+    </div>
+
+    <div>
+        <dir-pagination-controls
+                on-page-change="pageChanged(newPageNumber)"
+                template-url="search/dirPagination.tpl.html"></dir-pagination-controls>
+    </div>
+</div>
+<div ng-if="pagination.totalItems == 0">
+    <p translate="pages.search.results.page.texts.no.todo.entries.found"></p>
+</div>

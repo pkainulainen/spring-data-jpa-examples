@@ -1,5 +1,7 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -101,14 +103,14 @@ interface TodoRepository extends Repository<Todo, Long> {
     /**
      * This query method invokes the JPQL query that is configured by using the {@code @Query} annotation.
      * @param searchTerm    The given search term.
-     * @param sort          The sort specification.
-     * @return  A list of todo entries whose title or description contains with the given search term. The returned
-     *          todo entries are sorted by using the sort specification given as a method parameter.
+     * @param pageRequest   The information of the requested page.
+     * @return  A page of todo entries whose title or description contains with the given search term. The content of
+     *          the returned page depends from the page request given as a method parameter.
      */
     @Query("SELECT t FROM Todo t WHERE " +
             "LOWER(t.title) LIKE LOWER(CONCAT('%',:searchTerm, '%')) OR " +
             "LOWER(t.description) LIKE LOWER(CONCAT('%',:searchTerm, '%'))")
-    List<Todo> findBySearchTerm(@Param("searchTerm") String searchTerm, Sort sort);
+    Page<Todo> findBySearchTerm(@Param("searchTerm") String searchTerm, Pageable pageRequest);
 
     /**
      * This query method invokes the JPQL query that is configured by using the {@code @Query} annotation.

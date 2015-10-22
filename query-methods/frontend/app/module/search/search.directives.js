@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.search.directives', [])
-    .directive('searchForm', ['$log', '$state', function($log, $state) {
+    .directive('searchForm', ['$log', '$state', 'paginationConfig', function($log, $state, paginationConfig) {
 
         var logger = $log.getInstance('app.search.directives.searchForm');
 
@@ -51,7 +51,11 @@ angular.module('app.search.directives', [])
                     else {
                         scope.translationData.missingCharCount = 0;
                         $state.go('todo.search',
-                            {searchTerm: scope.search.searchTerm},
+                            {
+                                searchTerm: scope.search.searchTerm,
+                                pageNumber: paginationConfig.firstPageNumber,
+                                pageSize: paginationConfig.pageSize
+                            },
                             {reload: true, inherit: true, notify: true}
                         );
                     }
@@ -61,6 +65,40 @@ angular.module('app.search.directives', [])
             templateUrl: 'search/search-form-directive.html',
             scope: {
                 currentUser: '='
+            }
+        };
+    }])
+    .directive('searchResultList', ['$log', '$state', 'paginationConfig', function($log, $state, paginationConfig) {
+        var logger = $log.getInstance('app.search.directives.searchResultList');
+
+        return {
+            link: function(scope, element, attr) {
+                logger.debug("Rendering search result list for search term: %s and search results: %j", scope.searchTerm, scope.searchResults);
+                scope.todoEntries = scope.searchResults.content;
+
+                scope.pagination = {
+                    currentPage: scope.searchResults.number + 1,
+                    itemsPerPage: paginationConfig.pageSize,
+                    totalItems: scope.searchResults.totalElements
+                };
+
+                scope.pageChanged = function(newPageNumber) {
+                    logger.debug('Requesting a new page: %s for search term: %s with page size: %s',
+                        newPageNumber,
+                        scope.searchTerm,
+                        paginationConfig.pageSize
+                    );
+
+                    $state.go('todo.search',
+                        {searchTerm: scope.searchTerm, pageNumber: newPageNumber, pageSize: paginationConfig.pageSize},
+                        {reload: true, inherit: true, notify: true}
+                    );
+                };
+            },
+            templateUrl: 'search/search-result-list-directive.html',
+            scope: {
+                searchResults: '=',
+                searchTerm: '@'
             }
         };
     }]);

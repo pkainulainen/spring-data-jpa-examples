@@ -46,16 +46,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DatabaseSetup("two-todo-entries.xml")
 public class ITFindBySearchTermTest {
 
-    private static final String SECOND_TODO_CREATED_BY_USER = "createdByUser";
-    private static final String SECOND_TODO_CREATION_TIME = "2014-12-24T14:13:28+03:00";
-    private static final String SECOND_TODO_DESCRIPTION = "tiscription";
-    private static final Long SECOND_TODO_ID = 2L;
-    private static final String SECOND_TODO_MODIFIED_BY_USER = "modifiedByUser";
-    private static final String SECOND_TODO_MODIFICATION_TIME = "2014-12-25T14:13:28+03:00";
-    private static final String SECOND_TODO_TITLE = "First";
+    private static final int FIRST_PAGE = 0;
+    private static final String FIRST_PAGE_STRING = "0";
+
+    private static final String PAGE_SIZE_STRING = "1";
 
     private static final String SEARCH_TERM = "tIo";
-
+    private static final int SECOND_PAGE = 1;
+    private static final String SECOND_PAGE_STRING = "1";
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -69,6 +67,7 @@ public class ITFindBySearchTermTest {
                 .build();
     }
 
+    /* Response status tests */
     @Test
     public void findBySearchTerm_AsAnonymous_ShouldReturnHttpResponseStatusUnauthorized() throws Exception {
         mockMvc.perform(get("/api/todo/search")
@@ -88,132 +87,231 @@ public class ITFindBySearchTermTest {
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnZeroTodoEntriesAsJson() throws Exception {
+    public void findBySearchTerm_AsUser_WhenTodoEntriesAreFoundWithSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
+        )
+                .andExpect(status().isOk());
+    }
+
+
+    /* No results found */
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnAnEmptyPageAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_NO_MATCH)
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.content", hasSize(0)))
+                .andExpect(jsonPath("$.numberOfElements", is(0)));
     }
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+    public void findBySearchTerm_AsUser_WhenNoTodoEntriesAreFoundWithSearchTerm_ShouldReturnAnPageThatHasZeroTotalElementsAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_NO_MATCH)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.totalElements", is(0)));
+    }
+
+    /* One todo entry found */
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnPageThatHasOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES)
         )
-                .andExpect(status().isOk());
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.numberOfElements", is(1)));
     }
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldOneTodoEntryAsJson() throws Exception {
+    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnPageThatHasOneTotalElementAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES)
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$[0].creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$[0].description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$[0].id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$[0].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[0].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[0].title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.totalElements", is(1)));
     }
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+    public void findBySearchTerm_AsUser_WhenDescriptionOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnTheFoundTodoEntryAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_DESCRIPTION_MATCHES)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content[0].createdByUser", is(TodoConstants.TodoEntries.First.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].creationTime", is(TodoConstants.TodoEntries.First.CREATION_TIME)))
+                .andExpect(jsonPath("$.content[0].description", is(TodoConstants.TodoEntries.First.DESCRIPTION)))
+                .andExpect(jsonPath("$.content[0].id", is(TodoConstants.TodoEntries.First.ID.intValue())))
+                .andExpect(jsonPath("$.content[0].modifiedByUser", is(TodoConstants.TodoEntries.First.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].modificationTime", is(TodoConstants.TodoEntries.First.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.content[0].title", is(TodoConstants.TodoEntries.First.TITLE)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnPageThatHasOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
         )
-                .andExpect(status().isOk());
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.numberOfElements", is(1)));
     }
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldOneTodoEntryAsJson() throws Exception {
+    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnPageThatHasOneTotalElementsAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$[0].creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$[0].description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$[0].id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$[0].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[0].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[0].title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.totalElements", is(1)));
     }
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTerm_ShouldReturnHttpResponseStatusOk() throws Exception {
+    public void findBySearchTerm_AsUser_WhenTitleOfOneTodoEntryContainsTheGivenSearchTerm_ShouldReturnTheFoundTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
-                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
-                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, TodoConstants.SEARCH_TERM_TITLE_MATCHES)
         )
-                .andExpect(status().isOk());
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content[0].createdByUser", is(TodoConstants.TodoEntries.First.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].creationTime", is(TodoConstants.TodoEntries.First.CREATION_TIME)))
+                .andExpect(jsonPath("$.content[0].description", is(TodoConstants.TodoEntries.First.DESCRIPTION)))
+                .andExpect(jsonPath("$.content[0].id", is(TodoConstants.TodoEntries.First.ID.intValue())))
+                .andExpect(jsonPath("$.content[0].modifiedByUser", is(TodoConstants.TodoEntries.First.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].modificationTime", is(TodoConstants.TodoEntries.First.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.content[0].title", is(TodoConstants.TodoEntries.First.TITLE)));
     }
 
+    /* Pagination tests */
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTerm_ShouldTwoTodoEntriesAsJson() throws Exception {
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndFirstPageIsRequestedWithPageSizeOne_ShouldReturnPageThatHasOneTodoEntryAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
                         .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, FIRST_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
                         .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].createdByUser", is(SECOND_TODO_CREATED_BY_USER)))
-                .andExpect(jsonPath("$[0].creationTime", is(SECOND_TODO_CREATION_TIME)))
-                .andExpect(jsonPath("$[0].description", is(SECOND_TODO_DESCRIPTION)))
-                .andExpect(jsonPath("$[0].id", is(SECOND_TODO_ID.intValue())))
-                .andExpect(jsonPath("$[0].modifiedByUser", is(SECOND_TODO_MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[0].modificationTime", is(SECOND_TODO_MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[0].title", is(SECOND_TODO_TITLE)))
-                .andExpect(jsonPath("$[1].createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$[1].creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$[1].description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$[1].id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$[1].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[1].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[1].title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.numberOfElements", is(1)));
     }
 
     @Test
     @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenSearchTermIsEmpty_ShouldReturnHttpResponseStatusOk() throws Exception {
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndFirstPageIsRequestedWithPageSizeOne_ShouldReturnPageThatHasTwoTotalElementsAsJson() throws Exception {
         mockMvc.perform(get("/api/todo/search")
-                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, "")
-        )
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithUserDetails("user")
-    public void findBySearchTerm_AsUser_WhenSearchTermIsEmpty_ShouldTwoTodoEntriesAsJson() throws Exception {
-        mockMvc.perform(get("/api/todo/search")
-                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, "")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, FIRST_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
                         .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
         )
                 .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].createdByUser", is(SECOND_TODO_CREATED_BY_USER)))
-                .andExpect(jsonPath("$[0].creationTime", is(SECOND_TODO_CREATION_TIME)))
-                .andExpect(jsonPath("$[0].description", is(SECOND_TODO_DESCRIPTION)))
-                .andExpect(jsonPath("$[0].id", is(SECOND_TODO_ID.intValue())))
-                .andExpect(jsonPath("$[0].modifiedByUser", is(SECOND_TODO_MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[0].modificationTime", is(SECOND_TODO_MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[0].title", is(SECOND_TODO_TITLE)))
-                .andExpect(jsonPath("$[1].createdByUser", is(TodoConstants.CREATED_BY_USER)))
-                .andExpect(jsonPath("$[1].creationTime", is(TodoConstants.CREATION_TIME)))
-                .andExpect(jsonPath("$[1].description", is(TodoConstants.DESCRIPTION)))
-                .andExpect(jsonPath("$[1].id", is(TodoConstants.ID.intValue())))
-                .andExpect(jsonPath("$[1].modifiedByUser", is(TodoConstants.MODIFIED_BY_USER)))
-                .andExpect(jsonPath("$[1].modificationTime", is(TodoConstants.MODIFICATION_TIME)))
-                .andExpect(jsonPath("$[1].title", is(TodoConstants.TITLE)));
+                .andExpect(jsonPath("$.totalElements", is(2)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndFirstPageIsRequestedWithPageSizeOne_ShouldReturnFirstPageJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, FIRST_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.number", is(FIRST_PAGE)))
+                .andExpect(jsonPath("$.first", is(true)))
+                .andExpect(jsonPath("$.last", is(false)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndFirstPageIsRequestedWithPageSizeOne_ShouldSortTodoEntriesByTitleAscAndReturnSecondTodoEntryAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, FIRST_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content[0].createdByUser", is(TodoConstants.TodoEntries.Second.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].creationTime", is(TodoConstants.TodoEntries.Second.CREATION_TIME)))
+                .andExpect(jsonPath("$.content[0].description", is(TodoConstants.TodoEntries.Second.DESCRIPTION)))
+                .andExpect(jsonPath("$.content[0].id", is(TodoConstants.TodoEntries.Second.ID.intValue())))
+                .andExpect(jsonPath("$.content[0].modifiedByUser", is(TodoConstants.TodoEntries.Second.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].modificationTime", is(TodoConstants.TodoEntries.Second.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.content[0].title", is(TodoConstants.TodoEntries.Second.TITLE)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndSecondPageIsRequestedWithPageSizeOne_ShouldReturnPageThatHasOneTodoEntryAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, SECOND_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.numberOfElements", is(1)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndSecondPageIsRequestedWithPageSizeOne_ShouldReturnPageThatHasTwoTotalElementsAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, SECOND_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.totalElements", is(2)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndSecondPageIsRequestedWithPageSizeOne_ShouldReturnLastPageJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, SECOND_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.number", is(SECOND_PAGE)))
+                .andExpect(jsonPath("$.first", is(false)))
+                .andExpect(jsonPath("$.last", is(true)));
+    }
+
+    @Test
+    @WithUserDetails("user")
+    public void findBySearchTerm_AsUser_WhenTwoTodoEntriesMatchesWithSearchTermAndSecondPageIsRequestedWithPageSizeOne_ShouldSortTodoEntriesByTitleAscAndReturnFirstTodoEntryAsJson() throws Exception {
+        mockMvc.perform(get("/api/todo/search")
+                        .param(WebTestConstants.REQUEST_PARAM_SEARCH_TERM, SEARCH_TERM)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_NUMBER, SECOND_PAGE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_PAGE_SIZE, PAGE_SIZE_STRING)
+                        .param(WebTestConstants.REQUEST_PARAM_SORT, WebTestConstants.FIELD_NAME_TITLE)
+        )
+                .andExpect(content().contentType(WebTestConstants.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.content[0].createdByUser", is(TodoConstants.TodoEntries.First.CREATED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].creationTime", is(TodoConstants.TodoEntries.First.CREATION_TIME)))
+                .andExpect(jsonPath("$.content[0].description", is(TodoConstants.TodoEntries.First.DESCRIPTION)))
+                .andExpect(jsonPath("$.content[0].id", is(TodoConstants.TodoEntries.First.ID.intValue())))
+                .andExpect(jsonPath("$.content[0].modifiedByUser", is(TodoConstants.TodoEntries.First.MODIFIED_BY_USER)))
+                .andExpect(jsonPath("$.content[0].modificationTime", is(TodoConstants.TodoEntries.First.MODIFICATION_TIME)))
+                .andExpect(jsonPath("$.content[0].title", is(TodoConstants.TodoEntries.First.TITLE)));
     }
 }

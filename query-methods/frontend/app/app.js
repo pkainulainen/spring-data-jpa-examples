@@ -13,6 +13,7 @@ var App = angular.module('app', [
     'ui.utils',
     'angular-growl',
     'angularMoment',
+    'angularUtils.directives.dirPagination',
     'spring-security-csrf-token-interceptor',
 
     //Partials
@@ -93,5 +94,5 @@ App.run(['$log', '$rootScope', '$state', 'AUTH_EVENTS', 'AuthenticatedUser', 'au
         listenAuthenticationEvents();
         listenCommonEvents();
         secureProtectedStates();
-}]);
+    }]);
 
