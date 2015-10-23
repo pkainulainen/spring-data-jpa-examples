@@ -26,13 +26,13 @@ interface TodoRepository extends Repository<Todo, Long> {
      * This query method creates the invoked query method by parsing it from the method name of the query method.
      * @param descriptionPart   The part that must be found from the description of the todo entry.
      * @param titlePart         The part that must be found from the title of the todo entry.
-     * @param sort              The sort specification.
+     * @param pageRequest       The information of the requested page.
      * @return  A list of todo entries whose title or description contains with the given search criteria. The returned
      *          todo entries are sorted by using the sort specification given as a method parameter.
      */
-    List<Todo> findByDescriptionContainsOrTitleContainsAllIgnoreCase(String descriptionPart,
+    Page<Todo> findByDescriptionContainsOrTitleContainsAllIgnoreCase(String descriptionPart,
                                                                      String titlePart,
-                                                                     Sort sort);
+                                                                     Pageable pageRequest);
 
     /**
      * This query method creates the invoked query method by parsing it from the method name of the query method.

@@ -122,7 +122,7 @@ public class ITQueryAnnotationTest {
     }
 
     @Test
-    public void findFirstPageBySearchTermWithPageOne_TwoTodoEntriesMatchesWithSearchTerm_ShouldReturnPageThatHasTheSecondTodoEntry() {
+    public void findFirstPageBySearchTermWithPageSizeOne_TwoTodoEntriesMatchesWithSearchTerm_ShouldReturnPageThatHasTheSecondTodoEntry() {
         Pageable pageRequest = createPageRequest(PAGE_NUMBER_ONE, PAGE_SIZE_ONE);
 
         Page<Todo> searchResultPage = repository.findBySearchTerm(SEARCH_TERM, pageRequest);
@@ -133,7 +133,7 @@ public class ITQueryAnnotationTest {
     }
 
     @Test
-    public void findSecondPageBySearchTermWithPageOne_TwoTodoEntriesMatchesWithSearchTerm_ShouldReturnPageThatHasTheFirstTodoEntry() {
+    public void findSecondPageBySearchTermWithPageSizeOne_TwoTodoEntriesMatchesWithSearchTerm_ShouldReturnPageThatHasTheFirstTodoEntry() {
         Pageable pageRequest = createPageRequest(PAGE_NUMBER_TWO, PAGE_SIZE_ONE);
 
         Page<Todo> searchResultPage = repository.findBySearchTerm(SEARCH_TERM, pageRequest);
