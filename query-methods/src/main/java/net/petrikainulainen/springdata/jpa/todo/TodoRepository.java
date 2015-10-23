@@ -27,8 +27,8 @@ interface TodoRepository extends Repository<Todo, Long> {
      * @param descriptionPart   The part that must be found from the description of the todo entry.
      * @param titlePart         The part that must be found from the title of the todo entry.
      * @param pageRequest       The information of the requested page.
-     * @return  A list of todo entries whose title or description contains with the given search criteria. The returned
-     *          todo entries are sorted by using the sort specification given as a method parameter.
+     * @return  A page of todo entries whose title or description contains with the given search term. The content of
+     *          the returned page depends from the page request given as a method parameter.
      */
     Page<Todo> findByDescriptionContainsOrTitleContainsAllIgnoreCase(String descriptionPart,
                                                                      String titlePart,
@@ -48,10 +48,11 @@ interface TodoRepository extends Repository<Todo, Long> {
      * This query method invokes the named JPQL query that is configured in the {@code Todo} class by using the
      * {@code @NamedQuery} annotation. The name of the named query is: {@code Todo.findBySearchTermNamed}.
      * @param searchTerm    The given search term.
-     * @return  A list of todo entries whose title or description contains with the given search term. The returned
-     *          todo entries are sorted in alphabetical order by using the title of the todo entry.
+     * @param pageRequest   The information of the given page.
+     * @return  A page of todo entries whose title or description contains with the given search term. The content of
+     *          the returned page depends from the page request given as a method parameter.
      */
-    List<Todo> findBySearchTermNamed(@Param("searchTerm") String searchTerm);
+    Page<Todo> findBySearchTermNamed(@Param("searchTerm") String searchTerm, Pageable pageRequest);
 
     /**
      * This query method invokes the named SQL query that is configured in the {@code Todo} class by using
@@ -66,10 +67,11 @@ interface TodoRepository extends Repository<Todo, Long> {
      * This query method reads the named JPQL query from the {@code META-INF/jpa-named-queries.properties} file.
      * The name of the invoked query is: {@code Todo.findBySearchTermNamedFile}.
      * @param searchTerm    The given search term.
-     * @return  A list of todo entries whose title or description contains with the given search term. The returned
-     *          todo entries are sorted in alphabetical order by using the title of the todo entry.
+     * @param pageRequest   The information of the given page.
+     * @return  A page of todo entries whose title or description contains with the given search term. The content of
+     *          the returned page depends from the page request given as a method parameter.
      */
-    List<Todo> findBySearchTermNamedFile(@Param("searchTerm") String searchTerm);
+    Page<Todo> findBySearchTermNamedFile(@Param("searchTerm") String searchTerm, Pageable pageRequest);
 
     /**
      * This query method reads the named native query from the {@code META-INF/jpa-named-queries.properties} file.
@@ -85,10 +87,11 @@ interface TodoRepository extends Repository<Todo, Long> {
      * This query method reads the named from the {@code META-INF/orm.xml} file. The name of the invoked query
      * is: {@code Todo.findBySearchTermNamedOrmXml}.
      * @param searchTerm    The given search term.
-     * @return  A list of todo entries whose title or description contains the given search term. The returned
-     *          todo entries are sorted in alphabetical order by using the title of the todo entry.
+     * @param pageRequest   The information of the given page.
+     * @return  A page of todo entries whose title or description contains with the given search term. The content of
+     *          the returned page depends from the page request given as a method parameter.
      */
-    List<Todo> findBySearchTermNamedOrmXml(@Param("searchTerm") String searchTerm);
+    Page<Todo> findBySearchTermNamedOrmXml(@Param("searchTerm") String searchTerm, Pageable pageRequest);
 
     /**
      * This query method reads the named from the {@code META-INF/orm.xml} file. The name of the invoked query
