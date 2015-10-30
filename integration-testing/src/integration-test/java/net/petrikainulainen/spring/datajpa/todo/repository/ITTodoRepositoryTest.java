@@ -32,7 +32,7 @@ import static org.junit.Assert.assertThat;
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class })
-@DatabaseSetup("todoData.xml")
+@DatabaseSetup("toDoData.xml")
 public class ITTodoRepositoryTest {
 
     @Autowired
