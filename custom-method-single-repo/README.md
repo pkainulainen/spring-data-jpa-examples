@@ -5,9 +5,7 @@ This blog post is the example application of the following blog posts:
 * [Spring Data JPA Tutorial: CRUD](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-two-crud/)
 * [Spring Data JPA Tutorial: Auditing, Part One](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-auditing-part-one/)
 * [Spring Data JPA Tutorial: Auditing, Part Two](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-auditing-part-two/)
-* [Spring Data JPA Tutorial: Adding Custom Methods Into a Single Repository]() - Not published yet
-
-**Note:** This application is still work in progress.
+* [Spring Data JPA Tutorial: Adding Custom Methods Into a Single Repository](http://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-eight-adding-functionality-to-a-repository/)
 
 Prerequisites
 =============
