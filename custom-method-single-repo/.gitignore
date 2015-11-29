@@ -1,0 +1,10 @@
+.DS_Store
+.gradle
+.idea
+*.iml
+build
+h2db
+target
+node_modules
+bower_components
+build

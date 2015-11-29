@@ -1,0 +1,74 @@
+[ng-cloak] {
+  display: none;
+}
+
+@import "../../bower_components/bootstrap/less/bootstrap.less";
+
+// Red asterisk for required labels
+label.required:before{
+  content:"* ";
+  color:red;
+}
+
+// styles for custom input validation
+input.form-control.ng-pristine {
+  border: 1px solid #cccccc;
+}
+
+input.form-control.ng-pristine.ng-invalid.ng-submitted {
+  border: 1px solid #f00;
+  background-color: #ffffff;
+}
+
+input.form-control.ng-dirty.ng-invalid.ng-focused {
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+}
+
+input.form-control.ng-dirty.ng-invalid {
+  border: 1px solid #f00;
+  background-color: #ffffff;
+}
+
+textarea.form-control.ng-pristine {
+  border: 1px solid #cccccc;
+}
+
+textarea.form-control.ng-pristine.ng-invalid.ng-submitted {
+  border: 1px solid #f00;
+  background-color: #ffffff;
+}
+
+textarea.form-control.ng-dirty.ng-invalid.ng-focused {
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+}
+
+textarea.form-control.ng-dirty.ng-invalid {
+  border: 1px solid #f00;
+  background-color: #ffffff;
+}
+
+small.ng-error {
+  color: #a94442;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.striped-list {
+  > .row:nth-of-type(odd) {
+    background-color: @table-bg-accent;
+  }
+}
+
+.striped-list .row {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 0.5em;
+}
+
+.action-buttons {
+  text-align: right;
+}

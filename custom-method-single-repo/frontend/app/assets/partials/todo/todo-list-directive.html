@@ -1,0 +1,8 @@
+<div ng-if="todoEntries.length === 0" >
+    <p translate="pages.list.page.texts.no.todo.entries.found"></p>
+</div>
+<div class="container-fluid striped-list">
+    <div class="row" ng-repeat="todoEntry in todoEntries">
+        <a ui-sref="todo.view({id: todoEntry.id})">{{todoEntry.title}}</a>
+    </div>
+</div>
