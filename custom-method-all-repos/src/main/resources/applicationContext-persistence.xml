@@ -84,5 +84,5 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 
     <jpa:auditing auditor-aware-ref="auditingProvider" set-dates="true"/>
     <jpa:repositories base-package="net.petrikainulainen.springdata.jpa.todo"
-            factory-class="net.petrikainulainen.springdata.jpa.todo.BaseRepositoryFactoryBean"/>
+            factory-class="net.petrikainulainen.springdata.jpa.common.BaseRepositoryFactoryBean"/>
 </beans>

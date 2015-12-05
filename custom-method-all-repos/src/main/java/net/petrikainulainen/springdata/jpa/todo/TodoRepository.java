@@ -1,5 +1,6 @@
 package net.petrikainulainen.springdata.jpa.todo;
 
+import net.petrikainulainen.springdata.jpa.common.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 

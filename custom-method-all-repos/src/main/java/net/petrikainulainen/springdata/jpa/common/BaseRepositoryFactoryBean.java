@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.todo;
+package net.petrikainulainen.springdata.jpa.common;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;

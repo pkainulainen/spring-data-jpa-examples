@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.todo;
+package net.petrikainulainen.springdata.jpa.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

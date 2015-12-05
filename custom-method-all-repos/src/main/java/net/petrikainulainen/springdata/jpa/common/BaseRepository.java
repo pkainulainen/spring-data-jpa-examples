@@ -1,4 +1,4 @@
-package net.petrikainulainen.springdata.jpa.todo;
+package net.petrikainulainen.springdata.jpa.common;
 
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author Petri Kainulainen
  */
 @NoRepositoryBean
-interface BaseRepository<T, ID extends Serializable> extends Repository<T, ID> {
+public interface BaseRepository<T, ID extends Serializable> extends Repository<T, ID> {
 
     /**
      * Deletes a managed entity.
