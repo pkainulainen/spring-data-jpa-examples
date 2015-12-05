@@ -1,0 +1,25 @@
+<div>
+    <h1 translate="pages.view.page.title"></h1>
+
+    <div class="well well-lg">
+        <h2>{{todoEntry.title}}</h2>
+        <div><p>{{todoEntry.description}}</p></div>
+        <div>
+            <p>
+                <small>
+                    {{"todo.creation.time" | translate}}: {{todoEntry.creationTime | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}
+                    {{"todo.created.by.prefix" | translate}} {{todoEntry.createdByUser}}
+                    {{"todo.modification.time" | translate }}: {{todoEntry.modificationTime | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}
+                    {{"todo.modified.by.prefix" | translate}} {{todoEntry.modifiedByUser}}
+                </small>
+            </p>
+        </div>
+        <div class="action-buttons">
+            <a class="btn btn-default"
+               ui-sref="todo.edit({id: todoEntry.id})"
+               translate="pages.edit.page.link.label"></a>
+            <span delete-todo-entry-button
+                  todo-entry="todoEntry"></span>
+        </div>
+    </div>
+</div>
