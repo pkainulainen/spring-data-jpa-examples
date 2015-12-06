@@ -19,6 +19,7 @@ import java.io.Serializable;
 public class BaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T,
         I extends Serializable> extends JpaRepositoryFactoryBean<R, T, I> {
 
+    @Override
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager em) {
         return new MyRepositoryFactory(em);
     }
@@ -29,15 +30,16 @@ public class BaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T,
         private final EntityManager em;
 
         public MyRepositoryFactory(EntityManager em) {
-
             super(em);
             this.em = em;
         }
 
+        @Override
         protected Object getTargetRepository(RepositoryMetadata metadata) {
             return new BaseRepositoryImpl<T, I>((Class<T>) metadata.getDomainType(), em);
         }
 
+        @Override
         protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
             return BaseRepositoryImpl.class;
         }
