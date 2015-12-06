@@ -21,15 +21,15 @@ public class BaseRepositoryFactoryBean<R extends JpaRepository<T, I>, T,
 
     @Override
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager em) {
-        return new MyRepositoryFactory(em);
+        return new BaseRepositoryFactory(em);
     }
 
-    private static class MyRepositoryFactory<T, I extends Serializable>
+    private static class BaseRepositoryFactory<T, I extends Serializable>
             extends JpaRepositoryFactory {
 
         private final EntityManager em;
 
-        public MyRepositoryFactory(EntityManager em) {
+        public BaseRepositoryFactory(EntityManager em) {
             super(em);
             this.em = em;
         }
