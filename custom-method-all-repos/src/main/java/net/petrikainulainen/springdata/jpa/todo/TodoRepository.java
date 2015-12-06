@@ -15,8 +15,6 @@ import java.util.Optional;
  */
 interface TodoRepository extends BaseRepository<Todo, Long> {
 
-    void delete(Todo deleted);
-
     List<Todo> findAll();
 
     /**
