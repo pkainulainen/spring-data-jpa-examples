@@ -1,6 +1,6 @@
 package net.petrikainulainen.springdata.jpa.config;
 
-import net.petrikainulainen.springdata.jpa.web.security.CsrfHeaderFilter;
+import net.petrikainulainen.springdata.jpa.web.security.CSRFHeaderFilter;
 import net.petrikainulainen.springdata.jpa.web.security.RestAuthenticationEntryPoint;
 import net.petrikainulainen.springdata.jpa.web.security.RestAuthenticationFailureHandler;
 import net.petrikainulainen.springdata.jpa.web.security.RestAuthenticationSuccessHandler;
@@ -81,7 +81,7 @@ class SecurityContext extends WebSecurityConfigurerAdapter {
                     ).permitAll()
                     .anyRequest().hasRole("USER")
                     .and()
-                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+                .addFilterAfter(new CSRFHeaderFilter(), CsrfFilter.class);
     }
 
     @Override
