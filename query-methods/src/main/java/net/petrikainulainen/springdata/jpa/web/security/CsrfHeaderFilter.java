@@ -18,9 +18,9 @@ import java.io.IOException;
  *
  * @author Petri Kainulainen
  */
-public class FooHeaderFilter extends OncePerRequestFilter {
+public class CsrfHeaderFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(FooHeaderFilter.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CsrfHeaderFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
